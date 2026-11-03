@@ -224,3 +224,52 @@ def test_m4_ot_run_on_real_data_structure_convergence_and_determinism(repo, tmp_
         for d in dirs
     ]
     assert rows[0] == rows[1]
+
+
+def test_m5_uq_run_on_real_data_structure_and_matches_loao_v1_predictions(repo, tmp_path):
+    """Structure only: canary, calibration sizes, retention goal 1.0 and point predictions equal to
+    the frozen LOAO-v1 locked run (same models, same preprocessing). No config is tuned on this."""
+    import csv
+    import json
+
+    import yaml
+
+    from chemiproof.config import load_experiment_config
+    from chemiproof.experiments import run_uncertainty_experiment
+
+    cfg = yaml.safe_load((repo / "config/experiments/uncertainty_loao.yaml").read_text())
+    cfg.update(run_class="exploratory")
+    cfg["uncertainty"]["random_rejection_repeats"] = 10
+    cfg["perturbations"] = {
+        "noise_fraction_of_max": [0.01],
+        "noise_seeds": [20261024],
+        "baseline_offset_fraction_of_max": [0.1],
+        "intensity_scale": [2.0],
+    }
+    p = tmp_path / "c.yaml"
+    p.write_text(yaml.safe_dump(cfg))
+    out = run_uncertainty_experiment(
+        load_experiment_config(p),
+        repo / "data/raw/extracted",
+        repo / "data/interim/sample_manifest.csv",
+        tmp_path / "res",
+    )
+    assert json.loads((out / "leakage_audit.json").read_text())["label_shuffle_canary"]["passed"]
+    diag = list(csv.DictReader((out / "score_diagnostics.csv").open()))
+    assert sorted({int(r["n_calibration"]) for r in diag}) == [240, 270, 300]
+    sel = list(csv.DictReader((out / "selective_risk.csv").open()))
+    assert all(float(r["observed_retention"]) == 1.0 for r in sel if r["retention_goal"] == "1.0")
+    locked = sorted((repo / "results").glob("M3_2*"))
+    if locked:  # compare with the frozen all-330 LOAO-v1 predictions when present
+        ref = {
+            (r["sample_id"], r["model"]): float(r["y_pred_fraction"])
+            for d in locked
+            if "luhua" not in (d / "config_resolved.yaml").read_text()
+            for r in csv.DictReader((d / "predictions.csv").open())
+        }
+        got = {
+            (r["sample_id"], r["model"]): float(r["y_pred_fraction"])
+            for r in csv.DictReader((out / "predictions.csv").open())
+        }
+        common = [k for k in got if k in ref]
+        assert common and all(abs(got[k] - ref[k]) < 1e-9 for k in common)

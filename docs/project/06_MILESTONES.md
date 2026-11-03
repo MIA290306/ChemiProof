@@ -110,13 +110,13 @@
 **Scientific purpose:** determine whether the model knows when estimates are likely unreliable.
 
 **Tasks**
-- [ ] Preregister primary risk / uncertainty scoring rules before target results; source-trained OOD proxy and residual-based intervals.
-- [ ] Select abstention threshold via **source-only validation**. Never tune to outer test errors.
-- [ ] Run selective risk vs retention curves, compare random rejection baseline, report retained/rejected errors and worst-case folds.
-- [ ] Report empirical interval coverage per unseen adulterant; explicitly no theoretical target-shift coverage guarantee.
-- [ ] Conduct seeded spectral perturbation tests with justified magnitudes and full robustness table.
-- [ ] Review failure examples, confounding by brand, ablation of filtering/normalization, and whether effect is stable.
-- [ ] Write original-contribution claim conservatively: e.g., *an empirical audit of abstention and robustness on a published domain-shift benchmark*.
+- [x] Preregister primary risk / uncertainty scoring rules before target results; source-trained OOD proxy and residual-based intervals.
+- [x] Select abstention threshold via **source-only validation**. Never tune to outer test errors.
+- [x] Run selective risk vs retention curves, compare random rejection baseline, report retained/rejected errors and worst-case folds.
+- [x] Report empirical interval coverage per unseen adulterant; explicitly no theoretical target-shift coverage guarantee.
+- [x] Conduct seeded spectral perturbation tests with justified magnitudes and full robustness table.
+- [x] Review failure examples, confounding by brand, ablation of filtering/normalization, and whether effect is stable. *(done; brand effect described but not tested; effect NOT stable across folds)*
+- [x] Write original-contribution claim conservatively: e.g., *an empirical audit of abstention and robustness on a published domain-shift benchmark*.
 
 **Artifacts:** selective-risk plot, interval tables, stress-test figures, detailed error case studies, decisions documented.
 

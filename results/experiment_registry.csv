@@ -7,3 +7,4 @@ utc_time,run_id,experiment_id,protocol,run_class,subset_brand,config_sha256,git_
 2026-11-03T04:48:13Z,20261103T044812Z_7129cde_44fba4b8,chemiproof-ot-loao-luhua-only,loao,locked,luhua,70f0c2f5af843fb8,7129cded6db6,False,M4_20261103T044812Z_7129cde_44fba4b8
 2026-11-03T04:48:52Z,20261103T044852Z_8951b3f_5522217a,chemiproof-ot-loao,loao_ot_batch_sensitivity,exploratory,,batch_sensitivit,8951b3f7328a,False,M4_batch_sensitivity_20261103T044852Z_8951b3f_5522217a
 2026-11-03T04:48:56Z,20261103T044856Z_8951b3f_d7147996,chemiproof-ot-loao-luhua-only,loao_ot_batch_sensitivity,exploratory,luhua,batch_sensitivit,8951b3f7328a,False,M4_batch_sensitivity_20261103T044856Z_8951b3f_d7147996
+2026-11-03T05:42:48Z,20261103T054226Z_914e8ed_ac6bfcef,chemiproof-uq-loao,LOAO-UQ-v1,locked,,f93cfb4c97d22ad2,914e8edd2fb7,False,M5_20261103T054226Z_914e8ed_ac6bfcef

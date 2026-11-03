@@ -1,7 +1,7 @@
 # Milestone Progress / Evidence Ledger
 
-**Updated:** 2026-10-24  
-**Current overall state:** M0-M4 REVIEW REQUIRED; measured inductive and transductive (OT) LOAO results exist; OT result is conditional on batch composition; no abstention or UI yet.  
+**Updated:** 2026-11-03  
+**Current overall state:** M0-M5 REVIEW REQUIRED; measured inductive, transductive (OT) and abstention/interval/robustness results exist; OT is conditional on batch composition; label-free abstention and source-calibrated intervals are NOT reliably useful on this benchmark; no UI yet.  
 **Rule:** Agent may set `REVIEW REQUIRED`; **only owner** may mark `ACCEPTED` after evidence review.
 
 | Milestone | Status | Evidence / artifacts | Next action |
@@ -11,7 +11,7 @@
 | M2 Chemometric baselines | REVIEW REQUIRED | `results/M2_20261103T041143Z_ca43062_4097e86f/` (validation_report, MILESTONE_REVIEW); 124 tests; source-internal results exported | Owner review (CI green: run 41581270090) |
 | M3 LOAO benchmark | REVIEW REQUIRED | `results/M3_20261103T042740Z_01a9d42_b1c2dfa1/` (validation_report, MILESTONE_REVIEW); two locked runs + controls | Owner review (CI green: run 41581270090) |
 | M4 OT replication | REVIEW REQUIRED | `results/M4_20261103T044749Z_7129cde_363deee6/` (validation_report, MILESTONE_REVIEW); two locked runs + stress tests | Owner review (CI green: run 41581270090) |
-| M5 Abstention/robustness | NOT STARTED | None | Await M4 acceptance |
+| M5 Abstention/robustness | REVIEW REQUIRED | `results/M5_20261103T054226Z_914e8ed_ac6bfcef/` (validation_report, MILESTONE_REVIEW); one locked run, largely unfavourable findings | Owner review of ADR-017 and results |
 | M6 Research UI | NOT STARTED | UX spec only | Await validated artifact |
 | M6.5 Power BI quality-analytics layer (optional extension) | NOT STARTED | Specification only: `docs/bi/18_POWER_BI_SPEC.md`, `19_POWER_BI_DATA_MODEL.md`, `20_POWER_BI_ACCEPTANCE_TESTS.md`, `config/bi/export_contract.yaml`; no export code, no Power BI file | Await M5 and M6 acceptance and a Windows environment |
 | M7 Release | NOT STARTED | Templates only | Await M6 acceptance |
@@ -121,6 +121,17 @@ Acceptance tests: T012, T013, T014, T015 PASS; T016-T023 NOT RUN; GitHub Actions
 Risks / open questions: OT conditional on batch composition and size; published PCA baselines reproduce only with clipping; per-fold published values not compared.
 Owner signoff: pending
 Next milestone (only after ACCEPTED): M5
+
+### 2026-11-03 — M5 — REVIEW REQUIRED
+Owner / agent: Mia Ho (blanket delegation) / Claude Code
+Scope attempted: preregistration ADR-017 (LOAO-UQ-v1), `src/chemiproof/uncertainty/{scores,calibration,selective,perturb,runner,report}.py`, `experiments.py` and `cli.py` entry `experiment uncertainty`, config `uncertainty_loao.yaml`, tests (`test_uncertainty.py`, `test_uncertainty_run.py`, real-data M5 test).
+Actual commands + exit codes: see `results/M5_20261103T054226Z_914e8ed_ac6bfcef/validation_report.md` (locked run exit 0, git dirty=False; dataset test exit 0; ruff clean).
+Measured results (inductive, macro over 5 held-out adulterants): PLS 6.50 pp full MAE, 6.22 pp after `ood_maha` abstention at goal 0.80 (3/5 folds improve). Usefulness rule met by 1 of 6 model/score pairs (the weak pca_svr). Pooled 90 % interval observed coverage 0.47-1.00 by system; `max_domain` intervals 45 pp wide (PLS). Offset/scale invariance measured; 1 % noise lifts PLS MAE to 17.7 pp and OOD abstention to 57 %.
+Artifact paths + checksums: `M5_20261103T054226Z_914e8ed_ac6bfcef` (config sha256 `f93cfb4c97d22ad2...`), manifest `31c718edd95b4fac...`; registry `results/experiment_registry.csv`.
+Acceptance tests: T011, T016, T017, T018 PASS; T019-T023 NOT RUN.
+Risks / open questions: unfavourable abstention result stands as reported; brand/batch effect (soybean-olivera) untested; OT batch-composition detector missing; ADR-017 needs owner review.
+Owner signoff: pending
+Next milestone (only after ACCEPTED): M6
 
 ### 2026-11-03 — Power BI integration (documentation only; M6.5 added to the plan)
 Owner / agent: Mia Ho / Claude Code
