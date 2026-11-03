@@ -16,6 +16,8 @@ from pathlib import Path
 from typing import Any
 
 SHORT = 8
+# The run registry is appended to by every run; it must not make the next run look "dirty".
+DIRTY_EXCLUDES = (":(exclude)results/experiment_registry.csv",)
 
 
 def config_hash(config: dict[str, Any]) -> str:
@@ -44,7 +46,7 @@ def git_short_hash(repo: Path | None = None) -> str:
             cwd=cwd,
         ).stdout.strip()
         dirty = subprocess.run(
-            ["git", "status", "--porcelain", "--untracked-files=no"],
+            ["git", "status", "--porcelain", "--untracked-files=no", "--", ".", *DIRTY_EXCLUDES],
             capture_output=True,
             text=True,
             check=True,

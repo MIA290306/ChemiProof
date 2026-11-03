@@ -1,0 +1,82 @@
+{
+  "control": "permuted_source_labels",
+  "n_repeats": 3,
+  "seed": 20261024,
+  "models": {
+    "mean_y": {
+      "per_repeat": [
+        {
+          "macro_r2": 0.0,
+          "macro_mae_fraction": 0.22727272727272735
+        },
+        {
+          "macro_r2": 0.0,
+          "macro_mae_fraction": 0.22727272727272735
+        },
+        {
+          "macro_r2": 0.0,
+          "macro_mae_fraction": 0.22727272727272735
+        }
+      ],
+      "mean_macro_r2": 0.0,
+      "mean_macro_mae_fraction": 0.22727272727272738
+    },
+    "svr_raw": {
+      "per_repeat": [
+        {
+          "macro_r2": -0.06745731568502558,
+          "macro_mae_fraction": 0.22605366470832222
+        },
+        {
+          "macro_r2": -0.05002443300049701,
+          "macro_mae_fraction": 0.23191686417517926
+        },
+        {
+          "macro_r2": -0.12540682977043313,
+          "macro_mae_fraction": 0.23424803039153996
+        }
+      ],
+      "mean_macro_r2": -0.08096285948531858,
+      "mean_macro_mae_fraction": 0.23073951975834714
+    },
+    "pca_svr": {
+      "per_repeat": [
+        {
+          "macro_r2": -0.6331496175521925,
+          "macro_mae_fraction": 0.23015976531289314
+        },
+        {
+          "macro_r2": -0.28303811472833523,
+          "macro_mae_fraction": 0.235928243961787
+        },
+        {
+          "macro_r2": -0.24174308799509348,
+          "macro_mae_fraction": 0.22124606002526387
+        }
+      ],
+      "mean_macro_r2": -0.3859769400918737,
+      "mean_macro_mae_fraction": 0.22911135643331468
+    },
+    "pls": {
+      "per_repeat": [
+        {
+          "macro_r2": 0.0513456767800962,
+          "macro_mae_fraction": 0.21767247274625706
+        },
+        {
+          "macro_r2": -0.07864506389663697,
+          "macro_mae_fraction": 0.23571038083974613
+        },
+        {
+          "macro_r2": -0.02691664887425991,
+          "macro_mae_fraction": 0.22749983024354684
+        }
+      ],
+      "mean_macro_r2": -0.01807201199693356,
+      "mean_macro_mae_fraction": 0.22696089460985
+    }
+  },
+  "experiment_id": "chemiproof-loao-luhua-only",
+  "subset_brand": "luhua",
+  "note": "negative control, exploratory; scored against TRUE held-out labels"
+}

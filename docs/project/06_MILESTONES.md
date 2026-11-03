@@ -76,12 +76,12 @@
 **Scientific purpose:** answer whether known-adulterant models generalize to wholly unseen adulterant types.
 
 **Tasks**
-- [ ] Deterministically produce exactly five outer folds by adulterant type (NOT random row-level split).
-- [ ] Within each source fold, choose parameters by source-only inner pseudo-LOAO or justified method; separate calibration residuals.
-- [ ] Run baselines, export predictions and per-fold MAE, RMSE, R², bias, `n` and macro/pooled metrics.
-- [ ] Validate equal fold rules and sample-level disjointness; independent audit checks group memberships.
-- [ ] Analyze EVOO-brand composition and sensitivity/confounding.
-- [ ] Track all experiments; freeze configs and generate `results/.../validation_report.md`.
+- [x] Deterministically produce exactly five outer folds by adulterant type (NOT random row-level split).
+- [x] Within each source fold, choose parameters (inner leave-one-source-adulterant-out; separate calibration residuals are an M5 topic) by source-only inner pseudo-LOAO or justified method; separate calibration residuals.
+- [x] Run baselines, export predictions and per-fold MAE, RMSE, R², bias, `n` and macro/pooled metrics.
+- [x] Validate equal fold rules and sample-level disjointness; independent audit checks group memberships.
+- [x] Analyze EVOO-brand composition (descriptive + Luhua-only sensitivity) and sensitivity/confounding.
+- [x] Track all experiments (registry, locked/exploratory); freeze configs and generate `results/.../validation_report.md`.
 
 **Artifacts:** split manifest, raw predictions, 5-fold table, model comparison plots, leakage audit.
 

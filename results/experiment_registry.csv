@@ -1,3 +1,5 @@
 utc_time,run_id,experiment_id,protocol,run_class,subset_brand,config_sha256,git_head,git_dirty,output_dir
 2026-11-03T04:27:51Z,20261103T042740Z_01a9d42_b1c2dfa1,chemiproof-source-baselines,loao,locked,,2c427bf82704fa93,01a9d4286af0,False,M3_20261103T042740Z_01a9d42_b1c2dfa1
 2026-11-03T04:28:04Z,20261103T042759Z_01a9d42_2fbd19b6,chemiproof-loao-luhua-only,loao,locked,luhua,c98da7473d7088d3,01a9d4286af0,False,M3_20261103T042759Z_01a9d42_2fbd19b6
+2026-11-03T04:30:14Z,20261103T043013Z_932d990_9a3dc967,chemiproof-source-baselines,loao_negative_control,exploratory,,control,932d990e567a,False,M3_control_20261103T043013Z_932d990_9a3dc967
+2026-11-03T04:30:22Z,20261103T043022Z_932d990-dirty_b1d73c83,chemiproof-loao-luhua-only,loao_negative_control,exploratory,luhua,control,932d990e567a,True,M3_control_20261103T043022Z_932d990-dirty_b1d73c83

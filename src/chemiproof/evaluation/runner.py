@@ -17,7 +17,7 @@ from chemiproof.evaluation.metrics import Metrics, compute_metrics, macro_averag
 from chemiproof.evaluation.protocols import Fold
 from chemiproof.logging_utils import log_event
 from chemiproof.modeling.baselines import model_factory
-from chemiproof.provenance import environment_info
+from chemiproof.provenance import DIRTY_EXCLUDES, environment_info
 
 
 @dataclass
@@ -163,7 +163,9 @@ def git_state(repo: Path | None = None) -> dict[str, Any]:
 
     return {
         "head": run("rev-parse", "HEAD"),
-        "dirty": bool(run("status", "--porcelain", "--untracked-files=no")),
+        "dirty": bool(
+            run("status", "--porcelain", "--untracked-files=no", "--", ".", *DIRTY_EXCLUDES)
+        ),
     }
 
 

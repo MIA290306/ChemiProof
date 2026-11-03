@@ -1,7 +1,7 @@
 # Milestone Progress / Evidence Ledger
 
 **Updated:** 2026-10-24  
-**Current overall state:** M0, M1, M2 REVIEW REQUIRED; data audited (330 spectra); first source-internal (optimistic) baseline results exist; no LOAO / unseen-adulterant results yet.  
+**Current overall state:** M0-M3 REVIEW REQUIRED; first measured held-out-adulterant (LOAO) baseline results exist (inductive); no OT, abstention or UI yet.  
 **Rule:** Agent may set `REVIEW REQUIRED`; **only owner** may mark `ACCEPTED` after evidence review.
 
 | Milestone | Status | Evidence / artifacts | Next action |
@@ -9,7 +9,7 @@
 | M0 Foundations | REVIEW REQUIRED | `results/M0_foundation/validation_report.md`, `MILESTONE_REVIEW.md`; 41 tests pass locally and in CI | Owner review and ADR-007 approval (CI green: run 41572684248) |
 | M1 Dataset audit | REVIEW REQUIRED | `results/M1_20261103T034431Z_b050b36-dirty_33c0ba5b/` (validation_report, MILESTONE_REVIEW); 330/330 parsed, ledger empty; 93 tests | Owner review (CI green: run 41574366884) |
 | M2 Chemometric baselines | REVIEW REQUIRED | `results/M2_20261103T041143Z_ca43062_4097e86f/` (validation_report, MILESTONE_REVIEW); 124 tests; source-internal results exported | Owner review; push and confirm CI |
-| M3 LOAO benchmark | NOT STARTED | None | Await M2 acceptance |
+| M3 LOAO benchmark | REVIEW REQUIRED | `results/M3_20261103T042740Z_01a9d42_b1c2dfa1/` (validation_report, MILESTONE_REVIEW); two locked runs + controls | Owner review; push and confirm CI |
 | M4 OT replication | NOT STARTED | Published paper numbers, not our results | Await M3 acceptance |
 | M5 Abstention/robustness | NOT STARTED | None | Await M4 acceptance |
 | M6 Research UI | NOT STARTED | UX spec only | Await validated artifact |
@@ -98,3 +98,14 @@ Acceptance tests: T007, T008, T009, T011 (M2 protocol), T024 PASS; T010, T012-T0
 Risks / open questions: grids widened after first run (ADR-012: scores are exploratory-development numbers; M3 must freeze); PCA-SVR underperforms raw SVR (unexplained); round-as-replicate unproven; brand confounding.
 Owner signoff: pending
 Next milestone (only after ACCEPTED): M3
+
+### 2026-11-02 — M3 — REVIEW REQUIRED
+Owner / agent: Mia Ho (blanket delegation) / Claude Code
+Scope attempted: CP-301..CP-305. Files changed: `evaluation/{protocols,runner,controls,plots}.py`, `experiments.py` (LOAO, canary, registry, control), `cli.py` (`experiment control`), `config.py` (`run_class`, `subset_brand`), `provenance.py` (dirty flag ignores the registry), configs (`baseline.yaml` locked, `loao_luhua_only.yaml`), tests (LOAO, controls, git state, end-to-end, real-data), ADR-013.
+Actual commands + exit codes: see `results/M3_20261103T042740Z_01a9d42_b1c2dfa1/validation_report.md` (two locked runs exit 0 with git dirty=False; controls exit 0; pytest 140 + 6 passed; ruff clean).
+Measured results (LOAO-v1, inductive, macro over 5 held-out adulterants; MAE in pp / R2): all-330: mean_y 22.73 / -0.000; svr_raw 8.37 / 0.831; pca_svr 16.55 / 0.019; pls 6.50 / 0.903. Luhua-only: svr_raw 0.859, pls 0.828, pca_svr 0.301. Permuted-label control: R2 <= 0 for all models.
+Artifact paths + checksums: `M3_20261103T042740Z_01a9d42_b1c2dfa1`, `M3_20261103T042759Z_01a9d42_2fbd19b6` (config sha256 `2c427bf82704fa93...`, `c98da7473d7088d3...`), manifest `31c718edd95b4fac...`; registry `results/experiment_registry.csv`.
+Acceptance tests: T008, T010, T011, T024 PASS; T012-T023 NOT RUN; GitHub Actions for M2/M3 commits NOT RUN.
+Risks / open questions: pca_svr failure unexplained; ranking instability; brand/adulterant confounding; only five folds.
+Owner signoff: pending
+Next milestone (only after ACCEPTED): M4
