@@ -24,6 +24,7 @@ from chemiproof.experiments import (
     run_experiment,
     run_negative_control,
     run_ot_batch_sensitivity,
+    run_uncertainty_experiment,
 )
 from chemiproof.provenance import environment_info, make_run_id
 
@@ -172,6 +173,15 @@ def _cmd_batch_sensitivity(args: argparse.Namespace) -> int:
     return EXIT_OK
 
 
+def _cmd_uncertainty(args: argparse.Namespace) -> int:
+    cfg = load_experiment_config(Path(args.config))
+    manifest = Path(cfg.model_dump().get("dataset_manifest", DEFAULT_MANIFEST))
+    out_dir = run_uncertainty_experiment(cfg, Path(args.data_dir), manifest, Path(args.output_root))
+    print(f"uncertainty artifacts: {out_dir}")
+    print((out_dir / "run_report.md").read_text(encoding="utf-8"))
+    return EXIT_OK
+
+
 def _unavailable(milestone: str, what: str) -> Callable[[argparse.Namespace], int]:
     def run(_: argparse.Namespace) -> int:
         raise _not_implemented(milestone, what)
@@ -245,6 +255,11 @@ def build_parser() -> argparse.ArgumentParser:
     bs.add_argument("--data-dir", default=str(DEFAULT_DATA_DIR))
     bs.add_argument("--output-root", default=str(DEFAULT_RESULTS))
     bs.set_defaults(func=_cmd_batch_sensitivity)
+    uq = ex_sub.add_parser("uncertainty", help="M5: abstention, intervals, robustness (LOAO-UQ-v1)")
+    uq.add_argument("--config", required=True)
+    uq.add_argument("--data-dir", default=str(DEFAULT_DATA_DIR))
+    uq.add_argument("--output-root", default=str(DEFAULT_RESULTS))
+    uq.set_defaults(func=_cmd_uncertainty)
     ex_sub.add_parser("report").set_defaults(func=_unavailable("M7", "experiment report"))
 
     sub.add_parser("app", help="research explorer (available from M6)").set_defaults(

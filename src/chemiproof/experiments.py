@@ -583,3 +583,12 @@ def run_ot_batch_sensitivity(
         run_class="exploratory",
     )
     return out_dir
+
+
+def run_uncertainty_experiment(
+    cfg: ExperimentConfig, data_dir: Path, manifest: Path, output_root: Path
+) -> Path:
+    """M5 entry point (protocol LOAO-UQ-v1, ADR-017)."""
+    from chemiproof.uncertainty.runner import run_uncertainty
+
+    return run_uncertainty(cfg, data_dir, manifest, output_root)
