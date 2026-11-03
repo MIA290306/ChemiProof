@@ -20,7 +20,7 @@
 
 *Refreshed 2026-11-03 after M5. The earlier list (unverified `.dat` schema, unchecked licenses, no benchmark results) was resolved by M1-M5; see the entries below.*
 
-1. Owner sign-off pending for M0-M5 and for ADR-007 (PROPOSED) plus the ADRs taken under delegation that request gate review (ADR-008, 013, 014, 015, 016, 017).
+1. Owner sign-off pending for M0-M5, for ADR-007 (PROPOSED) and for every ADR in `13_DECISION_LOG.md` whose signoff line still reads pending or review requested.
 2. Dataset archive MD5 not verifiable: the data arrived as an extracted folder (ADR-009).
 3. Licenses: dataset CC BY 4.0; authors' code has no license, so it is read-only reference only (ADR-010/011). Project code/data license for release still to be decided (M7).
 4. Brand/batch effect (soybean-olivera errors) described but not tested; OT batch-composition (label-skew) detector missing. Both need a new ADR (M5 open questions).

@@ -76,7 +76,7 @@ ruff check . && pytest -q -m "not dataset"   # chỉ test dữ liệu tổng h�
 chemiproof --help
 ```
 
-**Dữ liệu thật** (96 MB) không nằm trong repo. Tải từ Zenodo 19755088 và đặt vào `data/raw/extracted` (đã bị git-ignore). Các test cần dữ liệu thật chạy bằng `pytest -m dataset`, sau khi đã chạy `chemiproof dataset audit` để tạo manifest. Nếu chạy `pytest -q` không có `-m`, các test này sẽ FAIL với `DATASET_NOT_AVAILABLE` khi máy chưa có dữ liệu; đó là cố ý, không phải lỗi code.
+**Dữ liệu thật** (96 MB) không nằm trong repo. Tải từ Zenodo 19755088 và đặt vào `data/raw/extracted` (đã bị git-ignore). Các test cần dữ liệu thật chạy bằng `pytest -m dataset`. Các test M2–M5 trong nhóm này đọc manifest, nên phải chạy `chemiproof dataset audit` trước; ba test T003, T004 và hướng nhãn chỉ cần thư mục `data/raw/extracted`. Nếu chạy `pytest -q` không có `-m`, các test này sẽ FAIL với `DATASET_NOT_AVAILABLE` khi máy chưa có dữ liệu; đó là cố ý, không phải lỗi code.
 
 Chạy lại các thí nghiệm đã đóng băng:
 ```bash
