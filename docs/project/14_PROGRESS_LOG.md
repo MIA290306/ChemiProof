@@ -1,13 +1,13 @@
 # Milestone Progress / Evidence Ledger
 
 **Updated:** 2026-10-24  
-**Current overall state:** M0 REVIEW REQUIRED (tooling only); no data, model or experimental results.  
+**Current overall state:** M0 and M1 REVIEW REQUIRED; data audited (330 spectra), no model or experimental results.  
 **Rule:** Agent may set `REVIEW REQUIRED`; **only owner** may mark `ACCEPTED` after evidence review.
 
 | Milestone | Status | Evidence / artifacts | Next action |
 |---|---|---|---|
 | M0 Foundations | REVIEW REQUIRED | `results/M0_foundation/validation_report.md`, `MILESTONE_REVIEW.md`; 41 tests pass locally and in CI | Owner review and ADR-007 approval (CI green: run 41572684248) |
-| M1 Dataset audit | NOT STARTED | Published Zenodo link only; no archive downloaded | Perform safe M1 acquisition and parse |
+| M1 Dataset audit | REVIEW REQUIRED | `results/M1_20261103T034431Z_b050b36-dirty_33c0ba5b/` (validation_report, MILESTONE_REVIEW); 330/330 parsed, ledger empty; 93 tests | Owner review; push and confirm CI |
 | M2 Chemometric baselines | NOT STARTED | None | Await M1 acceptance |
 | M3 LOAO benchmark | NOT STARTED | None | Await M2 acceptance |
 | M4 OT replication | NOT STARTED | Published paper numbers, not our results | Await M3 acceptance |
@@ -76,3 +76,14 @@ Acceptance tests (IDs / PASS, FAIL, NOT RUN): T002-T006 NOT RUN.
 Risks / open questions: ADR-008 approval; dataset license; zip MD5 unverifiable (ADR-009); Chinese NFC/NFD + full-width colon in paths; negative intensities need a documented preprocessing decision in M2.
 Owner signoff: pending
 Next milestone (only after ACCEPTED): M1 implementation (parser, manifest, QC figures).
+
+### 2026-11-02 — M1 — REVIEW REQUIRED
+Owner / agent: Mia Ho (blanket delegation: "follow the .md steps, I trust your decisions, prioritize shipping") / Claude Code
+Scope attempted: CP-101..CP-107. Files changed: `src/chemiproof/data/{parser,labels,manifest,zipsafe}.py`, `spectra/{qc,visualize}.py`, `pipeline.py` (`load_dataset` real), `cli.py`, tests (unit + integration + `-m dataset`), `pyproject.toml`/`constraints.txt` (matplotlib), `.gitignore`, license registry, ADR-008/009/010.
+Actual commands + exit codes: see `results/M1_20261103T034431Z_b050b36-dirty_33c0ba5b/validation_report.md` (audit exit 0; pytest 90 passed exit 0; dataset tests 3 passed exit 0; ruff exit 0).
+Measured results: data facts only: 330 spectra, 60/60/90/90/30, 35x270 grid, 0 NaN, 0 duplicates, 22,982 negative cells in 330/330 files. Model metrics: NONE.
+Artifact paths + checksums: manifest sha256 `31c718edd95b4faca5f0f3fe68871870dc6f1b5d2307a8af93e8ce3712765495`; run `20261103T034431Z_b050b36-dirty_33c0ba5b`.
+Acceptance tests: T001-T006 PASS (T003 limitation: MD5 unverified; T002 on synthetic zips); T007+ NOT RUN; CI for M1 commits NOT RUN.
+Risks / open questions: ADR-008 direction evidence (documentary + spectral; 3 weak OliVera pairs); MD5; negative intensities (M2); brand confounding.
+Owner signoff: pending
+Next milestone (only after ACCEPTED): M2

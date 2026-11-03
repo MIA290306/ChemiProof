@@ -23,9 +23,9 @@ Supports: replication reference. **Check whether this repo contains a license be
 
 ## Rights checklist — MUST complete at M1/M7
 
-- [ ] Record exact Zenodo dataset license name/identifier visible in **record metadata**. (The public page fetched during planning did not expose a usable value under Rights; **do not assume CC BY simply because it is a Zenodo default**.)
-- [ ] Check allowed derivative work and redistribution; if ambiguous, keep **all raw/derived data** local and share only code plus independently created small synthetic fixtures.
-- [ ] Record license/permissions on original GitHub repo. If license missing, do not copy-paste code wholesale or redistribute fragments; develop independent implementation referencing paper/methodology.
+- [x] Zenodo dataset license, read from the record's machine-readable metadata (`https://zenodo.org/api/records/19755088`, queried 2026-11-02): `license.id = cc-by-4.0`, `access_right = open`. (The HTML page does not show it; the API does.) Attribution is required.
+- [x] CC BY 4.0 permits redistribution/derivatives with attribution, but project policy (CLAUDE.md invariant 10, ADR-003) stays: raw data and data-derived figures are **not committed**; only code, synthetic fixtures and small audit summaries are tracked. Re-evaluate at M7 with the owner.
+- [x] Authors' repo `Zhanjun-Li/fluorescence_NonLinear`: GitHub API (queried 2026-11-02) reports `license: null`, size 11 KB, no description. **No license = all rights reserved**: do not copy code; read only to confirm method details (M2/M4) and reimplement independently; cite it.
 - [ ] Record paper's content/image license before reusing figures; create your own figures by running experiments where possible.
 - [ ] Choose license for **ChemiProof original code** and keep upstream software and dataset licensing separate.
 - [ ] Cite original researchers/DOI prominently in README, results and scientific report. Credit is required even if redistribution is not used.
@@ -36,7 +36,7 @@ Supports: replication reference. **Check whether this repo contains a license be
 | Claim | Evidence status | Safe public wording |
 |---|---|---|
 | 2026 authors reported OT-SVR mean R² 0.965 in LOAO | published | `The authors reported...` + DOI |
-| Dataset contains 330 spectra | published; verify archive in M1 | `The published dataset describes 330 spectra...` |
+| Dataset contains 330 spectra | published; **audited in M1: 330 `.dat` parsed, 60/60/90/90/30, no discrepancies** (our measurement of the owner-provided extracted copy, run `data_audit.json`) | `We parsed 330 spectra from Zenodo 10.5281/zenodo.19755088` |
 | ChemiProof reproduces R²=0.965 | **NOT VERIFIED** | Do not say until actual replication results |
 | ChemiProof detects fraud in marketplace products | **NOT VERIFIED** | Do not claim |
 | 90% interval is guaranteed on novel oils | **NOT SUPPORTED** | Say `empirical coverage on the tested folds` if measured |

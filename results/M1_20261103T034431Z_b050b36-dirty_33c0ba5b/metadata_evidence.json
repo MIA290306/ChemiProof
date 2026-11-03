@@ -1,0 +1,23 @@
+{
+  "olive_fraction": {
+    "rule": "folder 'a：b' (full-width colon) = olive:adulterant parts by volume; a+b==11; y=a/11",
+    "source": "Zenodo 19755088 description: 'olive-oil volume fractions 9.09% to 90.91%', 'olive-oil-to-adulterant ratio'",
+    "supporting": "chlorophyll-band probe (audit.json: chlorophyll_probe); decision ADR-008"
+  },
+  "adulterant_type_and_evoo_brand": {
+    "rule": "exact Chinese folder-name fragments -> labels (chemiproof.data.labels)",
+    "source": "article Table 2 as recorded in docs/science/03_DATA_CONTRACT.md (Earl Grey=伯爵, Luhua=鲁花, OliVera=欧丽薇兰); observed counts agree"
+  },
+  "measurement_round": {
+    "rule": "folder 第一/二/三轮 -> 1/2/3",
+    "source": "folder name"
+  },
+  "replicate_id": {
+    "rule": "left empty",
+    "source": "round->replicate equivalence is not proven"
+  },
+  "excitation_axis": {
+    "rule": "file order descending 640->300 nm; reordered ascending by one explicit rule",
+    "source": "parser.py; source order recorded per row"
+  }
+}

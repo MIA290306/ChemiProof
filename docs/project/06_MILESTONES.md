@@ -40,15 +40,15 @@
 **Scientific purpose:** establish that labels and wavelengths match measurements before learning chemistry from numbers.
 
 **Tasks**
-- [ ] Download official Zenodo archive locally; checksum and permission review; safe ZIP inspection.
-- [ ] Inspect representative actual `.dat` across oil groups, ratio directories, brands/rounds; document discovered columns/orientation.
-- [ ] Implement safe parser with actual schema, monotonic axes, stable ID, checksum, validation.
-- [ ] Generate manifest with `adulterant_type`, exact `olive_fraction`, `evoo_brand` only when grounded, replicate information, measurement round and evidence source.
-- [ ] Reconcile published totals: soybean 60, peanut 60, rapeseed 90, corn 90, walnut 30; total 330.
-- [ ] Verify 10 concentration levels and 3 reps per valid brand×group×level; report any exceptions.
-- [ ] Inspect unexpected duplicates, NaN/Inf, negative intensity, constant spectra, axis mismatch, file count deviations.
-- [ ] Plot at least 5 real spectra/EEM heatmaps with captions naming actual sample ID and units.
-- [ ] Test parser on malformed fixtures, archive traversal protection, wrong labels, corrupted .dat.
+- [x] Data obtained by owner as an extracted folder (no zip; ADR-009); permission review done (CC BY 4.0 dataset, unlicensed author code); safe ZIP inspection implemented and tested on synthetic malicious archives (real zip not available; MD5 NOT CHECKED).
+- [x] Inspect representative actual `.dat` across oil groups, ratio directories, brands/rounds; document discovered columns/orientation.
+- [x] Implement safe parser with actual schema, monotonic axes, stable ID, checksum, validation.
+- [x] Generate manifest with `adulterant_type`, exact `olive_fraction`, `evoo_brand` only when grounded, replicate information, measurement round and evidence source.
+- [x] Reconcile published totals (330 = 60/60/90/90/30, no discrepancy): soybean 60, peanut 60, rapeseed 90, corn 90, walnut 30; total 330.
+- [x] Verify 10 concentration levels (10 levels x 3 rounds in every brand x adulterant cell; ledger empty) and 3 reps per valid brand×group×level; report any exceptions.
+- [x] Inspect unexpected duplicates (0 duplicate hashes, 0 NaN/Inf, 0 constant; negatives in all files -> WARN), NaN/Inf, negative intensity, constant spectra, axis mismatch, file count deviations.
+- [x] Plot at least 5 real (10 EEMs, `eem_examples.png`) spectra/EEM heatmaps with captions naming actual sample ID and units.
+- [x] Test parser on malformed fixtures, archive traversal protection, wrong labels, corrupted .dat.
 
 **Artifacts:** audit metadata + checksum; `data/interim/sample_manifest.csv`, QA report, EEM figure gallery, parser tests, licensing decision.
 

@@ -1,0 +1,212 @@
+{
+  "total_records": 330,
+  "expected_total": 330,
+  "by_adulterant": {
+    "soybean": {
+      "observed": 60,
+      "expected": 60
+    },
+    "peanut": {
+      "observed": 60,
+      "expected": 60
+    },
+    "rapeseed": {
+      "observed": 90,
+      "expected": 90
+    },
+    "corn": {
+      "observed": 90,
+      "expected": 90
+    },
+    "walnut": {
+      "observed": 30,
+      "expected": 30
+    }
+  },
+  "brand_by_adulterant": {
+    "corn": {
+      "earl_grey": 30,
+      "olivera": 30,
+      "luhua": 30
+    },
+    "peanut": {
+      "olivera": 30,
+      "luhua": 30
+    },
+    "rapeseed": {
+      "earl_grey": 30,
+      "olivera": 30,
+      "luhua": 30
+    },
+    "soybean": {
+      "olivera": 30,
+      "luhua": 30
+    },
+    "walnut": {
+      "luhua": 30
+    }
+  },
+  "ratio_levels": [
+    "10：1",
+    "1：10",
+    "2：9",
+    "3：8",
+    "4：7",
+    "5：6",
+    "6：5",
+    "7：4",
+    "8：3",
+    "9：2"
+  ],
+  "olive_fraction_range": [
+    0.09090909090909091,
+    0.9090909090909091
+  ],
+  "qc_status": {
+    "WARN": 330
+  },
+  "qc_flags": {
+    "NEGATIVE_INTENSITY": 330
+  },
+  "negative_cells_total": 22982,
+  "intensity_min": -22.3666,
+  "intensity_max": 10617.7,
+  "distinct_axes": 1,
+  "source_excitation_order": {
+    "descending": 330
+  },
+  "normalization_factors": {
+    "1.0": 330
+  },
+  "dat_file_names": {
+    "0_RM.dat": 314,
+    "0.dat": 16
+  },
+  "duplicate_hashes": 0,
+  "extra_non_dat_files": 1328,
+  "extra_non_dat_by_suffix": {
+    ".txt": 668,
+    ".jpg": 330,
+    ".spc": 330
+  },
+  "extra_duplicate_copy_files": [
+    "欧丽薇兰特级初榨混福临门大豆油/第一轮/2：9/EzspecCompatible_0_RM (1).txt",
+    "欧丽薇兰特级初榨混福临门大豆油/第一轮/2：9/TableHeaderData_0_RM (1).txt",
+    "欧丽薇兰特级初榨混福临门大豆油/第一轮/3：8/EzspecCompatible_0_RM (1).txt",
+    "欧丽薇兰特级初榨混福临门大豆油/第一轮/3：8/TableHeaderData_0_RM (1).txt",
+    "欧丽薇兰特级初榨混福临门大豆油/第一轮/4：7/EzspecCompatible_0 (1).txt",
+    "欧丽薇兰特级初榨混福临门大豆油/第一轮/4：7/TableHeaderData_0 (1).txt",
+    "欧丽薇兰特级初榨混福临门大豆油/第一轮/5：6/EzspecCompatible_0 (1).txt",
+    "欧丽薇兰特级初榨混福临门大豆油/第一轮/5：6/TableHeaderData_0 (1).txt"
+  ],
+  "problems": [],
+  "discrepancy_ledger": [],
+  "parser_version": "1.0.0",
+  "run_id": "20261103T034431Z_b050b36-dirty_33c0ba5b",
+  "manifest_sha256": "31c718edd95b4faca5f0f3fe68871870dc6f1b5d2307a8af93e8ce3712765495",
+  "manifest_fingerprint": "fef41ed419f86da5c6b504306bd90bf525fa0ec6abe31e492758fdd3396bae2c",
+  "source_doi": "10.5281/zenodo.19755088",
+  "environment": {
+    "python": "3.12.15",
+    "platform": "macOS-26.5.1-arm64-arm-64bit",
+    "machine": "arm64",
+    "packages": {
+      "numpy": "2.5.4",
+      "scipy": "not-installed",
+      "scikit-learn": "not-installed",
+      "pydantic": "2.14.2",
+      "PyYAML": "6.0.3",
+      "chemiproof": "0.0.1"
+    }
+  },
+  "chlorophyll_probe": [
+    {
+      "evoo_brand": "earl_grey",
+      "adulterant_type": "corn",
+      "spearman_olive_fraction_vs_band": 0.964,
+      "band_mean_at_min_olive": 2961.6,
+      "band_mean_at_max_olive": 6073.1,
+      "unit": "Counts/uA (mean over band)"
+    },
+    {
+      "evoo_brand": "earl_grey",
+      "adulterant_type": "rapeseed",
+      "spearman_olive_fraction_vs_band": 0.988,
+      "band_mean_at_min_olive": 5498.2,
+      "band_mean_at_max_olive": 6029.8,
+      "unit": "Counts/uA (mean over band)"
+    },
+    {
+      "evoo_brand": "luhua",
+      "adulterant_type": "corn",
+      "spearman_olive_fraction_vs_band": 1.0,
+      "band_mean_at_min_olive": 3290.0,
+      "band_mean_at_max_olive": 6352.8,
+      "unit": "Counts/uA (mean over band)"
+    },
+    {
+      "evoo_brand": "luhua",
+      "adulterant_type": "peanut",
+      "spearman_olive_fraction_vs_band": 1.0,
+      "band_mean_at_min_olive": 3604.9,
+      "band_mean_at_max_olive": 6386.1,
+      "unit": "Counts/uA (mean over band)"
+    },
+    {
+      "evoo_brand": "luhua",
+      "adulterant_type": "rapeseed",
+      "spearman_olive_fraction_vs_band": 1.0,
+      "band_mean_at_min_olive": 5633.2,
+      "band_mean_at_max_olive": 6191.4,
+      "unit": "Counts/uA (mean over band)"
+    },
+    {
+      "evoo_brand": "luhua",
+      "adulterant_type": "soybean",
+      "spearman_olive_fraction_vs_band": 0.903,
+      "band_mean_at_min_olive": 4258.4,
+      "band_mean_at_max_olive": 6671.5,
+      "unit": "Counts/uA (mean over band)"
+    },
+    {
+      "evoo_brand": "luhua",
+      "adulterant_type": "walnut",
+      "spearman_olive_fraction_vs_band": 0.988,
+      "band_mean_at_min_olive": 3659.7,
+      "band_mean_at_max_olive": 6224.1,
+      "unit": "Counts/uA (mean over band)"
+    },
+    {
+      "evoo_brand": "olivera",
+      "adulterant_type": "corn",
+      "spearman_olive_fraction_vs_band": 0.309,
+      "band_mean_at_min_olive": 4448.7,
+      "band_mean_at_max_olive": 6527.7,
+      "unit": "Counts/uA (mean over band)"
+    },
+    {
+      "evoo_brand": "olivera",
+      "adulterant_type": "peanut",
+      "spearman_olive_fraction_vs_band": 0.394,
+      "band_mean_at_min_olive": 4417.5,
+      "band_mean_at_max_olive": 5763.7,
+      "unit": "Counts/uA (mean over band)"
+    },
+    {
+      "evoo_brand": "olivera",
+      "adulterant_type": "rapeseed",
+      "spearman_olive_fraction_vs_band": 0.818,
+      "band_mean_at_min_olive": 5617.0,
+      "band_mean_at_max_olive": 5870.2,
+      "unit": "Counts/uA (mean over band)"
+    },
+    {
+      "evoo_brand": "olivera",
+      "adulterant_type": "soybean",
+      "spearman_olive_fraction_vs_band": -0.042,
+      "band_mean_at_min_olive": 5493.7,
+      "band_mean_at_max_olive": 5882.9,
+      "unit": "Counts/uA (mean over band)"
+    }
+  ]
+}
