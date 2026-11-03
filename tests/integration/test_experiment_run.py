@@ -175,12 +175,16 @@ def test_unknown_preprocessing_version_refused(synthetic_world, tmp_path, capsys
 
 
 def test_loao_without_data_reports_dataset_not_available(repo, tmp_path, capsys):
+    cfg = yaml.safe_load((repo / "config/experiments/baseline.yaml").read_text())
+    cfg["run_class"] = "exploratory"  # keep this test independent of the git tree state
+    cfg_path = tmp_path / "c.yaml"
+    cfg_path.write_text(yaml.safe_dump(cfg))
     rc = main(
         [
             "experiment",
             "run",
             "--config",
-            str(repo / "config/experiments/baseline.yaml"),
+            str(cfg_path),
             "--data-dir",
             str(tmp_path / "nodata"),
             "--output-root",

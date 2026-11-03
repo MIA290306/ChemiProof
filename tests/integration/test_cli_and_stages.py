@@ -68,20 +68,17 @@ def test_audit_command_on_synthetic_tree_flags_discrepancies(tmp_path, capsys):
 
 
 def test_experiment_run_validates_config_first_then_needs_dataset(repo, tmp_path, capsys):
+    import yaml
+
     bad = tmp_path / "b.yaml"
     bad.write_text("mode: magic\n")
     assert main(["experiment", "run", "--config", str(bad)]) == EXIT_ERROR
     assert "INVALID_CONFIG" in capsys.readouterr().err
-    rc = main(
-        [
-            "experiment",
-            "run",
-            "--config",
-            str(repo / "config/experiments/baseline.yaml"),
-            "--data-dir",
-            str(tmp_path / "nodata"),
-        ]
-    )
+    cfg = yaml.safe_load((repo / "config/experiments/baseline.yaml").read_text())
+    cfg["run_class"] = "exploratory"  # independent of the git tree state
+    good = tmp_path / "g.yaml"
+    good.write_text(yaml.safe_dump(cfg))
+    rc = main(["experiment", "run", "--config", str(good), "--data-dir", str(tmp_path / "nodata")])
     assert rc == EXIT_ERROR and "DATASET_NOT_AVAILABLE" in capsys.readouterr().err
 
 
