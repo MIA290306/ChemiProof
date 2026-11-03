@@ -1,0 +1,29 @@
+# Raw third-party data: never commit (see CLAUDE.md invariant 10, data/README.md)
+data/raw/
+*.dat
+*.zip
+
+# Python / environments
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+
+# Secrets / local config
+.env
+.env.*
+
+# macOS / editors
+.DS_Store
+.idea/
+.vscode/
+
+# Large generated artifacts: only small reviewed CSV/JSON get force-added (see results/README.md)
+results/*
+!results/README.md

@@ -1,0 +1,26 @@
+# M4 planned config. Do not run before M1-M3 validation.
+experiment_id: chemiproof-ot-loao
+status: NOT_RUN
+random_seed: 20261024
+mode: transductive_batch
+dataset_manifest: data/interim/sample_manifest.csv
+outer_cv: leave_one_adulterant_out
+allowed_target_information: unlabeled_X_only
+forbidden_target_information: [y, labels_for_tuning, labels_for_calibration]
+preprocessing:
+  use_validated_m2_pipeline: true
+optimal_transport:
+  method: entropic_sinkhorn_barycentric_projection
+  epsilon_paper_reported: 0.1
+  max_iterations_paper_reported: 1000
+  tolerance: TBD_VERIFY_FROM_AUTHOR_CODE
+  cost_scaling: TBD_VERIFY_FROM_AUTHOR_CODE
+svr:
+  kernel: poly
+  degree_paper_reported: 3
+  C_paper_reported: 1.0
+  epsilon_paper_reported: 0.1
+  gamma_paper_reported: scale
+  label_scale: TBD_VERIFY_BEFORE_USE
+metrics: [mae, rmse, bias, r2]
+outputs: results/

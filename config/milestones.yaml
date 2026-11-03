@@ -1,0 +1,45 @@
+# Machine-readable milestone plan. Treat docs/project/06_MILESTONES.md as full source of truth.
+version: 1
+owner: Mia Ho
+status_enum: [NOT_STARTED, IN_PROGRESS, BLOCKED, REVIEW_REQUIRED, ACCEPTED]
+milestones:
+  - id: M0
+    name: Foundation
+    status: NOT_STARTED
+    prerequisites: []
+    exit: [reproducible_env, synthetic_unit_tests_pass, lint_pass, no_raw_data_in_git]
+  - id: M1
+    name: Data_Audit
+    status: NOT_STARTED
+    prerequisites: [M0]
+    exit: [source_checksum_verified, native_dat_schema_confirmed, y_labels_verified, group_inventory_audited, parser_tests_pass]
+  - id: M2
+    name: Baselines
+    status: NOT_STARTED
+    prerequisites: [M1]
+    exit: [preprocess_audited, baselines_measured, no_fit_on_heldout_X]
+  - id: M3
+    name: LOAO_Evaluation
+    status: NOT_STARTED
+    prerequisites: [M2]
+    exit: [five_folds_scored, disjointness_proven, macro_and_pooled_reported, leakage_tests_pass]
+  - id: M4
+    name: OT_Replication
+    status: NOT_STARTED
+    prerequisites: [M3]
+    exit: [transductive_mode_enforced, OT_converged_or_failure_documented, comparison_reported]
+  - id: M5
+    name: Trustworthiness
+    status: NOT_STARTED
+    prerequisites: [M4]
+    exit: [thresholds_source_only, selective_risk_reported, empirical_coverage_reported, failure_cases_documented]
+  - id: M6
+    name: Research_UI
+    status: NOT_STARTED
+    prerequisites: [M5]
+    exit: [real_artifacts_rendered, malformed_files_refused, modes_separate, disclaimers_visible]
+  - id: M7
+    name: Release
+    status: NOT_STARTED
+    prerequisites: [M6]
+    exit: [clean_reproduction, source_rights_review, research_report, reviewer_signoff]

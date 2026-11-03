@@ -1,0 +1,21 @@
+# M2/M3 planned config. Must be validated by actual code; not an executed study.
+experiment_id: chemiproof-source-baselines
+status: NOT_RUN
+random_seed: 20261024
+mode: inductive
+label_unit: fraction
+dataset_manifest: data/interim/sample_manifest.csv
+outer_cv: leave_one_adulterant_out
+inner_cv: source_only_leave_one_group_out
+preprocessing:
+  orient_from_axes: true
+  baseline_correction: TBD_VERIFY_FROM_AUTHOR_CODE
+  savitzky_golay: TBD_VERIFY_FROM_AUTHOR_CODE
+  intensity_normalization: TBD_VERIFY_FROM_AUTHOR_CODE
+models:
+  - mean_y
+  - svr_raw
+  - pca_svr
+  - pls
+metrics: [mae, rmse, bias, r2]
+outputs: results/

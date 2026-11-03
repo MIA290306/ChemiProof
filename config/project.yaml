@@ -1,0 +1,31 @@
+# Planning configuration — schema to implement/validate during M0.
+project:
+  name: ChemiProof
+  owner: Mia Ho
+  stage: documentation_only
+  default_seed: 20261024
+  primary_target: olive_oil_volume_fraction
+  target_unit: fraction
+  accepted_range: [0.0, 1.0]
+source:
+  dataset_doi: 10.5281/zenodo.19755088
+  paper_doi: 10.1038/s41538-026-01037-6
+  source_data_file: data/raw/data.zip
+  published_md5: dfad908d186e584b96b6070d90cbeec4
+  redistribute_raw: false
+spectra:
+  excitation_channels: 35
+  emission_channels: 270
+  expected_features: 9450
+  # Recorded from article; validate actual input axes in M1 before use.
+  reported_excitation_range_nm: [300, 640]
+  reported_emission_range_nm: [300, 800]
+evaluation:
+  outer_split: leave_one_adulterant_out
+  adversarial_label_access: disallow
+  adulterants: [soybean, peanut, rapeseed, corn, walnut]
+  report_macro_and_pooled: true
+ui:
+  certified_authenticity_claims: false
+  allow_inductive_single_sample: true
+  allow_transductive_single_sample: false
