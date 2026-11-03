@@ -21,7 +21,7 @@
 *Refreshed 2026-11-03 after M5. The earlier list (unverified `.dat` schema, unchecked licenses, no benchmark results) was resolved by M1-M5; see the entries below.*
 
 1. Owner sign-off pending for M0-M5, for ADR-007 (PROPOSED) and for every ADR in `13_DECISION_LOG.md` whose signoff line still reads pending or review requested.
-2. Dataset archive MD5 not verifiable: the data arrived as an extracted folder (ADR-009).
+2. Dataset archive MD5 still not verified: the owner's copy was an extracted folder (ADR-009); the collaborator's copy (2026-11-03) has MD5 `450a6c64779a075b9ff0b49da6e359c2` / 96,854,833 bytes vs the published `dfad908d186e584b96b6070d90cbeec4` / 95,919,124 bytes (likely re-zipped on macOS: it contains `__MACOSX/`), although its 330 `.dat` files give the identical manifest sha256 `31c718ed...`.
 3. Licenses: dataset CC BY 4.0; authors' code has no license, so it is read-only reference only (ADR-010/011). Project code/data license for release still to be decided (M7).
 4. Brand/batch effect (soybean-olivera errors) described but not tested; OT batch-composition (label-skew) detector missing. Both need a new ADR (M5 open questions).
 5. M6 needs a final all-330-sample model (proposed PLS) declared in ADR-018 before training; it will have no independent evaluation.
@@ -168,4 +168,16 @@ Regression check added: `tests/unit/test_committed_results.py` (runs in CI, no d
 Actual commands + exit codes: `pytest -q tests/unit/test_committed_results.py` 7 passed; `pytest -q -m "not dataset"` 194 passed, 8 deselected; `ruff check .` and `ruff format --check .` clean.
 Measured results: NONE new (recomputation of existing numbers only).
 Risks / open questions: the audit cannot detect errors upstream of `predictions.csv` (parsing, preprocessing, model fitting) beyond code reading; re-running the locked configs on real data by a second person remains the stronger check. Dataset tests NOT RUN here.
+Owner signoff: pending
+
+### 2026-11-03 — Second-machine reproduction of M3-M5 (no milestone change) — DONE
+Owner / agent: Bruce1508 (collaborator) / Claude Code
+Scope attempted: rerun the locked M3, M4 and M5 configs on the collaborator's Mac from an independently downloaded copy of Zenodo 19755088, and compare with the committed runs. No code, config or protocol changed.
+Data: `data/raw/data.zip` 96,854,833 bytes, MD5 `450a6c64779a075b9ff0b49da6e359c2` (does NOT match the published `dfad908d...`; see blocker 2); `chemiproof dataset inspect-zip` exit 0 (4,066 members); extracted without `__MACOSX/` to `data/raw/extracted` (330 `.dat`). `chemiproof dataset audit` exit 0: manifest sha256 `31c718edd95b4faca5f0f3fe68871870dc6f1b5d2307a8af93e8ce3712765495` (identical to the owner's), 330 = 60/60/90/90/30, QC flags NEGATIVE_INTENSITY 330.
+Actual commands + exit codes: `pytest -q -m dataset` 8 passed, exit 0; `chemiproof experiment run --config config/experiments/baseline.yaml` exit 0 (run `20261103T071825Z_ac1dcfe_b1c2dfa1`); `... ot_transductive.yaml` exit 0 (`20261103T071848Z_ac1dcfe_363deee6`); `chemiproof experiment uncertainty --config config/experiments/uncertainty_loao.yaml` exit 0 (`20261103T071856Z_ac1dcfe_ac6bfcef`); all locked, git dirty=False, config sha256 identical to the committed runs (`2c427bf8...`, `417e41b5...`, `f93cfb4c...`).
+Comparison with the committed runs (every CSV, run_id column ignored): M4 byte-identical in all tables; M3 max numeric difference 2.3e-14 fraction, M5 7.2e-16 fraction, no non-numeric difference; M5 `usefulness.json` identical. Environment: Python 3.12.13 (owner 3.12.15), macOS 26.6.2 arm64, same numpy 2.5.4 / scipy 1.18.1 / scikit-learn 1.9.1.
+Measured results: NONE new; the published M3-M5 numbers reproduce on a second machine to floating-point round-off.
+Artifact paths: new run directories kept local (duplicates, not committed); rows appended to `results/experiment_registry.csv`.
+Acceptance tests: dataset tests PASS on a second machine; T001-T024 statuses unchanged.
+Risks / open questions: same OS family and library versions as the owner, so this does not test cross-platform or cross-version stability; published archive MD5 remains unverified.
 Owner signoff: pending
