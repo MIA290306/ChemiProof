@@ -13,15 +13,15 @@ Câu hỏi khoa học chính: khi gặp **một loại dầu pha trộn chưa t�
 
 | Milestone | Trạng thái | Ý nghĩa |
 |---|---|---|
-| M0 Nền tảng | REVIEW REQUIRED | Gói Python, CLI, config, CI |
-| M1 Kiểm tra dữ liệu | REVIEW REQUIRED | 330/330 file đọc được, nhãn `a/11`, bảng kiểm kê |
-| M2 Baseline hóa trắc học | REVIEW REQUIRED | SVR, PCA+SVR, PLS (chỉ nội bộ nguồn) |
-| M3 Benchmark LOAO | REVIEW REQUIRED | 5 fold ngoài, đóng băng giao thức `LOAO-v1` |
-| M4 Tái lập OT | REVIEW REQUIRED | Optimal transport (transductive), `LOAO-OT-v1` |
-| M5 Từ chối dự đoán và độ bền | REVIEW REQUIRED | `LOAO-UQ-v1` (ADR-017) |
-| M6 Giao diện nghiên cứu (Streamlit) | REVIEW REQUIRED | Explorer 6 trang + mô hình sàng lọc `FINAL-PLS-v1` (ADR-018), đã merge vào `main` (PR #3, 2026-11-03) |
+| M0 Nền tảng | ACCEPTED (Bruce, ADR-020) | Gói Python, CLI, config, CI |
+| M1 Kiểm tra dữ liệu | ACCEPTED (Bruce, ADR-020) | 330/330 file đọc được, nhãn `a/11`, bảng kiểm kê |
+| M2 Baseline hóa trắc học | ACCEPTED (Bruce, ADR-020) | SVR, PCA+SVR, PLS (chỉ nội bộ nguồn) |
+| M3 Benchmark LOAO | ACCEPTED (Bruce, ADR-020) | 5 fold ngoài, đóng băng giao thức `LOAO-v1` |
+| M4 Tái lập OT | ACCEPTED (Bruce, ADR-020) | Optimal transport (transductive), `LOAO-OT-v1` |
+| M5 Từ chối dự đoán và độ bền | ACCEPTED (Bruce, ADR-020) | `LOAO-UQ-v1` (ADR-017) |
+| M6 Giao diện nghiên cứu (Streamlit) | ACCEPTED (Bruce, ADR-020) | Explorer 6 trang + mô hình sàng lọc `FINAL-PLS-v1` (ADR-018), đã merge vào `main` (PR #3, 2026-11-03) |
 | M6.5 Power BI | CHƯA BẮT ĐẦU (chỉ có đặc tả) | Cần M5, M6 và máy Windows |
-| M7 Phát hành | REVIEW REQUIRED | Báo cáo nghiên cứu, model card, data card trong `docs/release/`; chạy lại sạch khớp hoàn toàn; chưa tag (chờ chọn license ADR-019 và người review bên ngoài) |
+| M7 Phát hành | ACCEPTED (Bruce, ADR-020) | Báo cáo nghiên cứu, model card, data card trong `docs/release/`; chạy lại sạch khớp hoàn toàn; chưa tag (chờ chọn license ADR-019 và người review bên ngoài) |
 
 "REVIEW REQUIRED" nghĩa là agent đã làm xong và có bằng chứng, **chỉ chủ dự án mới được đánh ACCEPTED**. Đừng tự đổi trạng thái này.
 
@@ -62,7 +62,7 @@ Các số đã công bố của tác giả (raw 0,831; PCA 0,693; OT 0,965) đư
 **Việc có thể nhận (chọn một, báo trước để không đụng nhau):**
 - Kiểm tra kết quả M3–M5 độc lập: đọc `validation_report.md` của từng run trong `results/` và tìm lỗi.
 - M5 còn dở: kiểm định hiệu ứng thương hiệu (lỗi lớn nằm ở soybean–olivera) và bộ phát hiện batch lệch nhãn cho OT. Cả hai cần ADR mới.
-- M7 đã có bản nháp. Còn thiếu: chủ dự án chọn license (ADR-019), một người review bên ngoài (giảng viên/mentor/QA) đọc `docs/release/RELEASE_REVIEW.md` mục 5, rồi mới tag `v1.0`.
+- Đã phát hành `v1.0.0` (2026-11-03): license MIT cho code, CC BY 4.0 cho tài liệu (ADR-019). Chưa có người review bên ngoài; bước này được miễn cho v1.0.0 (ADR-020). Nếu sau này có giảng viên/mentor review (`docs/release/RELEASE_REVIEW.md` mục 5), sửa lỗi ở bản vá.
 - Phần xuất dữ liệu cho Power BI (CP-651 đến 653) chạy được trên Mac, nhưng chỉ làm sau M5/M6 được duyệt. Dựng dashboard cần Windows.
 
 ## 6. Cách chạy lại trên máy bạn

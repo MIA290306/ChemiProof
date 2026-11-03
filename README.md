@@ -1,7 +1,7 @@
 # ChemiProof 🧪
 
 **Explainable & Uncertainty-Aware Olive-Oil Adulteration Research**  
-**Status: M0-M7 drafted and awaiting owner review; release NOT tagged** (needs the owner's license decision, ADR-019, and an external reviewer). Research report, model card and data card: [`docs/release/`](docs/release/). Every locked run reproduces from a fresh clone and environment.  
+**Status: `v1.0.0` research release (2026-11-03).** Research report, model card and data card: [`docs/release/`](docs/release/). Every locked run reproduces from a fresh clone and environment. **Not reviewed by an external scientist** (waived for this release, ADR-020).  
 **Owner:** Mia Ho (`MIA290306`) · **Created:** 2026-10-24
 
 ChemiProof is a reproducible **research prototype** for estimating **olive-oil volume fraction** from **excitation–emission matrix (EEM) fluorescence spectra** and evaluating when a predictive system ought to **abstain** under unfamiliar adulterant distributions.
@@ -82,7 +82,7 @@ chemiproof model train-final && chemiproof app # local research explorer
 
 - Dataset: Sun et al. (2026), Zenodo 10.5281/zenodo.19755088, **CC BY 4.0**. It is not redistributed here; raw spectra, data-derived figures and the trained model file are git-ignored.
 - Authors' code: no license (all rights reserved); read for method details only, nothing copied.
-- ChemiProof's own code and documents: **no license chosen yet**. A proposal (MIT for code, CC BY 4.0 for docs) awaits the owner's decision in ADR-019 ([`docs/project/13_DECISION_LOG.md`](docs/project/13_DECISION_LOG.md)). Until then, all rights reserved.
+- ChemiProof's code: **MIT** ([`LICENSE`](LICENSE)). Documentation and research report: **CC BY 4.0**. Decision: ADR-019 in [`docs/project/13_DECISION_LOG.md`](docs/project/13_DECISION_LOG.md).
 - Power BI layer: not delivered (M6.5 needs Windows; M7 does not depend on it).
 
 ## Roadmap

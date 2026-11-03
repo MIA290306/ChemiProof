@@ -2,8 +2,8 @@
 
 **Author:** Mia Ho (owner). Implementation and analysis: Claude Code (AI coding agent) for the owner and collaborator Bruce1508; see *Contributions*.
 **Data source DOI:** 10.5281/zenodo.19755088 (CC BY 4.0) · **Benchmark reference DOI:** 10.1038/s41538-026-01037-6
-**Report date:** 2026-11-03 · **Code:** branch `m7/release` (based on commit `27c6efb`) · **Runs:** listed in Appendix A
-**Status:** DRAFT, REVIEW REQUIRED. Not reviewed by an external scientist yet (see `docs/release/RELEASE_REVIEW.md`).
+**Report date:** 2026-11-03 · **Code:** `v1.0.0` · **Runs:** listed in Appendix A
+**Status:** released with ChemiProof `v1.0.0`. **Not reviewed by an external scientist** (waived for this release, ADR-020; review questions in `docs/release/RELEASE_REVIEW.md`). License: CC BY 4.0.
 
 > **Notice:** experimental screening software. Not a validated or certified regulatory food-authenticity method. Every number below is a ChemiProof measurement from a committed run unless it is explicitly labelled **published**.
 
@@ -155,13 +155,13 @@ The comparison with Sun et al. (2026) is therefore one of agreement on arithmeti
 
 | Item | Value |
 |---|---|
-| Code | branch `m7/release`; runs produced at the commits in their run IDs; release tag NOT created (needs reviewer signoff) |
+| Code | tag `v1.0.0`; runs produced at the commits in their run IDs |
 | Environment | original runs: Python 3.12.15, macOS 26.5.1 arm64 (owner's machine); clean reproduction: Python 3.12.13, macOS 26.6.2 arm64 (collaborator's machine); both numpy 2.5.4, scipy 1.18.1, scikit-learn 1.9.1; POT 0.9.7.post1 in the reproduction (POT's version is not recorded in run `environment.json`); all pins in `constraints.txt` |
 | Upstream dataset | Zenodo 19755088; published MD5 `dfad908d186e584b96b6070d90cbeec4` (NOT matched by our copy, see 4.1); manifest sha256 `31c718edd95b4faca5f0f3fe68871870dc6f1b5d2307a8af93e8ce3712765495` |
 | Preprocessing | `author_v1` (ADR-011), parameters in each run's `config_resolved.yaml` |
 | Splits | deterministic LOAO folds; `splits.csv` and `fold_manifest.csv` in each run |
 | Screening model | FINAL-PLS-v1, `model.npz` sha256 `bbcff343011aa4e7ac674f7151affd6f6cf164f09acd68557f0a05e47261aa4c` |
-| License decision | PROPOSED, owner decision pending (ADR-019) |
+| License | code MIT (`LICENSE`), report and docs CC BY 4.0 (ADR-019); dataset CC BY 4.0, not redistributed |
 
 | Run (results/...) | Protocol / mode | Config sha256 (prefix) |
 |---|---|---|

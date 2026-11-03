@@ -1,29 +1,29 @@
 # Milestone Progress / Evidence Ledger
 
 **Updated:** 2026-11-03  
-**Current overall state:** M0-M7 REVIEW REQUIRED (M7: release drafted and reproduced, not tagged); measured inductive, transductive (OT) and abstention/interval/robustness results exist; OT is conditional on batch composition; label-free abstention and source-calibrated intervals are NOT reliably useful on this benchmark; a local Streamlit explorer and an all-330 screening model (FINAL-PLS-v1, no independent test) exist. The owner asked on 2026-11-03 to continue without waiting for her formal ACCEPTED.  
+**Current overall state:** M0-M7 ACCEPTED by the owner's delegate (ADR-020, 2026-11-03); `v1.0.0` released without external review (waived, ADR-020); measured inductive, transductive (OT) and abstention/interval/robustness results exist; OT is conditional on batch composition; label-free abstention and source-calibrated intervals are NOT reliably useful on this benchmark; a local Streamlit explorer and an all-330 screening model (FINAL-PLS-v1, no independent test) exist. The owner asked on 2026-11-03 to continue without waiting for her formal ACCEPTED.  
 **Rule:** Agent may set `REVIEW REQUIRED`; **only owner** may mark `ACCEPTED` after evidence review.
 
 | Milestone | Status | Evidence / artifacts | Next action |
 |---|---|---|---|
-| M0 Foundations | REVIEW REQUIRED | `results/M0_foundation/validation_report.md`, `MILESTONE_REVIEW.md`; 41 tests pass locally and in CI | Owner review and ADR-007 approval (CI green: run 41572684248) |
-| M1 Dataset audit | REVIEW REQUIRED | `results/M1_20261103T034431Z_b050b36-dirty_33c0ba5b/` (validation_report, MILESTONE_REVIEW); 330/330 parsed, ledger empty; 93 tests | Owner review (CI green: run 41574366884) |
-| M2 Chemometric baselines | REVIEW REQUIRED | `results/M2_20261103T041143Z_ca43062_4097e86f/` (validation_report, MILESTONE_REVIEW); 124 tests; source-internal results exported | Owner review (CI green: run 41581270090) |
-| M3 LOAO benchmark | REVIEW REQUIRED | `results/M3_20261103T042740Z_01a9d42_b1c2dfa1/` (validation_report, MILESTONE_REVIEW); two locked runs + controls | Owner review (CI green: run 41581270090) |
-| M4 OT replication | REVIEW REQUIRED | `results/M4_20261103T044749Z_7129cde_363deee6/` (validation_report, MILESTONE_REVIEW); two locked runs + stress tests | Owner review (CI green: run 41581270090) |
-| M5 Abstention/robustness | REVIEW REQUIRED | `results/M5_20261103T054226Z_914e8ed_ac6bfcef/` (validation_report, MILESTONE_REVIEW); one locked run, largely unfavourable findings | Owner review of ADR-017 and results |
-| M6 Research UI | REVIEW REQUIRED | `results/M6_explorer_20261103/` (validation_report, MILESTONE_REVIEW); `results/M6_final_20261103T074605Z_ce2423b_82b39d6c/model_card.json`; 229 + 9 tests | Owner review of ADR-018 and a walkthrough |
+| M0 Foundations | ACCEPTED (delegate, ADR-020) | `results/M0_foundation/validation_report.md`, `MILESTONE_REVIEW.md`; 41 tests pass locally and in CI | Owner review and ADR-007 approval (CI green: run 41572684248) |
+| M1 Dataset audit | ACCEPTED (delegate, ADR-020) | `results/M1_20261103T034431Z_b050b36-dirty_33c0ba5b/` (validation_report, MILESTONE_REVIEW); 330/330 parsed, ledger empty; 93 tests | Owner review (CI green: run 41574366884) |
+| M2 Chemometric baselines | ACCEPTED (delegate, ADR-020) | `results/M2_20261103T041143Z_ca43062_4097e86f/` (validation_report, MILESTONE_REVIEW); 124 tests; source-internal results exported | Owner review (CI green: run 41581270090) |
+| M3 LOAO benchmark | ACCEPTED (delegate, ADR-020) | `results/M3_20261103T042740Z_01a9d42_b1c2dfa1/` (validation_report, MILESTONE_REVIEW); two locked runs + controls | Owner review (CI green: run 41581270090) |
+| M4 OT replication | ACCEPTED (delegate, ADR-020) | `results/M4_20261103T044749Z_7129cde_363deee6/` (validation_report, MILESTONE_REVIEW); two locked runs + stress tests | Owner review (CI green: run 41581270090) |
+| M5 Abstention/robustness | ACCEPTED (delegate, ADR-020) | `results/M5_20261103T054226Z_914e8ed_ac6bfcef/` (validation_report, MILESTONE_REVIEW); one locked run, largely unfavourable findings | Owner review of ADR-017 and results |
+| M6 Research UI | ACCEPTED (delegate, ADR-020) | `results/M6_explorer_20261103/` (validation_report, MILESTONE_REVIEW); `results/M6_final_20261103T074605Z_ce2423b_82b39d6c/model_card.json`; 229 + 9 tests | Owner review of ADR-018 and a walkthrough |
 | M6.5 Power BI quality-analytics layer (optional extension) | NOT STARTED | Specification only: `docs/bi/18_POWER_BI_SPEC.md`, `19_POWER_BI_DATA_MODEL.md`, `20_POWER_BI_ACCEPTANCE_TESTS.md`, `config/bi/export_contract.yaml`; no export code, no Power BI file | Await M5 and M6 acceptance and a Windows environment |
-| M7 Release | REVIEW REQUIRED | `results/M7_release_20261103/` (validation_report, MILESTONE_REVIEW); `docs/release/` report, model card, data card, release review; clean reproduction of every locked run matches | Owner license decision (ADR-019), external reviewer, then tag |
+| M7 Release | ACCEPTED (delegate, ADR-020) | `results/M7_release_20261103/` (validation_report, MILESTONE_REVIEW); `docs/release/` report, model card, data card, release review; clean reproduction of every locked run matches | Owner license decision (ADR-019), external reviewer, then tag |
 
 ## Current blockers / unknowns
 
 *Refreshed 2026-11-03 after M5. The earlier list (unverified `.dat` schema, unchecked licenses, no benchmark results) was resolved by M1-M5; see the entries below.*
 
-1. Owner sign-off pending for M0-M6 (the owner chose on 2026-11-03 to let work continue without it), for ADR-007 (PROPOSED) and for every ADR in `13_DECISION_LOG.md` whose signoff line still reads pending or review requested.
+1. Resolved 2026-11-03: M0-M7 accepted by Bruce1508 under the owner's delegated authority (ADR-020). ADRs whose signoff line still reads pending were not individually re-signed; ADR-020 covers the release.
 2. Dataset archive MD5 still not verified: the owner's copy was an extracted folder (ADR-009); the collaborator's copy (2026-11-03) has MD5 `450a6c64779a075b9ff0b49da6e359c2` / 96,854,833 bytes vs the published `dfad908d186e584b96b6070d90cbeec4` / 95,919,124 bytes (likely re-zipped on macOS: it contains `__MACOSX/`), although its 330 `.dat` files give the identical manifest sha256 `31c718ed...`.
-3. Licenses: dataset CC BY 4.0; authors' code has no license, so it is read-only reference only (ADR-010/011). ChemiProof's own license is PROPOSED in ADR-019 (MIT code, CC BY 4.0 docs) and needs the owner's decision.
-8. M7 release: no external reviewer yet and no tag; both block `v1.0` (`docs/release/RELEASE_REVIEW.md`).
+3. Licenses: dataset CC BY 4.0; authors' code has no license, so it is read-only reference only (ADR-010/011). ChemiProof's own license decided in ADR-019: MIT code (`LICENSE`), CC BY 4.0 docs.
+8. `v1.0.0` shipped without an external reviewer (waived, ADR-020); the review packet stays open for a later patch release.
 4. Brand/batch effect (soybean-olivera errors) described but not tested; OT batch-composition (label-skew) detector missing. Both need a new ADR (M5 open questions).
 5. The M6 screening model FINAL-PLS-v1 (ADR-018) has no independent evaluation, and the batch OT path (source = all 330) has never been evaluated.
 6. M6.5 dashboard work needs a Windows machine with Power BI Desktop; the owner works on macOS.
@@ -212,4 +212,13 @@ Acceptance tests: T021 PASS (clean rerun within tolerance); T022 PASS for datase
 Risks / open questions: same OS family and numerical-library versions as the original runs (cross-platform untested); POT version not recorded in run `environment.json`; published archive MD5 still unmatched; report not externally reviewed.
 Owner signoff: pending
 Next milestone (only after ACCEPTED): none; release tag after ADR-019 decision and reviewer signoff.
+
+### 2026-11-03 — M7 release v1.0.0 — ACCEPTED (owner's delegate)
+Owner / agent: Bruce1508 (full decision authority delegated by Mia Ho) / Claude Code
+Decisions: ADR-019 accepted (MIT code, copyright Mia Ho; CC BY 4.0 docs; result tables stay public; no real-data screenshots). ADR-020: external review waived for v1.0.0 only and stated publicly; M0-M7 marked ACCEPTED by the delegate.
+Files changed: `LICENSE` (new), `pyproject.toml` (version 1.0.0, license metadata), `src/chemiproof/__init__.py` (1.0.0), `README.md`, `docs/release/*`, ADR-019/020, `config/milestones.yaml`, this log, `docs/vi/TIEN_DO_HIEN_TAI_VI.md`.
+PR #4 review (3 Sonnet agents: code, tests, number fact-check): no finding at >= 80 % confidence; short-row crash in `compare` fixed and boundary test added (commit 8e30379); every number in the M7 documents recomputed from committed artifacts without discrepancy. CI green on 8e30379.
+Measured results: NONE new.
+Release: tag `v1.0.0` on `main` after PR #4 merges (see the GitHub release for the commit).
+Owner signoff: Bruce1508 (delegated), 2026-11-03
 
