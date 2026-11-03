@@ -71,7 +71,7 @@ Descriptive only: the adulterants were present in training, so this is not LOAO.
 | Synthetic benchmark learns; mean_y floor R2 about 0 | PASS | `test_synthetic_benchmark_...` |
 | Real-data run is structurally valid and deterministic | PASS | `tests/integration/test_real_dataset.py::test_m2_source_internal_run_on_real_data` |
 | T010, T012-T023 | NOT RUN | M3 onwards |
-| GitHub Actions for the M2 commits | NOT RUN | needs push |
+| GitHub Actions `ci` on head commit 6f878a6 (covers M2-M4) | PASS (run 41581270090, commit 6f878a6, https://github.com/MIA290306/ChemiProof/actions/runs/41581270090) | |
 
 ## Adverse observations and limitations
 

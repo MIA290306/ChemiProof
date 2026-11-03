@@ -17,7 +17,7 @@
 
 ## Executed verification
 
-pytest not-dataset 140 passed (exit 0); pytest dataset 6 passed (exit 0); ruff clean; both locked runs exit 0 with `git dirty=False`; control runs exit 0. T008, T010, T011, T024 PASS. GitHub Actions for M2/M3 commits: NOT RUN (not pushed yet).
+pytest not-dataset 140 passed (exit 0); pytest dataset 6 passed (exit 0); ruff clean; both locked runs exit 0 with `git dirty=False`; control runs exit 0. T008, T010, T011, T024 PASS. GitHub Actions `ci` for M2-M4 commits: PASS (run 41581270090, commit 6f878a6, https://github.com/MIA290306/ChemiProof/actions/runs/41581270090).
 
 ## Scientific results (measured; held-out adulterant, inductive)
 
@@ -34,5 +34,5 @@ All 330 samples, macro over 5 folds: mean_y MAE 22.73 pp / R2 -0.000; svr_raw 8.
 ## Recommendations and next action
 
 - Decision requested: review ADR-013 and the report; confirm that pca_svr's failure should stand as a reported negative result.
-- Conditions before M3 may be ACCEPTED: owner review; green CI on the pushed commits.
+- Conditions before M3 may be ACCEPTED: owner review; CI condition met: green run 41581270090.
 - Suggested next milestone AFTER approval: M4 (OT replication, transductive mode, clearly separated from these inductive numbers).

@@ -19,7 +19,7 @@
 
 ## Executed verification
 
-pytest not-dataset 158 passed (exit 0); pytest dataset 7 passed (exit 0); ruff clean; both locked runs exit 0 with `git dirty=False`; Sinkhorn converged in all 10 folds. T012, T013, T014, T015 PASS. GitHub Actions for the M2-M4 commits: NOT RUN (not pushed yet).
+pytest not-dataset 158 passed (exit 0); pytest dataset 7 passed (exit 0); ruff clean; both locked runs exit 0 with `git dirty=False`; Sinkhorn converged in all 10 folds. T012, T013, T014, T015 PASS. GitHub Actions `ci` for M2-M4 commits: PASS (run 41581270090, commit 6f878a6, https://github.com/MIA290306/ChemiProof/actions/runs/41581270090).
 
 ## Scientific results (measured; transductive unless stated)
 
@@ -37,5 +37,5 @@ All 330, macro over 5 held-out adulterants: ot_svr MAE 4.09 pp, R2 0.964; ot_svr
 ## Recommendations and next action
 
 - Decision requested: review ADR-014/015; confirm the wording that OT results are conditional on batch composition.
-- Conditions before M4 may be ACCEPTED: owner review; green CI on the pushed commits.
+- Conditions before M4 may be ACCEPTED: owner review; CI condition met: green run 41581270090.
 - Suggested next milestone AFTER approval: M5 (abstention / uncertainty; should include a batch-composition risk flag).

@@ -28,7 +28,7 @@
 
 ## Executed verification
 
-pytest (all) exit 0, 124 passed; ruff exit 0; run exit 0 with `git dirty=false`. T007, T008, T009, T011, T024 PASS. GitHub Actions for these commits: NOT RUN.
+pytest (all) exit 0, 124 passed; ruff exit 0; run exit 0 with `git dirty=false`. T007, T008, T009, T011, T024 PASS. GitHub Actions `ci` for these commits: PASS (run 41581270090, commit 6f878a6, https://github.com/MIA290306/ChemiProof/actions/runs/41581270090).
 
 ## Scientific results (if any)
 

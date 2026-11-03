@@ -8,9 +8,9 @@
 |---|---|---|---|
 | M0 Foundations | REVIEW REQUIRED | `results/M0_foundation/validation_report.md`, `MILESTONE_REVIEW.md`; 41 tests pass locally and in CI | Owner review and ADR-007 approval (CI green: run 41572684248) |
 | M1 Dataset audit | REVIEW REQUIRED | `results/M1_20261103T034431Z_b050b36-dirty_33c0ba5b/` (validation_report, MILESTONE_REVIEW); 330/330 parsed, ledger empty; 93 tests | Owner review (CI green: run 41574366884) |
-| M2 Chemometric baselines | REVIEW REQUIRED | `results/M2_20261103T041143Z_ca43062_4097e86f/` (validation_report, MILESTONE_REVIEW); 124 tests; source-internal results exported | Owner review; push and confirm CI |
-| M3 LOAO benchmark | REVIEW REQUIRED | `results/M3_20261103T042740Z_01a9d42_b1c2dfa1/` (validation_report, MILESTONE_REVIEW); two locked runs + controls | Owner review; push and confirm CI |
-| M4 OT replication | REVIEW REQUIRED | `results/M4_20261103T044749Z_7129cde_363deee6/` (validation_report, MILESTONE_REVIEW); two locked runs + stress tests | Owner review; push and confirm CI |
+| M2 Chemometric baselines | REVIEW REQUIRED | `results/M2_20261103T041143Z_ca43062_4097e86f/` (validation_report, MILESTONE_REVIEW); 124 tests; source-internal results exported | Owner review (CI green: run 41581270090) |
+| M3 LOAO benchmark | REVIEW REQUIRED | `results/M3_20261103T042740Z_01a9d42_b1c2dfa1/` (validation_report, MILESTONE_REVIEW); two locked runs + controls | Owner review (CI green: run 41581270090) |
+| M4 OT replication | REVIEW REQUIRED | `results/M4_20261103T044749Z_7129cde_363deee6/` (validation_report, MILESTONE_REVIEW); two locked runs + stress tests | Owner review (CI green: run 41581270090) |
 | M5 Abstention/robustness | NOT STARTED | None | Await M4 acceptance |
 | M6 Research UI | NOT STARTED | UX spec only | Await validated artifact |
 | M7 Release | NOT STARTED | Templates only | Await M6 acceptance |
@@ -94,7 +94,7 @@ Scope attempted: CP-201..CP-205. Files changed: `src/chemiproof/{spectra/preproc
 Actual commands + exit codes: see `results/M2_20261103T041143Z_ca43062_4097e86f/validation_report.md` (run exit 0, git dirty=false; pytest 124 passed exit 0; ruff exit 0).
 Measured results (source-internal leave-one-round-out, 3 folds x n=110; OPTIMISTIC, same adulterants in train; macro MAE in percentage points, R2): mean_y 22.73 pp / 0.000; svr_raw 5.10 pp / 0.947; pca_svr 7.09 pp / 0.903; pls 1.37 pp / 0.996. Not unseen-adulterant evidence.
 Artifact paths + checksums: `results/M2_20261103T041143Z_ca43062_4097e86f/`; config sha256 `5ddb4697c349f887...`; manifest sha256 `31c718edd95b4fac...`.
-Acceptance tests: T007, T008, T009, T011 (M2 protocol), T024 PASS; T010, T012-T023 NOT RUN; GitHub Actions for M2 commits NOT RUN.
+Acceptance tests: T007, T008, T009, T011 (M2 protocol), T024 PASS; T010, T012-T023 NOT RUN; GitHub Actions PASS (run 41581270090, commit 6f878a6).
 Risks / open questions: grids widened after first run (ADR-012: scores are exploratory-development numbers; M3 must freeze); PCA-SVR underperforms raw SVR (unexplained); round-as-replicate unproven; brand confounding.
 Owner signoff: pending
 Next milestone (only after ACCEPTED): M3
@@ -105,7 +105,7 @@ Scope attempted: CP-301..CP-305. Files changed: `evaluation/{protocols,runner,co
 Actual commands + exit codes: see `results/M3_20261103T042740Z_01a9d42_b1c2dfa1/validation_report.md` (two locked runs exit 0 with git dirty=False; controls exit 0; pytest 140 + 6 passed; ruff clean).
 Measured results (LOAO-v1, inductive, macro over 5 held-out adulterants; MAE in pp / R2): all-330: mean_y 22.73 / -0.000; svr_raw 8.37 / 0.831; pca_svr 16.55 / 0.019; pls 6.50 / 0.903. Luhua-only: svr_raw 0.859, pls 0.828, pca_svr 0.301. Permuted-label control: R2 <= 0 for all models.
 Artifact paths + checksums: `M3_20261103T042740Z_01a9d42_b1c2dfa1`, `M3_20261103T042759Z_01a9d42_2fbd19b6` (config sha256 `2c427bf82704fa93...`, `c98da7473d7088d3...`), manifest `31c718edd95b4fac...`; registry `results/experiment_registry.csv`.
-Acceptance tests: T008, T010, T011, T024 PASS; T012-T023 NOT RUN; GitHub Actions for M2/M3 commits NOT RUN.
+Acceptance tests: T008, T010, T011, T024 PASS; T012-T023 NOT RUN; GitHub Actions PASS (run 41581270090, commit 6f878a6).
 Risks / open questions: pca_svr failure unexplained; ranking instability; brand/adulterant confounding; only five folds.
 Owner signoff: pending
 Next milestone (only after ACCEPTED): M4
@@ -116,7 +116,7 @@ Scope attempted: CP-401..CP-405. Files changed: `modeling/ot.py` (independent Si
 Actual commands + exit codes: see `results/M4_20261103T044749Z_7129cde_363deee6/validation_report.md` (two locked runs exit 0, git dirty=False; stress tests exit 0; pytest 158 + 7 passed; ruff clean).
 Measured results (transductive LOAO-OT-v1, macro over 5 held-out adulterants; MAE pp / R2): all-330: ot_svr 4.09 / 0.964; ot_svr_pot 4.09 / 0.965; no-adaptation control (inductive) 8.37 / 0.831; unclipped author_pca50 -1.39, author_pca10 -2.49 (clipped 0.693 / 0.659). Luhua-only: ot_svr 0.977. Stress: label-skewed batches R2 about -3 for OT.
 Artifact paths + checksums: `M4_20261103T044749Z_7129cde_363deee6`, `M4_20261103T044812Z_7129cde_44fba4b8` (config sha256 `417e41b5b3029099...`, `70f0c2f5af843fb8...`), batch-sensitivity dirs, manifest `31c718edd95b4fac...`; registry `results/experiment_registry.csv`.
-Acceptance tests: T012, T013, T014, T015 PASS; T016-T023 NOT RUN; GitHub Actions for M2-M4 commits NOT RUN.
+Acceptance tests: T012, T013, T014, T015 PASS; T016-T023 NOT RUN; GitHub Actions PASS (run 41581270090, commit 6f878a6).
 Risks / open questions: OT conditional on batch composition and size; published PCA baselines reproduce only with clipping; per-fold published values not compared.
 Owner signoff: pending
 Next milestone (only after ACCEPTED): M5

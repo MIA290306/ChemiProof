@@ -185,4 +185,4 @@ The prediction written before the run (ADR-015) came true: when the unlabeled ba
 | T014 (marginals, mass, convergence recorded) | PASS | `tests/unit/test_ot.py`, `ot_diagnostics.csv` |
 | T015 (published numbers never appear as measured results) | PASS | `test_ot_run_end_to_end_...`; published values only under `published_reference_not_measured` |
 | T016-T023 | NOT RUN | M5 onwards |
-| GitHub Actions for the M2-M4 commits | NOT RUN | needs push |
+| GitHub Actions `ci` on head commit 6f878a6 (covers M2-M4) | PASS (run 41581270090, commit 6f878a6, https://github.com/MIA290306/ChemiProof/actions/runs/41581270090) | |

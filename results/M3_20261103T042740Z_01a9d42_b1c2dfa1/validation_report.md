@@ -159,4 +159,4 @@ Sun et al. 2026 report, over the same five LOAO systems: raw R2 0.831, PCA 0.693
 | T011 (shuffled held-out labels change nothing) | PASS | unit test + canary in both locked runs (leakage_audit.json) |
 | T024 (permuted source labels degrade) | PASS | synthetic test + real-data control above |
 | T012-T023 | NOT RUN | M4 onwards |
-| GitHub Actions for M2/M3 commits | NOT RUN | needs push |
+| GitHub Actions `ci` on head commit 6f878a6 (covers M2-M4) | PASS (run 41581270090, commit 6f878a6, https://github.com/MIA290306/ChemiProof/actions/runs/41581270090) | |
