@@ -2,6 +2,11 @@
 data/raw/
 *.dat
 *.zip
+*.spc
+# Everything under data/ is ignored except the policy README and labeled synthetic fixtures
+data/*
+!data/README.md
+!data/fixtures/
 
 # Python / environments
 .venv/

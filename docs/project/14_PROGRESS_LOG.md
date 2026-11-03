@@ -58,3 +58,21 @@ Acceptance tests (IDs / PASS, FAIL, NOT RUN): T001 PASS; T002-T024 NOT RUN (late
 Risks / open questions: ADR-007 needs owner approval; CP-006 example provenance artifact not produced; pre-commit hook not installed (owner may run `pre-commit install`).
 Owner signoff: pending
 Next milestone (only after ACCEPTED): M1
+
+### 2026-11-02 — M1 — IN PROGRESS (exploration only; no parser/manifest code yet)
+Owner / agent: Mia Ho / Claude Code
+Scope attempted: read-only path inventory and plain-text audit of the provided data (scripts kept outside the repo). Owner authorized starting M1 before formal ACCEPTED of M0 (M0 stays REVIEW REQUIRED until owner signs).
+Files changed: `.gitignore` (ignore all of `data/` except README and fixtures, plus `*.spc`), `config/project.yaml` (data dir, observed axes), ADR-008/009 in decision log. Data moved to `data/raw/extracted/` (gitignored).
+Actual commands + exit codes: path inventory (exit 0); `.dat` audit over 330 files (exit 0); chlorophyll probe (exit 0); Zenodo + paper page fetched via Firecrawl.
+Measured results (data facts, not model results):
+- 330 `.dat` files, 11 brand x adulterant folders x 3 rounds x 10 ratios; per-adulterant totals by folder-name reading: soybean 60, peanut 60, rapeseed 90, corn 90, walnut 30 (Chinese-name -> oil mapping is the agent's reading, still to be confirmed).
+- `.dat` = ASCII tab-separated: header `Sample` + 35 excitation values (640 -> 300 nm, descending), line `nm`, line `Normalized by 1.00`, then 270 rows of [emission nm, 35 intensities]. Emission 297.417 -> 802.484 nm (ascending), identical in all files; unit per header file `Counts/uA`.
+- 0 non-finite values, 0 constant spectra, 0 duplicate file hashes; all 330 files contain negative cells (22,982 cells total, min -22.37, max 10,617.7).
+- Anomalies: 16 files named `0.dat` instead of `0_RM.dat`; 4 folders hold extra `(1).txt` copies (one `.dat` each).
+- Label direction: see ADR-008 (documentary + supporting empirical evidence; not yet owner-approved).
+- License of the dataset NOT found on the fetched Zenodo page; the paper is CC BY 4.0. Dataset/author-code license remain UNVERIFIED (LICENSE_REVIEW_PENDING). Zenodo text says "submitted to Nature Food" whereas the paper is published in npj Science of Food (2026-08-05): metadata inconsistency to cite carefully.
+Artifact paths + checksums: none yet.
+Acceptance tests (IDs / PASS, FAIL, NOT RUN): T002-T006 NOT RUN.
+Risks / open questions: ADR-008 approval; dataset license; zip MD5 unverifiable (ADR-009); Chinese NFC/NFD + full-width colon in paths; negative intensities need a documented preprocessing decision in M2.
+Owner signoff: pending
+Next milestone (only after ACCEPTED): M1 implementation (parser, manifest, QC figures).

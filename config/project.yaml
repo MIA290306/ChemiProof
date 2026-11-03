@@ -10,7 +10,8 @@ project:
 source:
   dataset_doi: 10.5281/zenodo.19755088
   paper_doi: 10.1038/s41538-026-01037-6
-  source_data_file: data/raw/data.zip
+  source_data_file: data/raw/data.zip  # not available: macOS auto-extracted the download; no zip, MD5 unverifiable
+  source_data_dir: data/raw/extracted   # extracted copy provided by owner (gitignored)
   published_md5: dfad908d186e584b96b6070d90cbeec4
   redistribute_raw: false
 spectra:
@@ -20,6 +21,9 @@ spectra:
   # Recorded from article; validate actual input axes in M1 before use.
   reported_excitation_range_nm: [300, 640]
   reported_emission_range_nm: [300, 800]
+  # Observed in all 330 .dat files (M1 exploration, 2026-11-02); to be re-verified by the M1 parser:
+  observed_excitation_nm: {first: 640.0, last: 300.0, order: descending, n: 35}
+  observed_emission_nm: {first: 297.417, last: 802.484, order: ascending, n: 270}
 evaluation:
   outer_split: leave_one_adulterant_out
   adversarial_label_access: disallow
