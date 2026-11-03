@@ -7,9 +7,9 @@
 - Use isolated virtual environment and a **lockfile / frozen resolution**. The AI agent selects tools after checking up-to-date official package docs and records its choice in `docs/project/13_DECISION_LOG.md`.
 - Suggested libraries: NumPy, Pandas, SciPy, Scikit-learn, Plotly, Pytest, Ruff, Streamlit; POT for OT after M4. Keep optional packages optional until needed.
 
-## Bootstrapping (commands are a specification, not executed yet)
+## Bootstrapping
 
-After M0 has created `pyproject.toml` and environment definitions, agent should verify commands such as:
+These commands have been run since M0 (latest evidence: `docs/project/14_PROGRESS_LOG.md`). Python must satisfy `requires-python` in `pyproject.toml` (3.12):
 
 ```bash
 python3 --version
@@ -17,12 +17,12 @@ python3 -m venv .venv
 source .venv/bin/activate
 python -m pip install --upgrade pip
 python -m pip install -e '.[dev]'
-python -m pytest -q
+python -m pytest -q -m "not dataset"   # synthetic only, as in CI; real-data tests: -m dataset
 ruff check .
 python -m chemiproof.cli --help
 ```
 
-If project chooses `uv`, use resolved lockfile and equivalent commands instead; do **not** generate conflicting package managers. In a fresh repository, the latter commands are **not runnable until M0 scaffolding exists**.
+If project chooses `uv`, use resolved lockfile and equivalent commands instead; do **not** generate conflicting package managers.
 
 ## Proposed CLI contract (implemented incrementally)
 
