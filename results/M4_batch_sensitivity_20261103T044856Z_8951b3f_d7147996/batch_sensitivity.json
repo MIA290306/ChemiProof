@@ -1,0 +1,343 @@
+{
+  "experiment_id": "chemiproof-ot-loao-luhua-only",
+  "subset_brand": "luhua",
+  "sizes": [
+    10,
+    20
+  ],
+  "repeats": 5,
+  "note": "exploratory; metrics on the SUBSET batch; adaptation uses subset features only",
+  "warning": "TRANSDUCTIVE RESEARCH MODE: these predictions need a BATCH of unlabeled target spectra from the same unseen adulterant. Metrics from this mode must never be advertised as single-file (inductive) deployment performance.",
+  "folds": {
+    "LOAO-soybean": {
+      "random_10|ot_svr": {
+        "n_batches": 5,
+        "n_failed": 0,
+        "mae_fraction_mean": 0.06774640134052398,
+        "mae_fraction_max": 0.0833590681617697,
+        "r2_mean": 0.8858507654896994,
+        "r2_min": 0.8298342692757958
+      },
+      "random_10|svr_no_adaptation": {
+        "n_batches": 5,
+        "n_failed": 0,
+        "mae_fraction_mean": 0.041131778207362316,
+        "mae_fraction_max": 0.051421966604900636,
+        "r2_mean": 0.9634603515835728,
+        "r2_min": 0.9597473282571458
+      },
+      "random_20|ot_svr": {
+        "n_batches": 5,
+        "n_failed": 0,
+        "mae_fraction_mean": 0.04158794127226393,
+        "mae_fraction_max": 0.052876422174806516,
+        "r2_mean": 0.9609072915712028,
+        "r2_min": 0.9519613456652807
+      },
+      "random_20|svr_no_adaptation": {
+        "n_batches": 5,
+        "n_failed": 0,
+        "mae_fraction_mean": 0.04247355415250459,
+        "mae_fraction_max": 0.0448274842552161,
+        "r2_mean": 0.9628303518129808,
+        "r2_min": 0.947724560775773
+      },
+      "skew_low_olive|ot_svr": {
+        "n_batches": 1,
+        "n_failed": 0,
+        "mae_fraction_mean": 0.24612013779083602,
+        "mae_fraction_max": 0.24612013779083602,
+        "r2_mean": -3.9840352184439967,
+        "r2_min": -3.9840352184439967
+      },
+      "skew_low_olive|svr_no_adaptation": {
+        "n_batches": 1,
+        "n_failed": 0,
+        "mae_fraction_mean": 0.052391785868818395,
+        "mae_fraction_max": 0.052391785868818395,
+        "r2_mean": 0.8038242837287674,
+        "r2_min": 0.8038242837287674
+      },
+      "skew_high_olive|ot_svr": {
+        "n_batches": 1,
+        "n_failed": 0,
+        "mae_fraction_mean": 0.2040099348160305,
+        "mae_fraction_max": 0.2040099348160305,
+        "r2_mean": -2.135493268299168,
+        "r2_min": -2.135493268299168
+      },
+      "skew_high_olive|svr_no_adaptation": {
+        "n_batches": 1,
+        "n_failed": 0,
+        "mae_fraction_mean": 0.031075209299556397,
+        "mae_fraction_max": 0.031075209299556397,
+        "r2_mean": 0.9162323623944884,
+        "r2_min": 0.9162323623944884
+      }
+    },
+    "LOAO-peanut": {
+      "random_10|ot_svr": {
+        "n_batches": 5,
+        "n_failed": 0,
+        "mae_fraction_mean": 0.06539188701938983,
+        "mae_fraction_max": 0.09065562283717216,
+        "r2_mean": 0.8848423288577209,
+        "r2_min": 0.7502488056962903
+      },
+      "random_10|svr_no_adaptation": {
+        "n_batches": 5,
+        "n_failed": 0,
+        "mae_fraction_mean": 0.0747556353493943,
+        "mae_fraction_max": 0.07750520613252054,
+        "r2_mean": 0.8965966196426323,
+        "r2_min": 0.8567971743474051
+      },
+      "random_20|ot_svr": {
+        "n_batches": 5,
+        "n_failed": 0,
+        "mae_fraction_mean": 0.044529483594929274,
+        "mae_fraction_max": 0.0510756182063975,
+        "r2_mean": 0.9548205613349605,
+        "r2_min": 0.9314228785428776
+      },
+      "random_20|svr_no_adaptation": {
+        "n_batches": 5,
+        "n_failed": 0,
+        "mae_fraction_mean": 0.07029325103829907,
+        "mae_fraction_max": 0.07582601483178567,
+        "r2_mean": 0.9148312735359857,
+        "r2_min": 0.8732505670688202
+      },
+      "skew_low_olive|ot_svr": {
+        "n_batches": 1,
+        "n_failed": 0,
+        "mae_fraction_mean": 0.18828535097907523,
+        "mae_fraction_max": 0.18828535097907523,
+        "r2_mean": -2.50845104828494,
+        "r2_min": -2.50845104828494
+      },
+      "skew_low_olive|svr_no_adaptation": {
+        "n_batches": 1,
+        "n_failed": 0,
+        "mae_fraction_mean": 0.07119181361543489,
+        "mae_fraction_max": 0.07119181361543489,
+        "r2_mean": 0.6505895289188661,
+        "r2_min": 0.6505895289188661
+      },
+      "skew_high_olive|ot_svr": {
+        "n_batches": 1,
+        "n_failed": 0,
+        "mae_fraction_mean": 0.23721418797328878,
+        "mae_fraction_max": 0.23721418797328878,
+        "r2_mean": -2.972113327854459,
+        "r2_min": -2.972113327854459
+      },
+      "skew_high_olive|svr_no_adaptation": {
+        "n_batches": 1,
+        "n_failed": 0,
+        "mae_fraction_mean": 0.06945117693622829,
+        "mae_fraction_max": 0.06945117693622829,
+        "r2_mean": 0.6872048225666505,
+        "r2_min": 0.6872048225666505
+      }
+    },
+    "LOAO-rapeseed": {
+      "random_10|ot_svr": {
+        "n_batches": 5,
+        "n_failed": 0,
+        "mae_fraction_mean": 0.06203684188841678,
+        "mae_fraction_max": 0.07304952947402024,
+        "r2_mean": 0.9138913884790222,
+        "r2_min": 0.8721194611675374
+      },
+      "random_10|svr_no_adaptation": {
+        "n_batches": 5,
+        "n_failed": 0,
+        "mae_fraction_mean": 0.14139065174342774,
+        "mae_fraction_max": 0.1771410034681953,
+        "r2_mean": 0.3978898732439963,
+        "r2_min": 0.07423037913735997
+      },
+      "random_20|ot_svr": {
+        "n_batches": 5,
+        "n_failed": 0,
+        "mae_fraction_mean": 0.038925895122925706,
+        "mae_fraction_max": 0.04388898860562111,
+        "r2_mean": 0.9603977112787259,
+        "r2_min": 0.9392415846429231
+      },
+      "random_20|svr_no_adaptation": {
+        "n_batches": 5,
+        "n_failed": 0,
+        "mae_fraction_mean": 0.1461520448473159,
+        "mae_fraction_max": 0.15593036948995623,
+        "r2_mean": 0.4632245976903005,
+        "r2_min": 0.42554266572256483
+      },
+      "skew_low_olive|ot_svr": {
+        "n_batches": 1,
+        "n_failed": 0,
+        "mae_fraction_mean": 0.21823946232879857,
+        "mae_fraction_max": 0.21823946232879857,
+        "r2_mean": -3.493405384364652,
+        "r2_min": -3.493405384364652
+      },
+      "skew_low_olive|svr_no_adaptation": {
+        "n_batches": 1,
+        "n_failed": 0,
+        "mae_fraction_mean": 0.24270044927938866,
+        "mae_fraction_max": 0.24270044927938866,
+        "r2_mean": -3.011528712927098,
+        "r2_min": -3.011528712927098
+      },
+      "skew_high_olive|ot_svr": {
+        "n_batches": 1,
+        "n_failed": 0,
+        "mae_fraction_mean": 0.23351153265844546,
+        "mae_fraction_max": 0.23351153265844546,
+        "r2_mean": -3.0754785380828444,
+        "r2_min": -3.0754785380828444
+      },
+      "skew_high_olive|svr_no_adaptation": {
+        "n_batches": 1,
+        "n_failed": 0,
+        "mae_fraction_mean": 0.035504107747484484,
+        "mae_fraction_max": 0.035504107747484484,
+        "r2_mean": 0.8926311394218374,
+        "r2_min": 0.8926311394218374
+      }
+    },
+    "LOAO-corn": {
+      "random_10|ot_svr": {
+        "n_batches": 5,
+        "n_failed": 0,
+        "mae_fraction_mean": 0.06623711096742033,
+        "mae_fraction_max": 0.09124740473341324,
+        "r2_mean": 0.8895872336641373,
+        "r2_min": 0.7618903044717691
+      },
+      "random_10|svr_no_adaptation": {
+        "n_batches": 5,
+        "n_failed": 0,
+        "mae_fraction_mean": 0.06089190785421968,
+        "mae_fraction_max": 0.0670440915273922,
+        "r2_mean": 0.9289088863867294,
+        "r2_min": 0.9106395598714263
+      },
+      "random_20|ot_svr": {
+        "n_batches": 5,
+        "n_failed": 2,
+        "mae_fraction_mean": 0.039215164817016084,
+        "mae_fraction_max": 0.04331954953373466,
+        "r2_mean": 0.9708092539818391,
+        "r2_min": 0.9636365036943753
+      },
+      "random_20|svr_no_adaptation": {
+        "n_batches": 5,
+        "n_failed": 0,
+        "mae_fraction_mean": 0.05642112266777678,
+        "mae_fraction_max": 0.06543033340338963,
+        "r2_mean": 0.9403344501736178,
+        "r2_min": 0.9008682364426455
+      },
+      "skew_low_olive|ot_svr": {
+        "n_batches": 1,
+        "n_failed": 0,
+        "mae_fraction_mean": 0.2013119747316697,
+        "mae_fraction_max": 0.2013119747316697,
+        "r2_mean": -3.2945231424214088,
+        "r2_min": -3.2945231424214088
+      },
+      "skew_low_olive|svr_no_adaptation": {
+        "n_batches": 1,
+        "n_failed": 0,
+        "mae_fraction_mean": 0.04934444405356349,
+        "mae_fraction_max": 0.04934444405356349,
+        "r2_mean": 0.8259825810146578,
+        "r2_min": 0.8259825810146578
+      },
+      "skew_high_olive|ot_svr": {
+        "n_batches": 1,
+        "n_failed": 0,
+        "mae_fraction_mean": 0.2407143192172577,
+        "mae_fraction_max": 0.2407143192172577,
+        "r2_mean": -3.0890113181342667,
+        "r2_min": -3.0890113181342667
+      },
+      "skew_high_olive|svr_no_adaptation": {
+        "n_batches": 1,
+        "n_failed": 0,
+        "mae_fraction_mean": 0.06660810461279269,
+        "mae_fraction_max": 0.06660810461279269,
+        "r2_mean": 0.6963002772666897,
+        "r2_min": 0.6963002772666897
+      }
+    },
+    "LOAO-walnut": {
+      "random_10|ot_svr": {
+        "n_batches": 5,
+        "n_failed": 0,
+        "mae_fraction_mean": 0.07177975065997115,
+        "mae_fraction_max": 0.11020218516357957,
+        "r2_mean": 0.858593180672678,
+        "r2_min": 0.6967775256536495
+      },
+      "random_10|svr_no_adaptation": {
+        "n_batches": 5,
+        "n_failed": 0,
+        "mae_fraction_mean": 0.042027430151311156,
+        "mae_fraction_max": 0.05172807627339947,
+        "r2_mean": 0.9571522917670263,
+        "r2_min": 0.9361968059208945
+      },
+      "random_20|ot_svr": {
+        "n_batches": 5,
+        "n_failed": 0,
+        "mae_fraction_mean": 0.04178653315939918,
+        "mae_fraction_max": 0.06083901013025352,
+        "r2_mean": 0.9579246150165671,
+        "r2_min": 0.9404809309598665
+      },
+      "random_20|svr_no_adaptation": {
+        "n_batches": 5,
+        "n_failed": 0,
+        "mae_fraction_mean": 0.03748805670205394,
+        "mae_fraction_max": 0.044495078132560914,
+        "r2_mean": 0.9655671930221489,
+        "r2_min": 0.9417182381732799
+      },
+      "skew_low_olive|ot_svr": {
+        "n_batches": 1,
+        "n_failed": 0,
+        "mae_fraction_mean": 0.24591169658615467,
+        "mae_fraction_max": 0.24591169658615467,
+        "r2_mean": -4.537864054572654,
+        "r2_min": -4.537864054572654
+      },
+      "skew_low_olive|svr_no_adaptation": {
+        "n_batches": 1,
+        "n_failed": 0,
+        "mae_fraction_mean": 0.03174034610198523,
+        "mae_fraction_max": 0.03174034610198523,
+        "r2_mean": 0.924026159577869,
+        "r2_min": 0.924026159577869
+      },
+      "skew_high_olive|ot_svr": {
+        "n_batches": 1,
+        "n_failed": 0,
+        "mae_fraction_mean": 0.21313013455970914,
+        "mae_fraction_max": 0.21313013455970914,
+        "r2_mean": -2.864466835023612,
+        "r2_min": -2.864466835023612
+      },
+      "skew_high_olive|svr_no_adaptation": {
+        "n_batches": 1,
+        "n_failed": 0,
+        "mae_fraction_mean": 0.04510396506737959,
+        "mae_fraction_max": 0.04510396506737959,
+        "r2_mean": 0.8079504946563381,
+        "r2_min": 0.8079504946563381
+      }
+    }
+  }
+}

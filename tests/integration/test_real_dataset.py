@@ -158,3 +158,69 @@ def test_m3_loao_run_on_real_data(repo, tmp_path, subset):
         for d in dirs
     ]
     assert rows[0] == rows[1]
+
+
+def test_m4_ot_run_on_real_data_structure_convergence_and_determinism(repo, tmp_path):
+    """Added AFTER the locked OT runs (ADR-014): structural/numerical checks only."""
+    import csv
+    import json
+
+    import yaml
+
+    from chemiproof.cli import EXIT_OK, main
+
+    cfg = yaml.safe_load((repo / "config/experiments/ot_transductive.yaml").read_text())
+    cfg.update(
+        run_class="exploratory",
+        models=["ot_svr", "svr_no_adaptation"],
+        dataset_manifest=str(repo / "data/interim/sample_manifest.csv"),
+    )
+    p = tmp_path / "c.yaml"
+    p.write_text(yaml.safe_dump(cfg))
+    dirs = []
+    for name in ("a", "b"):
+        rc = main(
+            [
+                "experiment",
+                "run",
+                "--config",
+                str(p),
+                "--data-dir",
+                str(repo / "data/raw/extracted"),
+                "--output-root",
+                str(tmp_path / name),
+            ]
+        )
+        assert rc == EXIT_OK
+        (d,) = list((tmp_path / name).glob("M4_*"))
+        dirs.append(d)
+    diags = [
+        r for r in csv.DictReader((dirs[0] / "ot_diagnostics.csv").open()) if r["model"] == "ot_svr"
+    ]
+    assert len(diags) == 5 and all(r["converged"] == "True" for r in diags)
+    assert all(
+        abs(float(r["total_mass"]) - 1.0) < 1e-9 and float(r["col_marginal_sq_l2"]) < 1e-9
+        for r in diags
+    )
+    assert [(int(r["n_source"]), int(r["n_target"])) for r in diags] == [
+        (270, 60),
+        (270, 60),
+        (240, 90),
+        (240, 90),
+        (300, 30),
+    ]
+    s = json.loads((dirs[0] / "summary.json").read_text())
+    assert s["models"]["ot_svr"]["mode"] == "transductive_batch"
+    assert s["models"]["svr_no_adaptation"]["mode"] == "inductive"
+    assert "TRANSDUCTIVE" in s["transductive_warning"]
+    assert json.loads((dirs[0] / "leakage_audit.json").read_text())["label_shuffle_canary"][
+        "passed"
+    ]
+    rows = [
+        [
+            (r["sample_id"], r["model"], r["y_pred_fraction"])
+            for r in csv.DictReader((d / "predictions.csv").open())
+        ]
+        for d in dirs
+    ]
+    assert rows[0] == rows[1]

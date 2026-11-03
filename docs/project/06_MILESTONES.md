@@ -92,13 +92,13 @@
 **Scientific purpose:** evaluate how unlabeled target-batch adaptation changes unseen-adulterant regression.
 
 **Tasks**
-- [ ] Review original authors' code and paper, record exact OT cost, normalization, regularization (`ε=0.1` cited), tolerance/iteration settings, projection and SVR label scale.
-- [ ] Implement or appropriately depend on OT solver (e.g., Python Optimal Transport), log numerical convergence and transport mass checks.
-- [ ] Build source+unlabeled-target batch protocol. Enforce prohibition on target y in training and tuning at API/test level.
-- [ ] Verify source barycentric projection semantics and whether target feature representation is untouched (as in paper).
-- [ ] Run five LOAO comparisons, including source-only and author's reported benchmark (reference values visibly identified as external).
-- [ ] Provide discrepancies table and investigate baseline/reproduction mismatch systematically.
-- [ ] Add warning: transductive performance requires a batch and must not be advertised as one-file deployment.
+- [x] Review original authors' code and paper (read-only; ADR-011/014), record exact OT cost, normalization, regularization (`ε=0.1` cited), tolerance/iteration settings, projection and SVR label scale.
+- [x] Implement or appropriately depend on OT solver (independent log-domain Sinkhorn; POT variant for cross-check) (e.g., Python Optimal Transport), log numerical convergence and transport mass checks.
+- [x] Build source+unlabeled-target batch protocol (no target-label parameter anywhere; canary). Enforce prohibition on target y in training and tuning at API/test level.
+- [x] Verify source barycentric projection semantics (source projected onto the target batch; target features untouched) and whether target feature representation is untouched (as in paper).
+- [x] Run five LOAO comparisons (source-only control and published values, kept visibly separate), including source-only and author's reported benchmark (reference values visibly identified as external).
+- [x] Provide discrepancies table and investigate baseline/reproduction mismatch systematically.
+- [x] Add warning: transductive performance (report, summary, CLI errors) requires a batch and must not be advertised as one-file deployment.
 
 **Artifacts:** OT runner, convergence log, per-fold comparison, reproduction notes, method diagram.
 

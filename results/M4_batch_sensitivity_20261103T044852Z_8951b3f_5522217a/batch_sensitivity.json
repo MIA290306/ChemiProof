@@ -1,0 +1,503 @@
+{
+  "experiment_id": "chemiproof-ot-loao",
+  "subset_brand": null,
+  "sizes": [
+    10,
+    20
+  ],
+  "repeats": 5,
+  "note": "exploratory; metrics on the SUBSET batch; adaptation uses subset features only",
+  "warning": "TRANSDUCTIVE RESEARCH MODE: these predictions need a BATCH of unlabeled target spectra from the same unseen adulterant. Metrics from this mode must never be advertised as single-file (inductive) deployment performance.",
+  "folds": {
+    "LOAO-soybean": {
+      "random_10|ot_svr": {
+        "n_batches": 5,
+        "n_failed": 0,
+        "mae_fraction_mean": 0.07309434452733027,
+        "mae_fraction_max": 0.11455316217496384,
+        "r2_mean": 0.8843451029983905,
+        "r2_min": 0.7688797161046325
+      },
+      "random_10|svr_no_adaptation": {
+        "n_batches": 5,
+        "n_failed": 0,
+        "mae_fraction_mean": 0.09174149167849335,
+        "mae_fraction_max": 0.11179444511815721,
+        "r2_mean": 0.8088069032224338,
+        "r2_min": 0.7307033733506149
+      },
+      "random_20|ot_svr": {
+        "n_batches": 5,
+        "n_failed": 0,
+        "mae_fraction_mean": 0.06505465894657202,
+        "mae_fraction_max": 0.09601835504913152,
+        "r2_mean": 0.8675939130760542,
+        "r2_min": 0.6516973435067248
+      },
+      "random_20|svr_no_adaptation": {
+        "n_batches": 5,
+        "n_failed": 0,
+        "mae_fraction_mean": 0.09614025536557953,
+        "mae_fraction_max": 0.10860413222832625,
+        "r2_mean": 0.7092825977606655,
+        "r2_min": 0.4590558640006108
+      },
+      "brand_luhua|ot_svr": {
+        "n_batches": 1,
+        "n_failed": 0,
+        "mae_fraction_mean": 0.03032527037433289,
+        "mae_fraction_max": 0.03032527037433289,
+        "r2_mean": 0.9740772676538506,
+        "r2_min": 0.9740772676538506
+      },
+      "brand_luhua|svr_no_adaptation": {
+        "n_batches": 1,
+        "n_failed": 0,
+        "mae_fraction_mean": 0.04667499089946257,
+        "mae_fraction_max": 0.04667499089946257,
+        "r2_mean": 0.9599945640431047,
+        "r2_min": 0.9599945640431047
+      },
+      "brand_olivera|ot_svr": {
+        "n_batches": 1,
+        "n_failed": 0,
+        "mae_fraction_mean": 0.06198818252633007,
+        "mae_fraction_max": 0.06198818252633007,
+        "r2_mean": 0.9265407992779235,
+        "r2_min": 0.9265407992779235
+      },
+      "brand_olivera|svr_no_adaptation": {
+        "n_batches": 1,
+        "n_failed": 0,
+        "mae_fraction_mean": 0.1426992100128,
+        "mae_fraction_max": 0.1426992100128,
+        "r2_mean": 0.6255340165214829,
+        "r2_min": 0.6255340165214829
+      },
+      "skew_low_olive|ot_svr": {
+        "n_batches": 1,
+        "n_failed": 0,
+        "mae_fraction_mean": 0.23630449170915302,
+        "mae_fraction_max": 0.23630449170915302,
+        "r2_mean": -3.6584239638526785,
+        "r2_min": -3.6584239638526785
+      },
+      "skew_low_olive|svr_no_adaptation": {
+        "n_batches": 1,
+        "n_failed": 0,
+        "mae_fraction_mean": 0.10866892959823304,
+        "mae_fraction_max": 0.10866892959823304,
+        "r2_mean": -0.049288862774300446,
+        "r2_min": -0.049288862774300446
+      },
+      "skew_high_olive|ot_svr": {
+        "n_batches": 1,
+        "n_failed": 0,
+        "mae_fraction_mean": 0.20460396713688947,
+        "mae_fraction_max": 0.20460396713688947,
+        "r2_mean": -2.011653257410672,
+        "r2_min": -2.011653257410672
+      },
+      "skew_high_olive|svr_no_adaptation": {
+        "n_batches": 1,
+        "n_failed": 0,
+        "mae_fraction_mean": 0.08070527131402953,
+        "mae_fraction_max": 0.08070527131402953,
+        "r2_mean": 0.3395942576032245,
+        "r2_min": 0.3395942576032245
+      }
+    },
+    "LOAO-peanut": {
+      "random_10|ot_svr": {
+        "n_batches": 5,
+        "n_failed": 0,
+        "mae_fraction_mean": 0.06596683654319191,
+        "mae_fraction_max": 0.13319787514470877,
+        "r2_mean": 0.8946456452995155,
+        "r2_min": 0.71586026449092
+      },
+      "random_10|svr_no_adaptation": {
+        "n_batches": 5,
+        "n_failed": 0,
+        "mae_fraction_mean": 0.07755680855846436,
+        "mae_fraction_max": 0.08645920911362556,
+        "r2_mean": 0.9047622783105831,
+        "r2_min": 0.875277432774458
+      },
+      "random_20|ot_svr": {
+        "n_batches": 5,
+        "n_failed": 0,
+        "mae_fraction_mean": 0.07456911068540287,
+        "mae_fraction_max": 0.10098022315133867,
+        "r2_mean": 0.8429951903012916,
+        "r2_min": 0.6292922079308038
+      },
+      "random_20|svr_no_adaptation": {
+        "n_batches": 5,
+        "n_failed": 0,
+        "mae_fraction_mean": 0.0745921462355277,
+        "mae_fraction_max": 0.08120321230813156,
+        "r2_mean": 0.8816282345175118,
+        "r2_min": 0.8219709601262069
+      },
+      "brand_luhua|ot_svr": {
+        "n_batches": 1,
+        "n_failed": 0,
+        "mae_fraction_mean": 0.02746167821959901,
+        "mae_fraction_max": 0.02746167821959901,
+        "r2_mean": 0.9817623041435506,
+        "r2_min": 0.9817623041435506
+      },
+      "brand_luhua|svr_no_adaptation": {
+        "n_batches": 1,
+        "n_failed": 0,
+        "mae_fraction_mean": 0.08080942681735855,
+        "mae_fraction_max": 0.08080942681735855,
+        "r2_mean": 0.8993629286355402,
+        "r2_min": 0.8993629286355402
+      },
+      "brand_olivera|ot_svr": {
+        "n_batches": 1,
+        "n_failed": 0,
+        "mae_fraction_mean": 0.03871764841230523,
+        "mae_fraction_max": 0.03871764841230523,
+        "r2_mean": 0.9648683462836378,
+        "r2_min": 0.9648683462836378
+      },
+      "brand_olivera|svr_no_adaptation": {
+        "n_batches": 1,
+        "n_failed": 0,
+        "mae_fraction_mean": 0.060243823820327086,
+        "mae_fraction_max": 0.060243823820327086,
+        "r2_mean": 0.9358266648608271,
+        "r2_min": 0.9358266648608271
+      },
+      "skew_low_olive|ot_svr": {
+        "n_batches": 1,
+        "n_failed": 0,
+        "mae_fraction_mean": 0.20768581166273536,
+        "mae_fraction_max": 0.20768581166273536,
+        "r2_mean": -2.8867191995005124,
+        "r2_min": -2.8867191995005124
+      },
+      "skew_low_olive|svr_no_adaptation": {
+        "n_batches": 1,
+        "n_failed": 0,
+        "mae_fraction_mean": 0.06383772686672634,
+        "mae_fraction_max": 0.06383772686672634,
+        "r2_mean": 0.70549806348453,
+        "r2_min": 0.70549806348453
+      },
+      "skew_high_olive|ot_svr": {
+        "n_batches": 1,
+        "n_failed": 0,
+        "mae_fraction_mean": 0.20098108525640496,
+        "mae_fraction_max": 0.20098108525640496,
+        "r2_mean": -2.0358303492028162,
+        "r2_min": -2.0358303492028162
+      },
+      "skew_high_olive|svr_no_adaptation": {
+        "n_batches": 1,
+        "n_failed": 0,
+        "mae_fraction_mean": 0.07721552377095928,
+        "mae_fraction_max": 0.07721552377095928,
+        "r2_mean": 0.6146590096879856,
+        "r2_min": 0.6146590096879856
+      }
+    },
+    "LOAO-rapeseed": {
+      "random_10|ot_svr": {
+        "n_batches": 5,
+        "n_failed": 0,
+        "mae_fraction_mean": 0.11794311208794453,
+        "mae_fraction_max": 0.15002373318770906,
+        "r2_mean": 0.6830276142282925,
+        "r2_min": 0.2688220572208766
+      },
+      "random_10|svr_no_adaptation": {
+        "n_batches": 5,
+        "n_failed": 0,
+        "mae_fraction_mean": 0.13070797695264785,
+        "mae_fraction_max": 0.18203710581780363,
+        "r2_mean": 0.6186973781323006,
+        "r2_min": 0.416146763299468
+      },
+      "random_20|ot_svr": {
+        "n_batches": 5,
+        "n_failed": 0,
+        "mae_fraction_mean": 0.06654437048106505,
+        "mae_fraction_max": 0.10869564939639786,
+        "r2_mean": 0.9220267834600282,
+        "r2_min": 0.8698324862911244
+      },
+      "random_20|svr_no_adaptation": {
+        "n_batches": 5,
+        "n_failed": 0,
+        "mae_fraction_mean": 0.1435824450420342,
+        "mae_fraction_max": 0.1664810084890955,
+        "r2_mean": 0.570291239248075,
+        "r2_min": 0.5207695014901597
+      },
+      "brand_earl_grey|ot_svr": {
+        "n_batches": 1,
+        "n_failed": 0,
+        "mae_fraction_mean": 0.033042531423324126,
+        "mae_fraction_max": 0.033042531423324126,
+        "r2_mean": 0.9757730783964762,
+        "r2_min": 0.9757730783964762
+      },
+      "brand_earl_grey|svr_no_adaptation": {
+        "n_batches": 1,
+        "n_failed": 0,
+        "mae_fraction_mean": 0.1296626000785877,
+        "mae_fraction_max": 0.1296626000785877,
+        "r2_mean": 0.6176032485415884,
+        "r2_min": 0.6176032485415884
+      },
+      "brand_luhua|ot_svr": {
+        "n_batches": 1,
+        "n_failed": 0,
+        "mae_fraction_mean": 0.024690820985858977,
+        "mae_fraction_max": 0.024690820985858977,
+        "r2_mean": 0.9827963647052259,
+        "r2_min": 0.9827963647052259
+      },
+      "brand_luhua|svr_no_adaptation": {
+        "n_batches": 1,
+        "n_failed": 0,
+        "mae_fraction_mean": 0.12692048683783658,
+        "mae_fraction_max": 0.12692048683783658,
+        "r2_mean": 0.6310078577163908,
+        "r2_min": 0.6310078577163908
+      },
+      "brand_olivera|ot_svr": {
+        "n_batches": 1,
+        "n_failed": 0,
+        "mae_fraction_mean": 0.024659226446471325,
+        "mae_fraction_max": 0.024659226446471325,
+        "r2_mean": 0.984110457478292,
+        "r2_min": 0.984110457478292
+      },
+      "brand_olivera|svr_no_adaptation": {
+        "n_batches": 1,
+        "n_failed": 0,
+        "mae_fraction_mean": 0.13262232190517906,
+        "mae_fraction_max": 0.13262232190517906,
+        "r2_mean": 0.5552936207988411,
+        "r2_min": 0.5552936207988411
+      },
+      "skew_low_olive|ot_svr": {
+        "n_batches": 1,
+        "n_failed": 0,
+        "mae_fraction_mean": 0.22671272291691594,
+        "mae_fraction_max": 0.22671272291691594,
+        "r2_mean": -3.4930802533130674,
+        "r2_min": -3.4930802533130674
+      },
+      "skew_low_olive|svr_no_adaptation": {
+        "n_batches": 1,
+        "n_failed": 0,
+        "mae_fraction_mean": 0.21238226120790185,
+        "mae_fraction_max": 0.21238226120790185,
+        "r2_mean": -2.1010984131435597,
+        "r2_min": -2.1010984131435597
+      },
+      "skew_high_olive|ot_svr": {
+        "n_batches": 1,
+        "n_failed": 0,
+        "mae_fraction_mean": 0.22429139623473868,
+        "mae_fraction_max": 0.22429139623473868,
+        "r2_mean": -2.681422558604802,
+        "r2_min": -2.681422558604802
+      },
+      "skew_high_olive|svr_no_adaptation": {
+        "n_batches": 1,
+        "n_failed": 0,
+        "mae_fraction_mean": 0.047088011339833695,
+        "mae_fraction_max": 0.047088011339833695,
+        "r2_mean": 0.8118364125498154,
+        "r2_min": 0.8118364125498154
+      }
+    },
+    "LOAO-corn": {
+      "random_10|ot_svr": {
+        "n_batches": 5,
+        "n_failed": 0,
+        "mae_fraction_mean": 0.13153454598371805,
+        "mae_fraction_max": 0.16233352567516782,
+        "r2_mean": 0.6331633532966019,
+        "r2_min": 0.18352918963508869
+      },
+      "random_10|svr_no_adaptation": {
+        "n_batches": 5,
+        "n_failed": 0,
+        "mae_fraction_mean": 0.060675329085271,
+        "mae_fraction_max": 0.0784129135378746,
+        "r2_mean": 0.9181828811562426,
+        "r2_min": 0.8317795222232307
+      },
+      "random_20|ot_svr": {
+        "n_batches": 5,
+        "n_failed": 0,
+        "mae_fraction_mean": 0.0699972598631485,
+        "mae_fraction_max": 0.11830027172946526,
+        "r2_mean": 0.9062753369423273,
+        "r2_min": 0.818655367524519
+      },
+      "random_20|svr_no_adaptation": {
+        "n_batches": 5,
+        "n_failed": 0,
+        "mae_fraction_mean": 0.05361008527861107,
+        "mae_fraction_max": 0.05739941225790339,
+        "r2_mean": 0.9496095131175334,
+        "r2_min": 0.9355975915067558
+      },
+      "brand_earl_grey|ot_svr": {
+        "n_batches": 1,
+        "n_failed": 0,
+        "mae_fraction_mean": 0.02666744719520669,
+        "mae_fraction_max": 0.02666744719520669,
+        "r2_mean": 0.9817589425222238,
+        "r2_min": 0.9817589425222238
+      },
+      "brand_earl_grey|svr_no_adaptation": {
+        "n_batches": 1,
+        "n_failed": 0,
+        "mae_fraction_mean": 0.05960893621933027,
+        "mae_fraction_max": 0.05960893621933027,
+        "r2_mean": 0.9413992823724321,
+        "r2_min": 0.9413992823724321
+      },
+      "brand_luhua|ot_svr": {
+        "n_batches": 1,
+        "n_failed": 0,
+        "mae_fraction_mean": 0.02043237482445304,
+        "mae_fraction_max": 0.02043237482445304,
+        "r2_mean": 0.9892219614774597,
+        "r2_min": 0.9892219614774597
+      },
+      "brand_luhua|svr_no_adaptation": {
+        "n_batches": 1,
+        "n_failed": 0,
+        "mae_fraction_mean": 0.062174906325639795,
+        "mae_fraction_max": 0.062174906325639795,
+        "r2_mean": 0.9297004574101508,
+        "r2_min": 0.9297004574101508
+      },
+      "brand_olivera|ot_svr": {
+        "n_batches": 1,
+        "n_failed": 0,
+        "mae_fraction_mean": 0.027566344301850034,
+        "mae_fraction_max": 0.027566344301850034,
+        "r2_mean": 0.9794478756785415,
+        "r2_min": 0.9794478756785415
+      },
+      "brand_olivera|svr_no_adaptation": {
+        "n_batches": 1,
+        "n_failed": 0,
+        "mae_fraction_mean": 0.032459362035549624,
+        "mae_fraction_max": 0.032459362035549624,
+        "r2_mean": 0.9726011442126853,
+        "r2_min": 0.9726011442126853
+      },
+      "skew_low_olive|ot_svr": {
+        "n_batches": 1,
+        "n_failed": 0,
+        "mae_fraction_mean": 0.19256036558609688,
+        "mae_fraction_max": 0.19256036558609688,
+        "r2_mean": -2.322916630848143,
+        "r2_min": -2.322916630848143
+      },
+      "skew_low_olive|svr_no_adaptation": {
+        "n_batches": 1,
+        "n_failed": 0,
+        "mae_fraction_mean": 0.0339271441181946,
+        "mae_fraction_max": 0.0339271441181946,
+        "r2_mean": 0.8987330902289243,
+        "r2_min": 0.8987330902289243
+      },
+      "skew_high_olive|ot_svr": {
+        "n_batches": 1,
+        "n_failed": 0,
+        "mae_fraction_mean": 0.23273472857154992,
+        "mae_fraction_max": 0.23273472857154992,
+        "r2_mean": -3.120733926049854,
+        "r2_min": -3.120733926049854
+      },
+      "skew_high_olive|svr_no_adaptation": {
+        "n_batches": 1,
+        "n_failed": 0,
+        "mae_fraction_mean": 0.06890165893548518,
+        "mae_fraction_max": 0.06890165893548518,
+        "r2_mean": 0.6714443407580634,
+        "r2_min": 0.6714443407580634
+      }
+    },
+    "LOAO-walnut": {
+      "random_10|ot_svr": {
+        "n_batches": 5,
+        "n_failed": 0,
+        "mae_fraction_mean": 0.0697520986203178,
+        "mae_fraction_max": 0.1043758069598629,
+        "r2_mean": 0.8607425797035264,
+        "r2_min": 0.7098136703958761
+      },
+      "random_10|svr_no_adaptation": {
+        "n_batches": 5,
+        "n_failed": 0,
+        "mae_fraction_mean": 0.07006705962717116,
+        "mae_fraction_max": 0.08157880409472879,
+        "r2_mean": 0.8818951195033933,
+        "r2_min": 0.8421236362219173
+      },
+      "random_20|ot_svr": {
+        "n_batches": 5,
+        "n_failed": 0,
+        "mae_fraction_mean": 0.04389202614907947,
+        "mae_fraction_max": 0.0600362348721168,
+        "r2_mean": 0.9614317870135476,
+        "r2_min": 0.9494116063836867
+      },
+      "random_20|svr_no_adaptation": {
+        "n_batches": 5,
+        "n_failed": 0,
+        "mae_fraction_mean": 0.07106392965042549,
+        "mae_fraction_max": 0.07853558480695948,
+        "r2_mean": 0.8933250292719294,
+        "r2_min": 0.8578790342146079
+      },
+      "skew_low_olive|ot_svr": {
+        "n_batches": 1,
+        "n_failed": 0,
+        "mae_fraction_mean": 0.2266177306413342,
+        "mae_fraction_max": 0.2266177306413342,
+        "r2_mean": -3.7082228938868775,
+        "r2_min": -3.7082228938868775
+      },
+      "skew_low_olive|svr_no_adaptation": {
+        "n_batches": 1,
+        "n_failed": 0,
+        "mae_fraction_mean": 0.059533830318134764,
+        "mae_fraction_max": 0.059533830318134764,
+        "r2_mean": 0.6540479880630681,
+        "r2_min": 0.6540479880630681
+      },
+      "skew_high_olive|ot_svr": {
+        "n_batches": 1,
+        "n_failed": 0,
+        "mae_fraction_mean": 0.23432607154711657,
+        "mae_fraction_max": 0.23432607154711657,
+        "r2_mean": -3.119698142724342,
+        "r2_min": -3.119698142724342
+      },
+      "skew_high_olive|svr_no_adaptation": {
+        "n_batches": 1,
+        "n_failed": 0,
+        "mae_fraction_mean": 0.08507681083497107,
+        "mae_fraction_max": 0.08507681083497107,
+        "r2_mean": 0.48559621424091026,
+        "r2_min": 0.48559621424091026
+      }
+    }
+  }
+}

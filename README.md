@@ -1,7 +1,7 @@
 # ChemiProof 🧪
 
 **Explainable & Uncertainty-Aware Olive-Oil Adulteration Research**  
-**Status: M0-M3 (tooling, data audit, baselines, five-domain LOAO benchmark) awaiting owner review. Measured held-out-adulterant results exist for inductive source-only baselines (no model is reliable on every unseen adulterant); OT, abstention and UI are not built yet.**  
+**Status: M0-M4 (tooling, data audit, baselines, LOAO benchmark, optimal-transport replication) awaiting owner review. The published OT numbers are reproduced independently, but the OT gain needs a batch of unlabeled spectra with the right composition (it collapses on skewed or tiny batches); abstention and UI are not built yet.**  
 **Owner:** Mia Ho (`MIA290306`) · **Created:** 2026-10-24
 
 ChemiProof is a reproducible **research prototype** for estimating **olive-oil volume fraction** from **excitation–emission matrix (EEM) fluorescence spectra** and evaluating when a predictive system ought to **abstain** under unfamiliar adulterant distributions.
