@@ -58,3 +58,4 @@ exports/bi/
 .playwright-mcp/
 !results/M6_explorer_*/
 results/M6_explorer_*/screenshots/
+!results/M7_release_*/

@@ -188,6 +188,19 @@
 - **Review notes (PR #3, 2026-11-03):** (1) the threshold comes from cross-fitted scores while the deployed scorer is fitted on all 330 spectra (the same pattern as LOAO-UQ-v1), so training spectra score lower than unseen ones and are withheld less often than the 0.20 source rate; this is expected, not a calibration error. (2) The IN_SAMPLE flag matches the uploaded bytes' SHA-256 exactly; a training file whose bytes were altered (e.g. line endings rewritten) is not flagged. (3) Calibration is recomputed independently in `tests/integration/test_final_model.py` so a leak of the held-out adulterant into its own calibration fit would fail CI.
 - **Owner signoff:** delegated; review pending
 
+## ADR-019: release licensing and what the public repository may contain (M7)
+
+- **Date:** 2026-11-03 · **Status:** PROPOSED; **owner decision required** (the agent may not choose a license for the owner's work)
+- **Problem:** the M7 exit gate needs "no unknown legal permissions". The dataset is CC BY 4.0 and the authors' code has no license (read only, nothing copied), but ChemiProof's own code and documents have no license file, and the repository already tracks small data-derived tables (`results/*/predictions.csv` with sample IDs and true labels; metric and audit tables).
+- **Options and tradeoffs:**
+  - Code: **MIT** (shortest, permissive, common for portfolio/research code) or **Apache-2.0** (permissive plus an explicit patent grant and change-notice rule). Both are compatible with every runtime dependency (all permissive; `docs/release/RELEASE_REVIEW.md` section 2). A copyleft license (GPL) would restrict reuse by labs and is not suggested.
+  - Documents and report: **CC BY 4.0** (matches the dataset) or the same license as the code.
+  - No license: the repository stays "all rights reserved"; others may read it but not legally reuse it.
+- **Proposed decision (for the owner to accept or change):** MIT for code; CC BY 4.0 for `docs/` and the report; keep the dataset, data-derived figures, screenshots and `model.npz` out of git; keep the small tracked result tables with the CC BY 4.0 attribution that already appears in every report and card.
+- **Questions for the owner:** (1) which license, under which copyright holder name; (2) may the tracked per-sample tables in `results/` stay public (CC BY 4.0 allows it with attribution); (3) may README screenshots of the explorer that show real spectra be committed (also allowed by CC BY 4.0, but against the current conservative policy of ADR-003 / invariant 10).
+- **Until decided:** no `LICENSE` file is added, no release tag is created, and the release review lists T022 as pending for ChemiProof's own license.
+- **Owner signoff:** pending
+
 ## Future ADR template
 
 ```text

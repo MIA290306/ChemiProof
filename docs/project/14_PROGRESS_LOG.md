@@ -1,7 +1,7 @@
 # Milestone Progress / Evidence Ledger
 
 **Updated:** 2026-11-03  
-**Current overall state:** M0-M6 REVIEW REQUIRED; measured inductive, transductive (OT) and abstention/interval/robustness results exist; OT is conditional on batch composition; label-free abstention and source-calibrated intervals are NOT reliably useful on this benchmark; a local Streamlit explorer and an all-330 screening model (FINAL-PLS-v1, no independent test) exist. The owner asked on 2026-11-03 to continue without waiting for her formal ACCEPTED.  
+**Current overall state:** M0-M7 REVIEW REQUIRED (M7: release drafted and reproduced, not tagged); measured inductive, transductive (OT) and abstention/interval/robustness results exist; OT is conditional on batch composition; label-free abstention and source-calibrated intervals are NOT reliably useful on this benchmark; a local Streamlit explorer and an all-330 screening model (FINAL-PLS-v1, no independent test) exist. The owner asked on 2026-11-03 to continue without waiting for her formal ACCEPTED.  
 **Rule:** Agent may set `REVIEW REQUIRED`; **only owner** may mark `ACCEPTED` after evidence review.
 
 | Milestone | Status | Evidence / artifacts | Next action |
@@ -14,7 +14,7 @@
 | M5 Abstention/robustness | REVIEW REQUIRED | `results/M5_20261103T054226Z_914e8ed_ac6bfcef/` (validation_report, MILESTONE_REVIEW); one locked run, largely unfavourable findings | Owner review of ADR-017 and results |
 | M6 Research UI | REVIEW REQUIRED | `results/M6_explorer_20261103/` (validation_report, MILESTONE_REVIEW); `results/M6_final_20261103T074605Z_ce2423b_82b39d6c/model_card.json`; 229 + 9 tests | Owner review of ADR-018 and a walkthrough |
 | M6.5 Power BI quality-analytics layer (optional extension) | NOT STARTED | Specification only: `docs/bi/18_POWER_BI_SPEC.md`, `19_POWER_BI_DATA_MODEL.md`, `20_POWER_BI_ACCEPTANCE_TESTS.md`, `config/bi/export_contract.yaml`; no export code, no Power BI file | Await M5 and M6 acceptance and a Windows environment |
-| M7 Release | NOT STARTED | Templates only | Await M6 acceptance |
+| M7 Release | REVIEW REQUIRED | `results/M7_release_20261103/` (validation_report, MILESTONE_REVIEW); `docs/release/` report, model card, data card, release review; clean reproduction of every locked run matches | Owner license decision (ADR-019), external reviewer, then tag |
 
 ## Current blockers / unknowns
 
@@ -22,7 +22,8 @@
 
 1. Owner sign-off pending for M0-M6 (the owner chose on 2026-11-03 to let work continue without it), for ADR-007 (PROPOSED) and for every ADR in `13_DECISION_LOG.md` whose signoff line still reads pending or review requested.
 2. Dataset archive MD5 still not verified: the owner's copy was an extracted folder (ADR-009); the collaborator's copy (2026-11-03) has MD5 `450a6c64779a075b9ff0b49da6e359c2` / 96,854,833 bytes vs the published `dfad908d186e584b96b6070d90cbeec4` / 95,919,124 bytes (likely re-zipped on macOS: it contains `__MACOSX/`), although its 330 `.dat` files give the identical manifest sha256 `31c718ed...`.
-3. Licenses: dataset CC BY 4.0; authors' code has no license, so it is read-only reference only (ADR-010/011). Project code/data license for release still to be decided (M7).
+3. Licenses: dataset CC BY 4.0; authors' code has no license, so it is read-only reference only (ADR-010/011). ChemiProof's own license is PROPOSED in ADR-019 (MIT code, CC BY 4.0 docs) and needs the owner's decision.
+8. M7 release: no external reviewer yet and no tag; both block `v1.0` (`docs/release/RELEASE_REVIEW.md`).
 4. Brand/batch effect (soybean-olivera errors) described but not tested; OT batch-composition (label-skew) detector missing. Both need a new ADR (M5 open questions).
 5. The M6 screening model FINAL-PLS-v1 (ADR-018) has no independent evaluation, and the batch OT path (source = all 330) has never been evaluated.
 6. M6.5 dashboard work needs a Windows machine with Power BI Desktop; the owner works on macOS.
@@ -200,3 +201,15 @@ Tests added: independent recomputation of the interval half-widths and OOD thres
 Actual commands + exit codes: `pytest -q -m "not dataset"` 229 passed exit 0; `pytest -q -m dataset` 9 passed exit 0; `ruff check .` / `ruff format --check .` exit 0.
 Measured results: NONE new. Comment/doc audit found no inaccurate numbers or overclaims.
 Owner signoff: pending
+
+### 2026-11-03 — M7 — REVIEW REQUIRED
+Owner / agent: Mia Ho (instruction to continue without formal ACCEPTED, relayed by Bruce1508) / Claude Code for Bruce1508
+Scope attempted: CP-701 clean-environment reproduction; CP-702 research report, model card, data card; CP-703 rights/citation/package-license review, third-party rerun checklist and external review packet; CP-704 README results section. Not done (owner or third party needed): license choice (ADR-019 PROPOSED), external reviewer, README screenshots, poster/demo, release tag.
+Files changed: `src/chemiproof/evaluation/compare.py` (new), `src/chemiproof/cli.py` (`experiment compare`; removed the `experiment report` placeholder and its unused helpers: every run already writes `run_report.md`), `tests/unit/test_compare.py`, `tests/integration/test_cli_and_stages.py`, `constraints.txt` (POT pinned, it was missing), `docs/release/{RESEARCH_REPORT,MODEL_CARD,DATA_CARD,RELEASE_REVIEW}.md`, `README.md`, ADR-019, `docs/engineering/11_DEV_SETUP.md`, `docs/science/10_REFERENCES_AND_LICENSES.md`, `docs/00_DOCS_INDEX.md`, `docs/project/06_MILESTONES.md`, `config/milestones.yaml`, `docs/vi/TIEN_DO_HIEN_TAI_VI.md`, `results/M7_release_20261103/`.
+Actual commands + exit codes: fresh `git clone` at `27c6efb` + new `uv` venv (no cache) + `uv pip install -c constraints.txt -e '.[dev]'` exit 0; there `pytest -q -m "not dataset"` 226 passed exit 0; `chemiproof dataset audit` exit 0 (manifest `31c718ed...`); `pytest -q -m dataset` 9 passed exit 0 (a first call before the audit failed 6 tests because the manifest did not exist yet: script ordering, not a defect); all five locked `experiment run` configs, `m2_source_internal`, `experiment uncertainty`, both `experiment control` and both `experiment batch-sensitivity` configs, and `model train-final` exit 0. Details: `results/M7_release_20261103/validation_report.md`.
+Measured results: NONE new. Reproduction: `chemiproof experiment compare` (atol 1e-9 fraction) finds every table of M2, both M3, both M4 and M5 equal (max |diff| 2.3e-14); controls and stress tests equal to 1.1e-16; FINAL-PLS-v1 `model.npz` sha256 `bbcff343...` identical. M2's resolved-config hash differs (`d506b48d...` vs `5ddb4697...`) only because later schema defaults (`n_samples`, `run_class`, `subset_brand`) now appear in the resolved file; the config file itself is unchanged since M2.
+Acceptance tests: T021 PASS (clean rerun within tolerance); T022 PASS for dataset and author-code attribution, PENDING for ChemiProof's own license; T023 unchanged (PASS in M6).
+Risks / open questions: same OS family and numerical-library versions as the original runs (cross-platform untested); POT version not recorded in run `environment.json`; published archive MD5 still unmatched; report not externally reviewed.
+Owner signoff: pending
+Next milestone (only after ACCEPTED): none; release tag after ADR-019 decision and reviewer signoff.
+

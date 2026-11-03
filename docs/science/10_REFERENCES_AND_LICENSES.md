@@ -28,10 +28,10 @@ Supports: replication reference. **Check whether this repo contains a license be
 - [x] Zenodo dataset license, read from the record's machine-readable metadata (`https://zenodo.org/api/records/19755088`, queried 2026-11-02): `license.id = cc-by-4.0`, `access_right = open`. (The HTML page does not show it; the API does.) Attribution is required.
 - [x] CC BY 4.0 permits redistribution/derivatives with attribution, but project policy (CLAUDE.md invariant 10, ADR-003) stays: raw data and data-derived figures are **not committed**; only code, synthetic fixtures and small audit summaries are tracked. Re-evaluate at M7 with the owner.
 - [x] Authors' repo `Zhanjun-Li/fluorescence_NonLinear`: GitHub API (queried 2026-11-02) reports `license: null`, size 11 KB, no description. **No license = all rights reserved**: do not copy code; read only to confirm method details (M2/M4) and reimplement independently; cite it.
-- [ ] Record paper's content/image license before reusing figures; create your own figures by running experiments where possible.
-- [ ] Choose license for **ChemiProof original code** and keep upstream software and dataset licensing separate.
-- [ ] Cite original researchers/DOI prominently in README, results and scientific report. Credit is required even if redistribution is not used.
-- [ ] List any third-party Python package licenses from lockfile / environment at release.
+- [x] Record paper's content/image license before reusing figures; create your own figures by running experiments where possible. (M7: no paper figure is reused; all figures come from our runs)
+- [ ] Choose license for **ChemiProof original code** and keep upstream software and dataset licensing separate. (M7: PROPOSED in ADR-019, owner decision)
+- [x] Cite original researchers/DOI prominently in README, results and scientific report. Credit is required even if redistribution is not used. (M7: locations listed in `docs/release/RELEASE_REVIEW.md` section 3)
+- [x] List any third-party Python package licenses from lockfile / environment at release. (M7: `docs/release/RELEASE_REVIEW.md` section 2; all permissive)
 - [ ] (M6.5) Power BI: no `.pbix`/data cache or exported tables committed without owner approval; no "publish to web" or public sharing before this rights review; any published dashboard carries the attribution footer (Sun et al. 2026, Zenodo DOI 10.5281/zenodo.19755088, CC BY 4.0); confirm the Power BI Desktop/service licence terms that apply to the person building the report.
 
 ## Evidence vs claim table

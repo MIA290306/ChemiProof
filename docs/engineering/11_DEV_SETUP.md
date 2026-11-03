@@ -44,7 +44,7 @@ chemiproof dataset audit --archive data/raw/data.zip --output results/M1.../
 chemiproof spectra plot --sample <verified_sample_id> --output results/M1.../
 chemiproof experiment run --config config/experiments/baseline.yaml
 chemiproof experiment run --config config/experiments/ot_transductive.yaml
-chemiproof experiment report --run-id <id>
+chemiproof experiment compare results/M3_<committed_run> results/M3_<your_rerun>   # M7, T021
 chemiproof app
 chemiproof export bi --run results/M3_<run_id> --run results/M4_<run_id> --output exports/bi   # planned, M6.5
 ```

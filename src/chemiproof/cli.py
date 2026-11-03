@@ -5,7 +5,7 @@ from __future__ import annotations
 import argparse
 import json
 import sys
-from collections.abc import Callable, Sequence
+from collections.abc import Sequence
 from pathlib import Path
 
 from chemiproof import __version__
@@ -20,6 +20,7 @@ from chemiproof.data.manifest import (
 )
 from chemiproof.data.zipsafe import inspect_zip
 from chemiproof.errors import ChemiProofError, StatusCode
+from chemiproof.evaluation.compare import DEFAULT_ATOL, compare_run_dirs
 from chemiproof.experiments import (
     run_experiment,
     run_negative_control,
@@ -34,10 +35,6 @@ EXIT_ERROR = 3  # argparse itself exits 2 on usage errors
 DEFAULT_DATA_DIR = Path("data/raw/extracted")
 DEFAULT_MANIFEST = Path("data/interim/sample_manifest.csv")
 DEFAULT_RESULTS = Path("results")
-
-
-def _not_implemented(milestone: str, what: str) -> ChemiProofError:
-    return ChemiProofError(StatusCode.NOT_IMPLEMENTED, f"{what} is implemented in {milestone}")
 
 
 def _cmd_config_validate(args: argparse.Namespace) -> int:
@@ -182,6 +179,19 @@ def _cmd_uncertainty(args: argparse.Namespace) -> int:
     return EXIT_OK
 
 
+def _cmd_compare(args: argparse.Namespace) -> int:
+    """T021: a rerun matches a reference run within an absolute tolerance (exit 1 if not)."""
+    results = compare_run_dirs(Path(args.reference), Path(args.rerun), args.atol)
+    for r in results:
+        status = "OK  " if r.ok else "DIFF"
+        print(f"{status} {r.name}: {r.rows} rows, max |diff| {r.max_abs_diff:.3g}")
+        for problem in r.problems:
+            print(f"     {problem}")
+    bad = sum(not r.ok for r in results)
+    print(f"{len(results) - bad}/{len(results)} files match (atol {args.atol:g}; run_id ignored)")
+    return EXIT_OK if bad == 0 else 1
+
+
 def _cmd_train_final(args: argparse.Namespace) -> int:
     """FINAL-PLS-v1 (ADR-018): fit on all spectra, calibrate leave-one-adulterant-out, save."""
     import hashlib
@@ -239,13 +249,6 @@ def _cmd_app(args: argparse.Namespace) -> int:
     app = Path(__file__).parent / "ui" / "app.py"
     cmd = [sys.executable, "-m", "streamlit", "run", str(app), "--server.headless", "true"]
     return subprocess.call(cmd + ["--server.port", str(args.port)])
-
-
-def _unavailable(milestone: str, what: str) -> Callable[[argparse.Namespace], int]:
-    def run(_: argparse.Namespace) -> int:
-        raise _not_implemented(milestone, what)
-
-    return run
 
 
 def _add_data_args(p: argparse.ArgumentParser, manifest: bool = True) -> None:
@@ -319,7 +322,11 @@ def build_parser() -> argparse.ArgumentParser:
     uq.add_argument("--data-dir", default=str(DEFAULT_DATA_DIR))
     uq.add_argument("--output-root", default=str(DEFAULT_RESULTS))
     uq.set_defaults(func=_cmd_uncertainty)
-    ex_sub.add_parser("report").set_defaults(func=_unavailable("M7", "experiment report"))
+    cmp = ex_sub.add_parser("compare", help="M7: check a rerun against a reference run folder")
+    cmp.add_argument("reference", help="reference run folder, e.g. a committed results/M3_...")
+    cmp.add_argument("rerun", help="rerun folder produced by the same locked config")
+    cmp.add_argument("--atol", type=float, default=DEFAULT_ATOL, help="absolute tolerance")
+    cmp.set_defaults(func=_cmd_compare)
 
     md = sub.add_parser("model", help="final screening artifact (M6, ADR-018)")
     md_sub = md.add_subparsers(dest="action", required=True)
