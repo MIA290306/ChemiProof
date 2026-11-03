@@ -63,14 +63,6 @@ def load_project_data_dir() -> str:
     return "data/raw/extracted"
 
 
-def make_outer_folds(manifest: Any) -> Any:
-    raise ChemiProofError(StatusCode.NOT_IMPLEMENTED, "LOAO folds are implemented in M3")
-
-
-def fit_baseline(*_: Any, **__: Any) -> Any:
-    raise ChemiProofError(StatusCode.NOT_IMPLEMENTED, "baseline models are implemented in M2")
-
-
 @dataclass(frozen=True)
 class ScreeningResult:
     """One inductive research estimate (or a withheld one). Fractions in [0, 1] units."""

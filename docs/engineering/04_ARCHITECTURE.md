@@ -68,11 +68,11 @@ Returns aligned records with sample IDs and source hashes. Fails if label proven
 
 Fixed spectral operations and fit-dependent transforms separately. Return history/parameter digest, QC warnings and feature vector (9,450 after valid preprocessing). Do not mutate source arrays in-place.
 
-### `make_outer_folds(manifest) -> FoldList`
+### `make_outer_folds(manifest) -> FoldList` (implemented as `evaluation.protocols.loao_folds`)
 
 Exactly five outer folds, each with disjoint source/test adulterant types and sample IDs. All samples from one adulterant are target. Save immutable split manifest. Source-internal validation partitions avoid replicate leakage.
 
-### `fit_baseline(source_train, source_val, cfg) -> ModelArtifact`
+### `fit_baseline(source_train, source_val, cfg) -> ModelArtifact` (implemented as `modeling.baselines.model_factory` + `evaluation.runner`)
 
 Fit preprocessing and model solely on permitted source. Bundle feature-schema version, label unit, data provenance and fitted transformations.
 
