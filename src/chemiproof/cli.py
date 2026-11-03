@@ -20,7 +20,11 @@ from chemiproof.data.manifest import (
 )
 from chemiproof.data.zipsafe import inspect_zip
 from chemiproof.errors import ChemiProofError, StatusCode
-from chemiproof.experiments import run_experiment, run_negative_control
+from chemiproof.experiments import (
+    run_experiment,
+    run_negative_control,
+    run_ot_batch_sensitivity,
+)
 from chemiproof.provenance import environment_info, make_run_id
 
 EXIT_OK = 0
@@ -160,6 +164,14 @@ def _cmd_control(args: argparse.Namespace) -> int:
     return EXIT_OK
 
 
+def _cmd_batch_sensitivity(args: argparse.Namespace) -> int:
+    cfg = load_experiment_config(Path(args.config))
+    manifest = Path(cfg.model_dump().get("dataset_manifest", DEFAULT_MANIFEST))
+    out_dir = run_ot_batch_sensitivity(cfg, Path(args.data_dir), manifest, Path(args.output_root))
+    print(f"batch-sensitivity artifacts: {out_dir}")
+    return EXIT_OK
+
+
 def _unavailable(milestone: str, what: str) -> Callable[[argparse.Namespace], int]:
     def run(_: argparse.Namespace) -> int:
         raise _not_implemented(milestone, what)
@@ -228,6 +240,11 @@ def build_parser() -> argparse.ArgumentParser:
     ctl.add_argument("--data-dir", default=str(DEFAULT_DATA_DIR))
     ctl.add_argument("--output-root", default=str(DEFAULT_RESULTS))
     ctl.set_defaults(func=_cmd_control)
+    bs = ex_sub.add_parser("batch-sensitivity", help="OT with smaller / single-brand batches")
+    bs.add_argument("--config", required=True)
+    bs.add_argument("--data-dir", default=str(DEFAULT_DATA_DIR))
+    bs.add_argument("--output-root", default=str(DEFAULT_RESULTS))
+    bs.set_defaults(func=_cmd_batch_sensitivity)
     ex_sub.add_parser("report").set_defaults(func=_unavailable("M7", "experiment report"))
 
     sub.add_parser("app", help="research explorer (available from M6)").set_defaults(

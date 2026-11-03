@@ -67,7 +67,13 @@ def fit_baseline(*_: Any, **__: Any) -> Any:
     raise ChemiProofError(StatusCode.NOT_IMPLEMENTED, "baseline models are implemented in M2")
 
 
-def screen_single(*_: Any, **__: Any) -> Any:
+def screen_single(*_: Any, mode: str = "inductive", **__: Any) -> Any:
+    """Single-file screening. OT adaptation is a batch method: asking for it here is refused."""
+    if mode != "inductive":
+        raise ChemiProofError(
+            StatusCode.TRANSDUCTIVE_BATCH_REQUIRED,
+            "transductive OT needs a batch of unlabeled spectra; it cannot score a single file",
+        )
     raise ChemiProofError(
         StatusCode.NO_TRAINED_MODEL, "no validated trained model exists; no prediction is shown"
     )

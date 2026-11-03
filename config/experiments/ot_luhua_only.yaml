@@ -1,0 +1,39 @@
+# M4 sensitivity (Luhua only, removes brand imbalance): published-style entropic OT + SVR, TRANSDUCTIVE (needs the unlabeled target batch).
+# Frozen as protocol LOAO-OT-v1 by ADR-014 BEFORE any scored run. Never mix its metrics with the
+# inductive LOAO-v1 numbers (ADR-002). Published values are listed only as *_paper_reported.
+experiment_id: chemiproof-ot-loao-luhua-only
+status: NOT_RUN
+run_class: locked
+subset_brand: luhua
+protocol: loao
+random_seed: 20261024
+mode: transductive_batch
+label_unit: fraction
+dataset_manifest: data/interim/sample_manifest.csv
+outer_cv: leave_one_adulterant_out
+allowed_target_information: unlabeled_X_only
+forbidden_target_information: [y, labels_for_tuning, labels_for_calibration]
+preprocessing:
+  version: author_v1
+  baseline_correction: subtract_global_min
+  savitzky_golay: {window: 5, polyorder: 2, axes: [emission]}
+  intensity_normalization: divide_by_global_max
+optimal_transport:
+  method: entropic_sinkhorn_barycentric_projection
+  cost: euclidean_unnormalized          # resolved from the authors' call (ADR-011/014)
+  epsilon: 0.1                          # paper-reported, read from the authors' call
+  max_iter: 1000                        # paper-reported
+  tol: 1.0e-9                           # stopThr in the authors' call; our statistic: squared L2 of target-marginal error
+  solver: log_domain_sinkhorn           # independent implementation; POT variant is run as ot_svr_pot
+  epsilon_paper_reported: 0.1
+  max_iterations_paper_reported: 1000
+svr:
+  kernel: poly
+  degree: 3
+  C: 1.0
+  epsilon: 0.1                          # fraction units (y in [0, 1]); scikit-learn default, as in the reference
+  gamma: scale
+  label_scale: fraction
+models: [ot_svr, ot_svr_pot, author_pca50, author_pca10, svr_no_adaptation]
+metrics: [mae, rmse, bias, r2]
+outputs: results/

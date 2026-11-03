@@ -84,7 +84,22 @@ class ExperimentConfig(BaseModel):
     run_class: Literal["exploratory", "locked"] = "exploratory"
     subset_brand: Literal["luhua", "olivera", "earl_grey"] | None = None
     outer_cv: Literal["leave_one_adulterant_out"] | None = None
-    models: list[Literal["mean_y", "svr_raw", "pca_svr", "pls"]] | None = None
+    models: (
+        list[
+            Literal[
+                "mean_y",
+                "svr_raw",
+                "pca_svr",
+                "pls",
+                "ot_svr",
+                "ot_svr_pot",
+                "author_pca50",
+                "author_pca10",
+                "svr_no_adaptation",
+            ]
+        ]
+        | None
+    ) = None
     metrics: list[Literal["mae", "rmse", "bias", "r2"]]
     allowed_target_information: Literal["unlabeled_X_only"] | None = None
     forbidden_target_information: list[str] = []
@@ -92,6 +107,19 @@ class ExperimentConfig(BaseModel):
 
     @model_validator(mode="after")
     def _mode_rules(self) -> ExperimentConfig:
+        inductive_keys = {"mean_y", "svr_raw", "pca_svr", "pls"}
+        transductive_keys = {
+            "ot_svr",
+            "ot_svr_pot",
+            "author_pca50",
+            "author_pca10",
+            "svr_no_adaptation",
+        }
+        if self.models is not None:
+            allowed = inductive_keys if self.mode == "inductive" else transductive_keys
+            bad = set(self.models) - allowed
+            if bad:
+                raise ValueError(f"models {sorted(bad)} are not valid for mode {self.mode!r}")
         if self.protocol == "loao" and self.outer_cv is None:
             raise ValueError("protocol 'loao' requires outer_cv: leave_one_adulterant_out")
         if self.mode == "transductive_batch":

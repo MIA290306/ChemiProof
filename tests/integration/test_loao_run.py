@@ -143,18 +143,166 @@ def test_locked_run_requires_clean_tree(world, repo, tmp_path, monkeypatch, caps
     assert reg[0]["run_class"] == "locked"
 
 
-def test_transductive_mode_is_not_runnable_here(world, repo, tmp_path, capsys):
-    rc, _ = _run(
-        world,
-        repo,
-        tmp_path,
+OT_KEYS = ["ot_svr", "ot_svr_pot", "author_pca50", "svr_no_adaptation"]
+
+
+def _ot_over(**over):
+    base = dict(
         mode="transductive_batch",
         allowed_target_information="unlabeled_X_only",
-        forbidden_target_information=["y"],
+        forbidden_target_information=["y", "labels_for_tuning", "labels_for_calibration"],
+        optimal_transport={
+            "method": "entropic_sinkhorn_barycentric_projection",
+            "cost": "euclidean_unnormalized",
+            "epsilon": 1.0,  # scaled to the synthetic cost range
+            "max_iter": 1000,
+            "tol": 1e-9,
+        },
+        models=OT_KEYS,
     )
-    assert rc == EXIT_ERROR and "NOT_IMPLEMENTED" in capsys.readouterr().err
+    base.update(over)
+    return base
+
+
+def test_ot_run_end_to_end_is_labeled_transductive_with_diagnostics(world, repo, tmp_path):
+    rc, out = _run(world, repo, tmp_path, **_ot_over())
+    assert rc == EXIT_OK
+    (d,) = list(out.glob("M4_*"))
+    for name in (
+        "predictions.csv",
+        "metrics_by_fold.csv",
+        "ot_diagnostics.csv",
+        "fold_manifest.csv",
+        "leakage_audit.json",
+        "summary.json",
+        "run_report.md",
+    ):
+        assert (d / name).is_file(), name
+    modes = {r["model"]: r["mode"] for r in csv.DictReader((d / "metrics_by_fold.csv").open())}
+    assert modes == {
+        "ot_svr": "transductive_batch",
+        "ot_svr_pot": "transductive_batch",
+        "author_pca50": "transductive_batch",
+        "svr_no_adaptation": "inductive",
+    }
+    preds = list(csv.DictReader((d / "predictions.csv").open()))
+    assert {p["mode"] for p in preds} == {"transductive_batch", "inductive"}
+    diags = [r for r in csv.DictReader((d / "ot_diagnostics.csv").open()) if r["model"] == "ot_svr"]
+    assert len(diags) == 5 and all(r["converged"] == "True" for r in diags)
+    assert all(
+        float(r["col_marginal_sq_l2"]) < 1e-9 and abs(float(r["total_mass"]) - 1) < 1e-6
+        for r in diags
+    )
+    assert {int(r["n_target"]) for r in diags} == {30} and {int(r["n_source"]) for r in diags} == {
+        120
+    }
+    summary = json.loads((d / "summary.json").read_text())
+    assert (
+        "TRANSDUCTIVE" in summary["transductive_warning"]
+        and summary["mode"] == "transductive_batch"
+    )
+    assert "NOT a ChemiProof measurement" in summary["published_reference_not_measured"]["status"]
+    assert summary["models"]["ot_svr"]["mode"] == "transductive_batch"
+    assert summary["models"]["svr_no_adaptation"]["mode"] == "inductive"
+    assert json.loads((d / "leakage_audit.json").read_text())["label_shuffle_canary"]["passed"]
+    report = (d / "run_report.md").read_text()
+    assert "TRANSDUCTIVE RESEARCH MODE" in report and "never be advertised" in report
+    # T015: published reference numbers never show up as measured numbers
+    measured = {
+        round(float(r["r2"]), 3) for r in csv.DictReader((d / "metrics_by_fold.csv").open())
+    }
+    assert 0.965 not in measured and 0.831 not in measured
+    assert "paper_reported" not in json.dumps(summary["models"])
+
+
+def test_ot_predictions_ignore_heldout_labels_even_in_the_runner(
+    world, repo, tmp_path, monkeypatch
+):
+    """Spy on the OT function: it must never receive anything shaped like the target labels."""
+    from chemiproof.modeling import ot
+
+    seen = []
+    real = ot.ot_svr_fit_predict
+
+    def spy(xs, ys, xt, cfg=ot.DEFAULT_OT):
+        seen.append((xs.shape, ys.shape, xt.shape))
+        return real(xs, ys, xt, cfg)
+
+    monkeypatch.setattr(ot, "ot_svr_fit_predict", spy)
+    rc, _ = _run(world, repo, tmp_path, **_ot_over(models=["ot_svr"]))
+    assert rc == EXIT_OK
+    assert seen and all(ys == (xs[0],) for xs, ys, _ in seen)  # labels only for the SOURCE rows
+
+
+@pytest.mark.parametrize(
+    "over",
+    [
+        dict(mode="transductive_batch", models=["pls"]),  # inductive model in OT mode
+        dict(models=["ot_svr"]),  # OT model in inductive mode
+        dict(protocol="source_internal_loro", **_ot_over()),  # OT only defined for LOAO
+    ],
+)
+def test_mode_and_model_mismatches_are_refused(world, repo, tmp_path, capsys, over):
+    if over.get("mode") == "transductive_batch" and "allowed_target_information" not in over:
+        over = {
+            **over,
+            "allowed_target_information": "unlabeled_X_only",
+            "forbidden_target_information": ["y"],
+        }
+    rc, out = _run(world, repo, tmp_path, **over)
+    assert rc == EXIT_ERROR and "INVALID_CONFIG" in capsys.readouterr().err
+    assert not out.exists()
+
+
+def test_ot_without_the_optimal_transport_section_or_with_wrong_method_is_refused(
+    world, repo, tmp_path, capsys
+):
+    rc, _ = _run(world, repo, tmp_path, **_ot_over(optimal_transport={"method": "magic"}))
+    assert rc == EXIT_ERROR and "INVALID_CONFIG" in capsys.readouterr().err
 
 
 def test_unknown_brand_subset_is_refused(world, repo, tmp_path, capsys):
     rc, _ = _run(world, repo, tmp_path, subset_brand="olivera")  # no such samples in this tree
     assert rc == EXIT_ERROR and "INVALID_CONFIG" in capsys.readouterr().err
+
+
+def test_batch_sensitivity_runs_and_labels_itself_exploratory(world, repo, tmp_path):
+    import yaml as _yaml
+
+    from chemiproof.cli import main as _main
+
+    cfg = _cfg(world, repo, tmp_path, **_ot_over())
+    out = tmp_path / "bs"
+    rc = _main(
+        [
+            "experiment",
+            "batch-sensitivity",
+            "--config",
+            str(cfg),
+            "--data-dir",
+            str(world[1]),
+            "--output-root",
+            str(out),
+        ]
+    )
+    assert rc == EXIT_OK
+    (d,) = list(out.glob("M4_batch_sensitivity_*"))
+    doc = json.loads((d / "batch_sensitivity.json").read_text())
+    assert "TRANSDUCTIVE" in doc["warning"] and doc["sizes"] == [10, 20]
+    walnut = doc["folds"]["LOAO-walnut"]
+    assert {"random_10|ot_svr", "random_20|svr_no_adaptation"} <= set(walnut)
+    assert walnut["random_10|ot_svr"]["n_batches"] == 5
+    reg = list(csv.DictReader((out / "experiment_registry.csv").open()))
+    assert (
+        reg[-1]["run_class"] == "exploratory" and reg[-1]["protocol"] == "loao_ot_batch_sensitivity"
+    )
+    assert _yaml  # (imported to keep the helper config path explicit)
+
+
+def test_screen_single_refuses_transductive_requests():
+    from chemiproof import pipeline
+    from chemiproof.errors import ChemiProofError, StatusCode
+
+    with pytest.raises(ChemiProofError) as e:
+        pipeline.screen_single("one_file.dat", mode="transductive_batch")
+    assert e.value.code is StatusCode.TRANSDUCTIVE_BATCH_REQUIRED  # T013

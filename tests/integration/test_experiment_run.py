@@ -129,7 +129,7 @@ def test_config_hash_is_part_of_the_run_id_and_changes_with_config(synthetic_wor
 @pytest.mark.parametrize(
     ("key", "value", "needle"),
     [
-        ("mode", "transductive_batch", "NOT_IMPLEMENTED"),
+        ("mode", "transductive_batch", "INVALID_CONFIG"),  # inductive model keys + OT mode
         ("random_seed", 1, "INVALID_CONFIG"),
     ],
 )

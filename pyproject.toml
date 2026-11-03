@@ -18,8 +18,10 @@ dependencies = [
 
 [project.optional-dependencies]
 plot = ["matplotlib>=3.10,<4"]
+ot-reference = ["POT>=0.9.7,<0.10"]  # only for the authors-style reference call and cross-checks
 dev = [
     "matplotlib>=3.10,<4",
+    "POT>=0.9.7,<0.10",
     "pytest>=9,<10",
     "ruff>=0.17,<0.18",
     "pre-commit>=4.7,<5",

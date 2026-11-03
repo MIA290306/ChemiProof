@@ -5,7 +5,8 @@ from __future__ import annotations
 import csv
 import json
 import subprocess
-from dataclasses import dataclass
+from collections.abc import Callable
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
@@ -26,6 +27,7 @@ class RunOutput:
     fold_metrics: list[dict[str, Any]]
     selected: list[dict[str, Any]]
     metrics_objects: dict[tuple[str, str], Metrics]
+    diagnostics: list[dict[str, Any]] = field(default_factory=list)
 
 
 def run_models(
@@ -88,6 +90,96 @@ def run_models(
     return RunOutput(preds, fold_rows, selected, mobj)
 
 
+TRANSDUCTIVE_KEYS = ("ot_svr", "ot_svr_pot", "author_pca50", "author_pca10", "svr_no_adaptation")
+MODE_BY_KEY = {
+    "ot_svr": "transductive_batch",
+    "ot_svr_pot": "transductive_batch",
+    "author_pca50": "transductive_batch",
+    "author_pca10": "transductive_batch",
+    "svr_no_adaptation": "inductive",  # control: same SVR, no use of the target batch
+}
+
+
+def _transductive_fn(key: str, ot_cfg: Any) -> Callable[[np.ndarray, np.ndarray, np.ndarray], Any]:
+    from chemiproof.modeling import ot
+
+    table: dict[str, Callable[[np.ndarray, np.ndarray, np.ndarray], Any]] = {
+        "ot_svr": lambda xs, ys, xt: ot.ot_svr_fit_predict(xs, ys, xt, ot_cfg),
+        "ot_svr_pot": lambda xs, ys, xt: ot.ot_svr_pot_reference_fit_predict(xs, ys, xt, ot_cfg),
+        "author_pca50": lambda xs, ys, xt: ot.author_style_pca_svr_fit_predict(xs, ys, xt, 50),
+        "author_pca10": lambda xs, ys, xt: ot.author_style_pca_svr_fit_predict(xs, ys, xt, 10),
+        "svr_no_adaptation": lambda xs, ys, xt: ot.svr_no_adaptation_fit_predict(xs, ys, xt),
+    }
+    if key not in table:
+        raise KeyError(
+            f"unknown transductive model key {key!r}; expected one of {TRANSDUCTIVE_KEYS}"
+        )
+    return table[key]
+
+
+def run_transductive(
+    rows: list[ManifestRow],
+    X: np.ndarray,
+    y: np.ndarray,
+    folds: list[Fold],
+    keys: list[str],
+    ot_cfg: Any,
+    run_id: str,
+) -> RunOutput:
+    """Transductive LOAO. For each fold the method receives SOURCE features+labels and the
+    UNLABELED target batch X only; the target labels y[te] are first read by compute_metrics
+    after the predictions exist."""
+    preds, fold_rows, diags = [], [], []
+    mobj: dict[tuple[str, str], Metrics] = {}
+    for fold in folds:
+        tr, te = fold.train_idx, fold.test_idx
+        for key in keys:
+            result = _transductive_fn(key, ot_cfg)(X[tr], y[tr], X[te])  # no y[te] passed
+            m = compute_metrics(y[te], result.y_pred)  # first and only use of y[te]
+            mobj[(fold.fold_id, key)] = m
+            mode = MODE_BY_KEY[key]
+            log_event(
+                "fold_done", fold=fold.fold_id, model=key, mode=mode, mae=round(m.mae_fraction, 4)
+            )
+            diags.append(
+                {"run_id": run_id, "fold_id": fold.fold_id, "model": key, **result.diagnostics}
+            )
+            fold_rows.append(
+                {
+                    "run_id": run_id,
+                    "fold_id": fold.fold_id,
+                    "model": key,
+                    "mode": mode,
+                    "n": m.n,
+                    "mae_fraction": m.mae_fraction,
+                    "rmse_fraction": m.rmse_fraction,
+                    "bias_fraction": m.bias_fraction,
+                    "r2": m.r2,
+                    "retention": 1.0,
+                    "mae_pp": m.mae_pp,
+                    "n_out_of_range": m.n_out_of_range,
+                }
+            )
+            for i, p in zip(te, result.y_pred, strict=True):
+                preds.append(
+                    {
+                        "run_id": run_id,
+                        "fold_id": fold.fold_id,
+                        "source_sample_hash": rows[i].sha256,
+                        "sample_id": rows[i].sample_id,
+                        "y_true_fraction": float(y[i]),
+                        "y_pred_fraction": float(p),
+                        "model": key,
+                        "mode": mode,
+                        "abstain": "",
+                        "ood_score": "",
+                        "interval_lo": "",
+                        "interval_hi": "",
+                    }
+                )
+    return RunOutput(preds, fold_rows, [], mobj, diags)
+
+
 def summarize(
     out: RunOutput, model_keys: list[str], rows: list[ManifestRow] | None = None
 ) -> dict[str, Any]:
@@ -110,6 +202,7 @@ def summarize(
                 )
             )
         entry: dict[str, Any] = {
+            "mode": preds[0]["mode"] if preds else "unknown",
             "macro_over_folds": macro_average(per_fold),
             "macro_over_folds_clipped_to_unit_interval": macro_average(clipped_folds),
             "pooled_unclipped": compute_metrics(pooled_t, pooled_p).as_dict(),

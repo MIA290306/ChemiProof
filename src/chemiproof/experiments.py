@@ -20,13 +20,16 @@ from chemiproof.evaluation.protocols import (
     source_internal_loro_folds,
 )
 from chemiproof.evaluation.runner import (
+    TRANSDUCTIVE_KEYS,
     RunOutput,
     git_state,
     run_models,
+    run_transductive,
     summarize,
     write_run_artifacts,
 )
 from chemiproof.modeling.baselines import MODEL_KEYS, SEED
+from chemiproof.modeling.ot import TRANSDUCTIVE_WARNING, OTConfig
 from chemiproof.pipeline import Dataset, load_dataset
 from chemiproof.provenance import config_hash, file_sha256, make_run_id
 from chemiproof.spectra.preprocess import AUTHOR_V1, preprocess_features
@@ -54,6 +57,24 @@ SOURCE_INTERNAL_LIMITATIONS = [
     "Predictions are scored unclipped; values outside [0, 1] are counted per fold.",
 ]
 
+OT_LIMITATIONS = [
+    TRANSDUCTIVE_WARNING,
+    "Each fold uses the WHOLE held-out adulterant (30-90 spectra spanning all ten levels and every "
+    "brand of that adulterant) as the unlabeled batch; a batch with a different composition (fewer "
+    "samples, one level, one brand) is a different problem (see the batch-sensitivity run).",
+    "Only the target-batch FEATURES are read; target labels are used for scoring only (canary: "
+    "shuffling them changes nothing). This is still not an inductive protocol: compare with "
+    "svr_no_adaptation, which uses the same SVR and features without the batch.",
+    "Our OT solver is an independent log-domain implementation; ot_svr_pot calls POT the way the "
+    "authors describe. Their gap quantifies solver sensitivity of the polynomial SVR.",
+    "author_pca50/author_pca10 are published-style PCA baselines fitted on source + unlabeled "
+    "target X with prespecified sizes; the authors' 'PARAFAC-10' column is PCA with 10 components "
+    "in their code. CORAL/MMD are not reproduced: the authors tune their size on target labels.",
+    "Brand imbalance, five folds, one instrument, laboratory binary mixtures: see LOAO-v1 limits.",
+    "Published numbers are shown separately and were not measured by ChemiProof; the authors clip "
+    "predictions to [0, 1], we score unclipped (clipped values are reported as secondary).",
+]
+
 LOAO_LIMITATIONS = [
     "Only FIVE held-out adulterant systems exist: a macro mean over five folds says little about "
     "systems beyond them; the spread across folds matters more than the mean.",
@@ -69,6 +90,32 @@ LOAO_LIMITATIONS = [
     "The protocol was frozen (ADR-013) before the held-out adulterants were scored; the M2 grids "
     "were widened once before freezing, using inner CV only (ADR-012).",
 ]
+
+
+def _ot_config(cfg: ExperimentConfig) -> OTConfig:
+    raw = cfg.model_dump().get("optimal_transport") or {}
+    if raw.get("method") != "entropic_sinkhorn_barycentric_projection":
+        raise ChemiProofError(
+            StatusCode.INVALID_CONFIG,
+            "optimal_transport.method must be entropic_sinkhorn_barycentric_projection",
+        )
+    if raw.get("cost") != "euclidean_unnormalized":
+        raise ChemiProofError(
+            StatusCode.INVALID_CONFIG, "only the euclidean_unnormalized cost is defined"
+        )
+    return OTConfig(float(raw["epsilon"]), int(raw["max_iter"]), float(raw["tol"]))
+
+
+def _ot_dict(c: OTConfig | None) -> dict[str, Any]:
+    return {"epsilon": c.epsilon, "max_iter": c.max_iter, "tol": c.tol} if c else {}
+
+
+def _write_diagnostics(path: Path, diags: list[dict[str, Any]]) -> None:
+    cols = list(dict.fromkeys(k for d in diags for k in d))
+    with path.open("w", newline="", encoding="utf-8") as fh:
+        w = csv.DictWriter(fh, fieldnames=cols)
+        w.writeheader()
+        w.writerows(diags)
 
 
 def _subset(ds: Dataset, brand: str | None) -> Dataset:
@@ -88,6 +135,14 @@ def _preds(o: RunOutput, fold_id: str) -> list[tuple[str, str, float]]:
     ]
 
 
+def _diag(o: RunOutput, fold_id: str) -> list[Any]:
+    return [
+        {k: v for k, v in d.items() if k != "run_id"}
+        for d in o.diagnostics
+        if d["fold_id"] == fold_id
+    ]
+
+
 def _selected(o: RunOutput, fold_id: str) -> list[Any]:
     return [h for h in o.selected if h["fold_id"] == fold_id]
 
@@ -101,6 +156,7 @@ def _label_canary(
     groups: np.ndarray,
     base: RunOutput,
     run_id: str,
+    run_fn: Any = None,
 ) -> dict[str, Any]:
     """Shuffle the HELD-OUT labels of each fold and refit: predictions and selected
     hyper-parameters must not move. Catches any future code path that lets test labels in."""
@@ -112,10 +168,14 @@ def _label_canary(
         if np.array_equal(shuffled, y[fold.test_idx]):
             shuffled = np.roll(shuffled, 1)
         y_c[fold.test_idx] = shuffled
-        alt = run_models(ds.rows, X, y_c, [fold], keys, groups, run_id)
+        alt = (run_fn or run_models)(ds.rows, X, y_c, [fold], keys, groups, run_id)
 
         fid = fold.fold_id
-        same = _preds(base, fid) == _preds(alt, fid) and _selected(base, fid) == _selected(alt, fid)
+        same = (
+            _preds(base, fid) == _preds(alt, fid)
+            and _selected(base, fid) == _selected(alt, fid)
+            and _diag(base, fid) == _diag(alt, fid)
+        )
         results.append(
             {"fold_id": fold.fold_id, "heldout_labels_shuffled": True, "unchanged": same}
         )
@@ -131,31 +191,42 @@ def _label_canary(
 def _table(summary: dict[str, Any], clipped: bool = False) -> list[str]:
     key = "macro_over_folds_clipped_to_unit_interval" if clipped else "macro_over_folds"
     lines = [
-        "| model | macro MAE (pp) | macro RMSE | macro bias | macro R2 | R2 sd over folds | "
+        "| model | mode | macro MAE (pp) | macro RMSE | macro bias | macro R2 | R2 sd over folds | "
         "worst fold (MAE) |",
-        "|---|---:|---:|---:|---:|---:|---|",
+        "|---|---|---:|---:|---:|---:|---:|---|",
     ]
     for k, s in summary.items():
         m = s[key]
         lines.append(
-            f"| {k} | {100 * m['mae_fraction']:.2f} | {m['rmse_fraction']:.4f} | "
-            f"{m['bias_fraction']:+.4f} | {m['r2']:.3f} | {m['r2_std_across_folds']:.3f} | "
+            f"| {k} | {s.get('mode', '')} | {100 * m['mae_fraction']:.2f} | "
+            f"{m['rmse_fraction']:.4f} | {m['bias_fraction']:+.4f} | {m['r2']:.3f} | "
+            f"{m['r2_std_across_folds']:.3f} | "
             f"{s['worst_fold']} ({100 * m['worst_fold_mae_fraction']:.2f} pp) |"
         )
     return lines
 
 
 def _markdown_report(
-    run_id: str, protocol: str, summary: dict[str, Any], out: RunOutput, subset: str | None
+    run_id: str,
+    protocol: str,
+    summary: dict[str, Any],
+    out: RunOutput,
+    subset: str | None,
+    mode: str = "inductive",
 ) -> str:
     head = {
         "source_internal_loro": "source-internal evaluation (leave-one-round-out; OPTIMISTIC)",
-        "loao": "five-domain LOAO benchmark (inductive)"
+        "loao": (
+            "five-domain LOAO benchmark, TRANSDUCTIVE (OT) mode"
+            if mode == "transductive_batch"
+            else "five-domain LOAO benchmark (inductive)"
+        )
         + (f" restricted to brand {subset}" if subset else ""),
     }[protocol]
-    lines = [
-        f"# Run {run_id}: {head}",
-        "",
+    lines = [f"# Run {run_id}: {head}", ""]
+    if mode == "transductive_batch":
+        lines += [f"> **{TRANSDUCTIVE_WARNING}**", ""]
+    lines += [
         "Units: MAE in percentage points (pp) = 100 x fraction; RMSE/bias in olive-oil volume "
         "fraction; R2 unitless and never clamped. Predictions are scored UNCLIPPED.",
         "",
@@ -169,14 +240,14 @@ def _markdown_report(
         "",
         "## Per fold",
         "",
-        "| fold | model | n | MAE (pp) | RMSE | bias | R2 | out of [0,1] |",
-        "|---|---|---:|---:|---:|---:|---:|---:|",
+        "| fold | model | mode | n | MAE (pp) | RMSE | bias | R2 | out of [0,1] |",
+        "|---|---|---|---:|---:|---:|---:|---:|---:|",
     ]
     for r in out.fold_metrics:
         lines.append(
-            f"| {r['fold_id']} | {r['model']} | {r['n']} | {100 * r['mae_fraction']:.2f} | "
-            f"{r['rmse_fraction']:.4f} | {r['bias_fraction']:+.4f} | {r['r2']:.3f} | "
-            f"{r['n_out_of_range']} |"
+            f"| {r['fold_id']} | {r['model']} | {r['mode']} | {r['n']} | "
+            f"{100 * r['mae_fraction']:.2f} | {r['rmse_fraction']:.4f} | "
+            f"{r['bias_fraction']:+.4f} | {r['r2']:.3f} | {r['n_out_of_range']} |"
         )
     if protocol == "source_internal_loro":
         lines += ["", "Optimistic protocol, not unseen-adulterant evidence (see summary.json)."]
@@ -253,9 +324,10 @@ def _append_registry(
 def run_experiment(
     cfg: ExperimentConfig, data_dir: Path, manifest: Path, output_root: Path
 ) -> Path:
-    if cfg.mode != "inductive":
+    transductive = cfg.mode == "transductive_batch"
+    if transductive and cfg.protocol != "loao":
         raise ChemiProofError(
-            StatusCode.NOT_IMPLEMENTED, "transductive_batch (OT) runs are implemented in M4"
+            StatusCode.INVALID_CONFIG, "transductive runs are defined for the LOAO protocol only"
         )
     pre = (cfg.model_dump().get("preprocessing") or {}).get("version")
     if pre != AUTHOR_V1.version:
@@ -269,7 +341,8 @@ def run_experiment(
             StatusCode.INVALID_CONFIG,
             "a locked run needs a clean tracked git tree (commit first so the run is traceable)",
         )
-    keys = list(cfg.models or MODEL_KEYS)
+    keys = list(cfg.models or (TRANSDUCTIVE_KEYS if transductive else MODEL_KEYS))
+    ot_cfg = _ot_config(cfg) if transductive else None
 
     ds = _subset(load_dataset(manifest, data_dir), cfg.subset_brand)  # re-verifies SHA-256s
     manifest_sha = file_sha256(manifest)
@@ -285,7 +358,7 @@ def run_experiment(
         groups = np.array(
             [r.adulterant_type for r in ds.rows]
         )  # inner CV: leave-one-SOURCE-adulterant
-        prefix, limits = "M3", LOAO_LIMITATIONS
+        prefix, limits = ("M4", OT_LIMITATIONS) if transductive else ("M3", LOAO_LIMITATIONS)
         if len(folds) != 5:
             raise ChemiProofError(
                 StatusCode.QC_REVIEW_REQUIRED, f"expected 5 LOAO folds, got {len(folds)}"
@@ -308,7 +381,15 @@ def run_experiment(
     resolved["_config_sha256"] = config_hash(resolved)
     run_id = make_run_id(resolved)
 
-    out = run_models(ds.rows, X, y, folds, keys, groups, run_id)
+    if transductive:
+
+        def run_fn(rows_, X_, y_, folds_, keys_, groups_, run_id_):  # same args as run_models
+            return run_transductive(rows_, X_, y_, folds_, keys_, ot_cfg, run_id_)
+
+        out = run_fn(ds.rows, X, y, folds, keys, groups, run_id)
+    else:
+        run_fn = None
+        out = run_models(ds.rows, X, y, folds, keys, groups, run_id)
     summary = summarize(out, keys, ds.rows)
     out_dir = output_root / f"{prefix}_{run_id}"
     write_run_artifacts(
@@ -317,14 +398,25 @@ def run_experiment(
 
     extra: dict[str, Any] = {}
     if cfg.protocol == "loao":
-        canary = _label_canary(ds, X, y, folds, keys, groups, out, run_id)
+        canary = _label_canary(ds, X, y, folds, keys, groups, out, run_id, run_fn)
         audit = {"fold_audit": fold_audit, "label_shuffle_canary": canary}
         (out_dir / "leakage_audit.json").write_text(json.dumps(audit, indent=2), encoding="utf-8")
         _write_fold_manifest(out_dir / "fold_manifest.csv", fold_audit)
         plot_mae_r2_by_fold(out.fold_metrics, out_dir / "mae_r2_by_fold.png")
         plot_parity(out.predictions, out_dir / "parity_by_model.png")
+        if transductive:
+            _write_diagnostics(out_dir / "ot_diagnostics.csv", out.diagnostics)
         extra = {
             "published_reference_not_measured": PUBLISHED_REFERENCE,
+            "mode": cfg.mode,
+            **(
+                {
+                    "transductive_warning": TRANSDUCTIVE_WARNING,
+                    "optimal_transport": _ot_dict(ot_cfg),
+                }
+                if transductive
+                else {}
+            ),
             "run_class": cfg.run_class,
             "subset_brand": cfg.subset_brand,
             "leakage_audit": {"fold_audit_checks": fold_audit["checks"], "canary_passed": True},
@@ -334,7 +426,8 @@ def run_experiment(
         (out_dir / "summary.json").write_text(json.dumps(full, indent=2), encoding="utf-8")
 
     (out_dir / "run_report.md").write_text(
-        _markdown_report(run_id, cfg.protocol, summary, out, cfg.subset_brand), encoding="utf-8"
+        _markdown_report(run_id, cfg.protocol, summary, out, cfg.subset_brand, cfg.mode),
+        encoding="utf-8",
     )
     _append_registry(output_root, run_id, cfg, resolved["_config_sha256"], out_dir)
     return out_dir
@@ -375,6 +468,108 @@ def run_negative_control(
         "control",
         out_dir,
         protocol="loao_negative_control",
+        run_class="exploratory",
+    )
+    return out_dir
+
+
+def _batch_predict(
+    name: str, xs: np.ndarray, ys: np.ndarray, xt: np.ndarray, ot_cfg: OTConfig
+) -> np.ndarray:
+    from chemiproof.modeling.ot import ot_svr_fit_predict, svr_no_adaptation_fit_predict
+
+    if name == "ot_svr":
+        return ot_svr_fit_predict(xs, ys, xt, ot_cfg).y_pred
+    return svr_no_adaptation_fit_predict(xs, ys, xt).y_pred
+
+
+BATCH_SIZES = (10, 20)  # prespecified in ADR-014, never tuned
+BATCH_REPEATS = 5
+
+
+def run_ot_batch_sensitivity(
+    cfg: ExperimentConfig, data_dir: Path, manifest: Path, output_root: Path
+) -> Path:
+    """Exploratory: how does OT behave when the unlabeled target batch is SMALLER or covers ONE
+    brand only? Prespecified subsets (sizes 10 and 20, 5 seeded draws each; every single-brand
+    batch inside a fold). Scored against the true labels of the subset only; adaptation uses the
+    subset's features only. Compared with the same SVR without adaptation on the same subsets."""
+    from chemiproof.evaluation.metrics import compute_metrics
+
+    if cfg.mode != "transductive_batch" or cfg.protocol != "loao":
+        raise ChemiProofError(StatusCode.INVALID_CONFIG, "batch sensitivity needs the OT config")
+    ot_cfg = _ot_config(cfg)
+    ds = _subset(load_dataset(manifest, data_dir), cfg.subset_brand)
+    X = preprocess_features(ds.spectra, AUTHOR_V1)
+    y = ds.y
+    folds = loao_folds(ds.rows)
+    results: dict[str, Any] = {}
+    for fold in folds:
+        xs, ys = X[fold.train_idx], y[fold.train_idx]
+        te = fold.test_idx
+        brands = np.array([ds.rows[i].evoo_brand for i in te])
+        batches: list[tuple[str, np.ndarray]] = []
+        for k in BATCH_SIZES:
+            for rep in range(BATCH_REPEATS):
+                rng = np.random.default_rng(SEED + 200 + 10 * k + rep)
+                batches.append((f"random_{k}", rng.choice(len(te), size=k, replace=False)))
+        if len(set(brands.tolist())) > 1:
+            batches += [(f"brand_{b}", np.flatnonzero(brands == b)) for b in sorted(set(brands))]
+        rows_out: dict[str, list[dict[str, float]]] = {}
+        for label, sel in batches:
+            xt = X[te][sel]
+            for name in ("ot_svr", "svr_no_adaptation"):
+                try:
+                    pred = _batch_predict(name, xs, ys, xt, ot_cfg)
+                    m = compute_metrics(y[te][sel], pred)
+                    rec = {
+                        "mae_fraction": m.mae_fraction,
+                        "r2": m.r2,
+                        "bias_fraction": m.bias_fraction,
+                    }
+                except ChemiProofError as exc:
+                    rec = {"error": exc.code.value}
+                rows_out.setdefault(f"{label}|{name}", []).append(rec)
+        agg: dict[str, Any] = {}
+        for key, recs in rows_out.items():
+            ok = [r for r in recs if "error" not in r]
+            agg[key] = {
+                "n_batches": len(recs),
+                "n_failed": len(recs) - len(ok),
+                **(
+                    {
+                        "mae_fraction_mean": float(np.mean([r["mae_fraction"] for r in ok])),
+                        "mae_fraction_max": float(np.max([r["mae_fraction"] for r in ok])),
+                        "r2_mean": float(np.mean([r["r2"] for r in ok])),
+                        "r2_min": float(np.min([r["r2"] for r in ok])),
+                    }
+                    if ok
+                    else {}
+                ),
+            }
+        results[fold.fold_id] = agg
+    run_id = make_run_id(
+        {"batch_sensitivity": cfg.experiment_id, "manifest": file_sha256(manifest)}
+    )
+    out_dir = output_root / f"M4_batch_sensitivity_{run_id}"
+    out_dir.mkdir(parents=True, exist_ok=True)
+    doc = {
+        "experiment_id": cfg.experiment_id,
+        "subset_brand": cfg.subset_brand,
+        "sizes": list(BATCH_SIZES),
+        "repeats": BATCH_REPEATS,
+        "note": "exploratory; metrics on the SUBSET batch; adaptation uses subset features only",
+        "warning": TRANSDUCTIVE_WARNING,
+        "folds": results,
+    }
+    (out_dir / "batch_sensitivity.json").write_text(json.dumps(doc, indent=2), encoding="utf-8")
+    _append_registry(
+        output_root,
+        run_id,
+        cfg,
+        "batch_sensitivity",
+        out_dir,
+        protocol="loao_ot_batch_sensitivity",
         run_class="exploratory",
     )
     return out_dir
