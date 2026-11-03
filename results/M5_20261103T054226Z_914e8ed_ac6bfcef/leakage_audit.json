@@ -1,0 +1,156 @@
+{
+  "fold_audit": {
+    "n_samples": 330,
+    "n_folds": 5,
+    "checks": {
+      "each_test_is_exactly_one_adulterant": true,
+      "target_adulterant_absent_from_train": true,
+      "train_test_sample_ids_disjoint": true,
+      "every_sample_tested_exactly_once": true,
+      "sizes_match_published": true
+    },
+    "folds": [
+      {
+        "fold_id": "LOAO-soybean",
+        "target_adulterant": "soybean",
+        "n_test": 60,
+        "n_train": 270,
+        "train_adulterants": [
+          "corn",
+          "peanut",
+          "rapeseed",
+          "walnut"
+        ],
+        "test_brands": {
+          "luhua": 30,
+          "olivera": 30
+        },
+        "train_brands": {
+          "earl_grey": 60,
+          "luhua": 120,
+          "olivera": 90
+        },
+        "test_brands_absent_from_train": []
+      },
+      {
+        "fold_id": "LOAO-peanut",
+        "target_adulterant": "peanut",
+        "n_test": 60,
+        "n_train": 270,
+        "train_adulterants": [
+          "corn",
+          "rapeseed",
+          "soybean",
+          "walnut"
+        ],
+        "test_brands": {
+          "luhua": 30,
+          "olivera": 30
+        },
+        "train_brands": {
+          "earl_grey": 60,
+          "luhua": 120,
+          "olivera": 90
+        },
+        "test_brands_absent_from_train": []
+      },
+      {
+        "fold_id": "LOAO-rapeseed",
+        "target_adulterant": "rapeseed",
+        "n_test": 90,
+        "n_train": 240,
+        "train_adulterants": [
+          "corn",
+          "peanut",
+          "soybean",
+          "walnut"
+        ],
+        "test_brands": {
+          "earl_grey": 30,
+          "luhua": 30,
+          "olivera": 30
+        },
+        "train_brands": {
+          "earl_grey": 30,
+          "luhua": 120,
+          "olivera": 90
+        },
+        "test_brands_absent_from_train": []
+      },
+      {
+        "fold_id": "LOAO-corn",
+        "target_adulterant": "corn",
+        "n_test": 90,
+        "n_train": 240,
+        "train_adulterants": [
+          "peanut",
+          "rapeseed",
+          "soybean",
+          "walnut"
+        ],
+        "test_brands": {
+          "earl_grey": 30,
+          "luhua": 30,
+          "olivera": 30
+        },
+        "train_brands": {
+          "earl_grey": 30,
+          "luhua": 120,
+          "olivera": 90
+        },
+        "test_brands_absent_from_train": []
+      },
+      {
+        "fold_id": "LOAO-walnut",
+        "target_adulterant": "walnut",
+        "n_test": 30,
+        "n_train": 300,
+        "train_adulterants": [
+          "corn",
+          "peanut",
+          "rapeseed",
+          "soybean"
+        ],
+        "test_brands": {
+          "luhua": 30
+        },
+        "train_brands": {
+          "earl_grey": 60,
+          "luhua": 120,
+          "olivera": 120
+        },
+        "test_brands_absent_from_train": []
+      }
+    ]
+  },
+  "label_shuffle_canary": {
+    "passed": true,
+    "folds": [
+      {
+        "fold_id": "LOAO-soybean",
+        "heldout_labels_shuffled": true,
+        "unchanged": true
+      },
+      {
+        "fold_id": "LOAO-peanut",
+        "heldout_labels_shuffled": true,
+        "unchanged": true
+      },
+      {
+        "fold_id": "LOAO-rapeseed",
+        "heldout_labels_shuffled": true,
+        "unchanged": true
+      },
+      {
+        "fold_id": "LOAO-corn",
+        "heldout_labels_shuffled": true,
+        "unchanged": true
+      },
+      {
+        "fold_id": "LOAO-walnut",
+        "heldout_labels_shuffled": true,
+        "unchanged": true
+      }
+    ]
+  }
+}

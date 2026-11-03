@@ -42,6 +42,8 @@ results/M2_*/*.png
 results/M3_*/*.png
 !results/M4_*/
 results/M4_*/*.png
+!results/M5_*/
+results/M5_*/*.png
 !results/experiment_registry.csv
 
 # Power BI (M6.5): binary reports embed data; exports are derived from the dataset

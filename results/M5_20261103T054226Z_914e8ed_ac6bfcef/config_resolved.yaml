@@ -1,0 +1,102 @@
+_config_sha256: f93cfb4c97d22ad2d3ddc24457b19ab512dc9594a0f3eda11bbaff84278284e6
+allowed_target_information: null
+dataset_manifest: data/interim/sample_manifest.csv
+experiment_id: chemiproof-uq-loao
+forbidden_target_information: []
+label_unit: fraction
+manifest_sha256: 31c718edd95b4faca5f0f3fe68871870dc6f1b5d2307a8af93e8ce3712765495
+metrics:
+- mae
+- rmse
+- bias
+- r2
+mode: inductive
+models:
+- svr_raw
+- pca_svr
+- pls
+n_samples: 330
+outer_cv: leave_one_adulterant_out
+outputs: results/
+perturbations:
+  baseline_offset_fraction_of_max:
+  - 0.01
+  - 0.03
+  - 0.1
+  intensity_scale:
+  - 0.5
+  - 0.8
+  - 1.25
+  - 2.0
+  noise_fraction_of_max:
+  - 0.001
+  - 0.003
+  - 0.01
+  - 0.03
+  noise_seeds:
+  - 20261024
+  - 20261025
+  - 20261026
+  - 20261027
+  - 20261028
+preprocessing:
+  version: author_v1
+preprocessing_resolved:
+  baseline: subtract_min
+  normalize: max
+  sg_polyorder: 2
+  sg_window: 5
+  smooth_axes:
+  - emission
+  version: author_v1
+protocol: loao
+protocol_id: LOAO-UQ-v1
+random_seed: 20261024
+run_class: locked
+status: NOT_RUN
+subset_brand: null
+uncertainty:
+  calibration: cross_fitted_leave_one_source_adulterant_out
+  curve_retention_percent:
+  - 100
+  - 95
+  - 90
+  - 85
+  - 80
+  - 75
+  - 70
+  - 65
+  - 60
+  - 55
+  - 50
+  - 45
+  - 40
+  - 35
+  - 30
+  - 25
+  - 20
+  - 15
+  - 10
+  interval:
+    nominal_level: 0.9
+    variants:
+    - pooled
+    - max_domain
+  min_calibration_groups: 3
+  min_calibration_points: 100
+  pca_components_for_ood: 10
+  primary_score: ood_maha
+  protocol_id: LOAO-UQ-v1
+  random_rejection_repeats: 200
+  retention_goals:
+  - 1.0
+  - 0.9
+  - 0.8
+  - 0.7
+  scores:
+  - ood_maha
+  - model_disagreement
+  usefulness_rule:
+    goal: 0.8
+    min_folds_improved: 4
+    must_beat_random_p05_in_folds: 4

@@ -1,0 +1,45 @@
+{
+  "rule": {
+    "goal": 0.8,
+    "min_folds_improved": 4,
+    "must_beat_random_p05_in_folds": 4
+  },
+  "verdicts": {
+    "svr_raw/ood_maha": {
+      "folds_threshold_improved": 3,
+      "folds_beat_random_p05": 2,
+      "n_folds": 5,
+      "useful_on_this_benchmark": false
+    },
+    "svr_raw/model_disagreement": {
+      "folds_threshold_improved": 2,
+      "folds_beat_random_p05": 1,
+      "n_folds": 5,
+      "useful_on_this_benchmark": false
+    },
+    "pca_svr/ood_maha": {
+      "folds_threshold_improved": 3,
+      "folds_beat_random_p05": 4,
+      "n_folds": 5,
+      "useful_on_this_benchmark": false
+    },
+    "pca_svr/model_disagreement": {
+      "folds_threshold_improved": 5,
+      "folds_beat_random_p05": 5,
+      "n_folds": 5,
+      "useful_on_this_benchmark": true
+    },
+    "pls/ood_maha": {
+      "folds_threshold_improved": 3,
+      "folds_beat_random_p05": 3,
+      "n_folds": 5,
+      "useful_on_this_benchmark": false
+    },
+    "pls/model_disagreement": {
+      "folds_threshold_improved": 3,
+      "folds_beat_random_p05": 1,
+      "n_folds": 5,
+      "useful_on_this_benchmark": false
+    }
+  }
+}
