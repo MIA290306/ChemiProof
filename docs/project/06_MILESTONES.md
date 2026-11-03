@@ -127,13 +127,13 @@
 **Scientific purpose:** make valid results inspectable and useful to scientists and future reviewers.
 
 **Tasks**
-- [ ] Build streamlined Streamlit navigation described in `docs/product/08_UX_SPEC.md`.
-- [ ] Add `.dat` upload validation, EEM heatmap, QC messages and model selection by mode.
-- [ ] Single-file path calls **inductive only**; batch OT path demands >1 sample and explicitly explains dependencies/limitations.
-- [ ] Display decimal fraction and percent clearly, predictions or withheld estimate, optional **empirical** interval + warnings.
-- [ ] Link run ID/model card/methods, per-fold metrics and PDF/HTML/Markdown report export (choose least complex working export).
-- [ ] Handle malformed file, missing model and numeric failure without crash; no evidence of certification.
-- [ ] Check keyboard navigation, small screen and legibility; no fake testimonials or fabricated findings.
+- [x] Build streamlined Streamlit navigation described in `docs/product/08_UX_SPEC.md`.
+- [x] Add `.dat` upload validation, EEM heatmap, QC messages and model selection by mode.
+- [x] Single-file path calls **inductive only**; batch OT path demands >1 sample (>= 10, `MIN_TARGET_BATCH`) and explicitly explains dependencies/limitations.
+- [x] Display decimal fraction and percent clearly, predictions or withheld estimate, optional **empirical** interval + warnings.
+- [x] Link run ID/model card/methods, per-fold metrics and PDF/HTML/Markdown report export (choose least complex working export). *(Markdown)*
+- [x] Handle malformed file, missing model and numeric failure without crash; no evidence of certification.
+- [x] Check keyboard navigation, small screen and legibility; no fake testimonials or fabricated findings. *(keyboard section switching and 390 px layout checked; contrast/screen-reader audit NOT RUN)*
 
 **Artifacts:** functioning local UI, UI tests, screenshots, walkthrough demo, export fixture.
 

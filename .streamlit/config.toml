@@ -1,0 +1,11 @@
+# Laboratory-notebook look (docs/product/08_UX_SPEC.md "Visual style").
+[theme]
+base = "light"
+backgroundColor = "#FAF9F6"
+secondaryBackgroundColor = "#EEF1EC"
+textColor = "#1F2328"
+primaryColor = "#3A7D6E"
+font = "sans serif"
+
+[browser]
+gatherUsageStats = false

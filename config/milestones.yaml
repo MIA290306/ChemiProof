@@ -36,7 +36,7 @@ milestones:
     exit: [thresholds_source_only, selective_risk_reported, empirical_coverage_reported, failure_cases_documented]
   - id: M6
     name: Research_UI
-    status: NOT_STARTED
+    status: REVIEW_REQUIRED
     prerequisites: [M5]
     exit: [real_artifacts_rendered, malformed_files_refused, modes_separate, disclaimers_visible]
   - id: M6.5

@@ -19,7 +19,7 @@ Câu hỏi khoa học chính: khi gặp **một loại dầu pha trộn chưa t�
 | M3 Benchmark LOAO | REVIEW REQUIRED | 5 fold ngoài, đóng băng giao thức `LOAO-v1` |
 | M4 Tái lập OT | REVIEW REQUIRED | Optimal transport (transductive), `LOAO-OT-v1` |
 | M5 Từ chối dự đoán và độ bền | REVIEW REQUIRED | `LOAO-UQ-v1` (ADR-017) |
-| M6 Giao diện nghiên cứu (Streamlit) | **CHƯA BẮT ĐẦU** | Kế hoạch đã có, chờ chủ dự án chốt (mục 5) |
+| M6 Giao diện nghiên cứu (Streamlit) | REVIEW REQUIRED | Explorer 6 trang + mô hình sàng lọc `FINAL-PLS-v1` (ADR-018), nhánh `m6/research-explorer` |
 | M6.5 Power BI | CHƯA BẮT ĐẦU (chỉ có đặc tả) | Cần M5, M6 và máy Windows |
 | M7 Phát hành | CHƯA BẮT ĐẦU | |
 
@@ -56,13 +56,13 @@ Các số đã công bố của tác giả (raw 0,831; PCA 0,693; OT 0,965) đư
 ## 5. Việc đang chờ và việc có thể làm tiếp
 
 **Chờ chủ dự án quyết:**
-- Duyệt ADR-014, 015, 016, 017 và đánh dấu ACCEPTED cho M0–M5.
-- M6 cần một **mô hình cuối cùng huấn luyện trên cả 330 mẫu** (đề xuất PLS) cho trang "Screen Sample". Cần viết ADR-018 trước khi huấn luyện, và phải ghi rõ mô hình này không có đánh giá độc lập.
+- Duyệt ADR-014 đến 018 và đánh dấu ACCEPTED cho M0–M6. Ngày 2026-11-03 chủ dự án cho phép làm tiếp mà không cần chờ bước này.
+- Mô hình `FINAL-PLS-v1` (M6) huấn luyện trên cả 330 mẫu nên **không có đánh giá độc lập**; bằng chứng duy nhất là LOAO-v1 của cùng quy trình.
 
 **Việc có thể nhận (chọn một, báo trước để không đụng nhau):**
 - Kiểm tra kết quả M3–M5 độc lập: đọc `validation_report.md` của từng run trong `results/` và tìm lỗi.
 - M5 còn dở: kiểm định hiệu ứng thương hiệu (lỗi lớn nằm ở soybean–olivera) và bộ phát hiện batch lệch nhãn cho OT. Cả hai cần ADR mới.
-- Sau khi chủ dự án chốt: M6 (giao diện Streamlit).
+- M7 (báo cáo, model card, phát hành).
 - Phần xuất dữ liệu cho Power BI (CP-651 đến 653) chạy được trên Mac, nhưng chỉ làm sau M5/M6 được duyệt. Dựng dashboard cần Windows.
 
 ## 6. Cách chạy lại trên máy bạn
@@ -84,6 +84,12 @@ chemiproof experiment run --config config/experiments/baseline.yaml          # M
 chemiproof experiment run --config config/experiments/ot_transductive.yaml  # M4
 chemiproof experiment uncertainty --config config/experiments/uncertainty_loao.yaml  # M5
 ```
+Chạy giao diện (M6), cần dữ liệu thật để dựng mô hình sàng lọc (file `model.npz` bị git-ignore):
+```bash
+chemiproof model train-final   # FINAL-PLS-v1, khoảng 7 giây, kết quả giống hệt mỗi lần chạy
+chemiproof app                 # mở http://localhost:8501
+```
+
 Các config có `run_class: locked` chỉ chạy khi cây git sạch (đã commit hết). Muốn thử nghiệm thì copy ra bản `exploratory`. Mọi lần chạy đều được ghi vào `results/experiment_registry.csv`.
 
 ## 7. Quy trình làm việc chung

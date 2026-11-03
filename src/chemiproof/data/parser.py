@@ -108,13 +108,20 @@ def parse_dat_text(text: str, sample_id: str) -> ParsedDat:
     return ParsedDat(spectrum, norm, order)
 
 
+def parse_dat_bytes(data: bytes, sample_id: str) -> ParsedDat:
+    """Size + ASCII gate, then the strict text parser (used for files and UI uploads)."""
+    if len(data) > MAX_DAT_BYTES:
+        raise _fail(StatusCode.BAD_FILE_FORMAT, f"file too large ({len(data)} bytes)", sample_id)
+    try:
+        text = data.decode("ascii")
+    except UnicodeDecodeError as exc:
+        raise _fail(StatusCode.BAD_FILE_FORMAT, "file is not ASCII text", sample_id) from exc
+    return parse_dat_text(text, sample_id)
+
+
 def parse_dat(path: Path, sample_id: str | None = None) -> ParsedDat:
     sid = sample_id or path.stem
     size = path.stat().st_size
     if size > MAX_DAT_BYTES:
         raise _fail(StatusCode.BAD_FILE_FORMAT, f"file too large ({size} bytes)", sid)
-    try:
-        text = path.read_bytes().decode("ascii")
-    except UnicodeDecodeError as exc:
-        raise _fail(StatusCode.BAD_FILE_FORMAT, "file is not ASCII text", sid) from exc
-    return parse_dat_text(text, sid)
+    return parse_dat_bytes(path.read_bytes(), sid)

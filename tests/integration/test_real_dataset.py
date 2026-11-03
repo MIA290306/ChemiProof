@@ -273,3 +273,22 @@ def test_m5_uq_run_on_real_data_structure_and_matches_loao_v1_predictions(repo, 
         }
         common = [k for k in got if k in ref]
         assert common and all(abs(got[k] - ref[k]) < 1e-9 for k in common)
+
+
+def test_m6_final_model_rebuilds_the_committed_card(repo, tmp_path):
+    """FINAL-PLS-v1 (ADR-018): a retrain reproduces the tracked card; the npz is not tracked."""
+    import json
+
+    from chemiproof.cli import EXIT_OK, main
+
+    card_path = sorted((repo / "results").glob("M6_final_*/model_card.json"))[-1]
+    committed = json.loads(card_path.read_text())
+    assert main(["model", "train-final", "--output-root", str(tmp_path)]) == EXIT_OK
+    (new,) = list(tmp_path.glob("M6_final_*/model_card.json"))
+    card = json.loads(new.read_text())
+    assert card["n_components"] == committed["n_components"]
+    assert card["manifest_sha256"] == committed["manifest_sha256"]
+    assert card["train_sample_ids_hash"] == committed["train_sample_ids_hash"]
+    assert card["ood"]["threshold"] == pytest.approx(committed["ood"]["threshold"], rel=1e-9)
+    for k, q in committed["interval"]["halfwidth_fraction"].items():
+        assert card["interval"]["halfwidth_fraction"][k] == pytest.approx(q, abs=1e-12)

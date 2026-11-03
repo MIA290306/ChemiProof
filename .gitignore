@@ -44,6 +44,9 @@ results/M3_*/*.png
 results/M4_*/*.png
 !results/M5_*/
 results/M5_*/*.png
+# M6 final model: card tracked; arrays hold PCA mean/components of third-party spectra (ADR-018)
+!results/M6_final_*/
+results/M6_final_*/model.npz
 !results/experiment_registry.csv
 
 # Power BI (M6.5): binary reports embed data; exports are derived from the dataset
@@ -52,3 +55,6 @@ results/M5_*/*.png
 **/.pbi/localSettings.json
 **/.pbi/cache.abf
 exports/bi/
+.playwright-mcp/
+!results/M6_explorer_*/
+results/M6_explorer_*/screenshots/
