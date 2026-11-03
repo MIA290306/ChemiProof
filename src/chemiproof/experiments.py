@@ -204,7 +204,14 @@ def _write_fold_manifest(path: Path, audit: dict[str, Any]) -> None:
 
 
 def _append_registry(
-    output_root: Path, run_id: str, cfg: ExperimentConfig, cfg_sha: str, out_dir: Path
+    output_root: Path,
+    run_id: str,
+    cfg: ExperimentConfig,
+    cfg_sha: str,
+    out_dir: Path,
+    *,
+    protocol: str | None = None,
+    run_class: str | None = None,
 ) -> None:
     """Every run, exploratory or locked, leaves a line: attempt history is never deleted."""
     reg = output_root / "experiment_registry.csv"
@@ -232,8 +239,8 @@ def _append_registry(
                 datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ"),
                 run_id,
                 cfg.experiment_id,
-                cfg.protocol,
-                cfg.run_class,
+                protocol or cfg.protocol,
+                run_class or cfg.run_class,
                 cfg.subset_brand or "",
                 cfg_sha[:16],
                 g["head"][:12],
@@ -330,4 +337,44 @@ def run_experiment(
         _markdown_report(run_id, cfg.protocol, summary, out, cfg.subset_brand), encoding="utf-8"
     )
     _append_registry(output_root, run_id, cfg, resolved["_config_sha256"], out_dir)
+    return out_dir
+
+
+def run_negative_control(
+    cfg: ExperimentConfig, data_dir: Path, manifest: Path, output_root: Path
+) -> Path:
+    """Exploratory negative control for a LOAO config (never locked, never a headline result)."""
+    from chemiproof.evaluation.controls import permuted_source_label_control
+
+    if cfg.protocol != "loao" or cfg.mode != "inductive":
+        raise ChemiProofError(StatusCode.INVALID_CONFIG, "controls run on inductive loao configs")
+    ds = _subset(load_dataset(manifest, data_dir), cfg.subset_brand)
+    X = preprocess_features(ds.spectra, AUTHOR_V1)
+    folds = loao_folds(ds.rows)
+    groups = np.array([r.adulterant_type for r in ds.rows])
+    keys = list(cfg.models or MODEL_KEYS)
+    result = permuted_source_label_control(ds.rows, X, ds.y, folds, keys, groups)
+    run_id = make_run_id(
+        {
+            "control": "permuted_source_labels",
+            "experiment": cfg.experiment_id,
+            "manifest": file_sha256(manifest),
+            "subset": cfg.subset_brand,
+        }
+    )
+    out_dir = output_root / f"M3_control_{run_id}"
+    out_dir.mkdir(parents=True, exist_ok=True)
+    result["experiment_id"] = cfg.experiment_id
+    result["subset_brand"] = cfg.subset_brand
+    result["note"] = "negative control, exploratory; scored against TRUE held-out labels"
+    (out_dir / "control_summary.json").write_text(json.dumps(result, indent=2), encoding="utf-8")
+    _append_registry(
+        output_root,
+        run_id,
+        cfg,
+        "control",
+        out_dir,
+        protocol="loao_negative_control",
+        run_class="exploratory",
+    )
     return out_dir

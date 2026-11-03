@@ -1,0 +1,51 @@
+_config_sha256: 2c427bf82704fa93c40842e9700ffb428d6a9002624c48640a9ac7fbf8626d1b
+allowed_target_information: null
+dataset_manifest: data/interim/sample_manifest.csv
+experiment_id: chemiproof-source-baselines
+forbidden_target_information: []
+inner_cv: leave_one_source_adulterant_out
+label_unit: fraction
+manifest_sha256: 31c718edd95b4faca5f0f3fe68871870dc6f1b5d2307a8af93e8ce3712765495
+metrics:
+- mae
+- rmse
+- bias
+- r2
+mode: inductive
+models:
+- mean_y
+- svr_raw
+- pca_svr
+- pls
+n_features: 9450
+n_samples: 330
+outer_cv: leave_one_adulterant_out
+outputs: results/
+preprocessing:
+  baseline_correction: subtract_global_min
+  intensity_normalization: divide_by_global_max
+  orient_from_axes: true
+  savitzky_golay:
+    axes:
+    - emission
+    polyorder: 2
+    window: 5
+  version: author_v1
+preprocessing_resolved:
+  baseline: subtract_min
+  normalize: max
+  sg_polyorder: 2
+  sg_window: 5
+  smooth_axes:
+  - emission
+  version: author_v1
+preprocessing_steps:
+- 'baseline: subtract global minimum of the EEM (never clamps negatives away)'
+- savitzky_golay(window=5, polyorder=2) along ['emission']
+- 'normalize: divide by global maximum of the EEM'
+- flatten (excitation, emission) C-order -> 9450 features
+protocol: loao
+random_seed: 20261024
+run_class: locked
+status: NOT_RUN
+subset_brand: null

@@ -20,7 +20,7 @@ from chemiproof.data.manifest import (
 )
 from chemiproof.data.zipsafe import inspect_zip
 from chemiproof.errors import ChemiProofError, StatusCode
-from chemiproof.experiments import run_experiment
+from chemiproof.experiments import run_experiment, run_negative_control
 from chemiproof.provenance import environment_info, make_run_id
 
 EXIT_OK = 0
@@ -151,6 +151,15 @@ def _cmd_experiment(args: argparse.Namespace) -> int:
     return EXIT_OK
 
 
+def _cmd_control(args: argparse.Namespace) -> int:
+    cfg = load_experiment_config(Path(args.config))
+    manifest = Path(cfg.model_dump().get("dataset_manifest", DEFAULT_MANIFEST))
+    out_dir = run_negative_control(cfg, Path(args.data_dir), manifest, Path(args.output_root))
+    print(f"control artifacts: {out_dir}")
+    print((out_dir / "control_summary.json").read_text(encoding="utf-8"))
+    return EXIT_OK
+
+
 def _unavailable(milestone: str, what: str) -> Callable[[argparse.Namespace], int]:
     def run(_: argparse.Namespace) -> int:
         raise _not_implemented(milestone, what)
@@ -212,6 +221,13 @@ def build_parser() -> argparse.ArgumentParser:
     run.add_argument("--data-dir", default=str(DEFAULT_DATA_DIR))
     run.add_argument("--output-root", default=str(DEFAULT_RESULTS))
     run.set_defaults(func=_cmd_experiment)
+    ctl = ex_sub.add_parser(
+        "control", help="negative control: permuted source labels (exploratory)"
+    )
+    ctl.add_argument("--config", required=True)
+    ctl.add_argument("--data-dir", default=str(DEFAULT_DATA_DIR))
+    ctl.add_argument("--output-root", default=str(DEFAULT_RESULTS))
+    ctl.set_defaults(func=_cmd_control)
     ex_sub.add_parser("report").set_defaults(func=_unavailable("M7", "experiment report"))
 
     sub.add_parser("app", help="research explorer (available from M6)").set_defaults(
