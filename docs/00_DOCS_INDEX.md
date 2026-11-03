@@ -66,6 +66,7 @@ config/         project.yaml, milestones.yaml, experiments/, bi/export_contract.
 |---|---|---|
 | `START_HERE_VI.md` | Where do I begin, with zero background? | Owner / student |
 | `ROADMAP_VI.md` | What are the milestones and the evidence to check? | Owner / student |
+| `TIEN_DO_HIEN_TAI_VI.md` | What is the project status right now, for a new collaborator? | Collaborator / owner |
 | `17_GLOSSARY_VI.md` | How do key food chemistry/ML concepts work? | Student |
 
 ## Delivery policy
