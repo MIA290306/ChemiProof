@@ -1,31 +1,32 @@
 # Machine-readable milestone plan. Treat docs/project/06_MILESTONES.md as full source of truth.
-version: 1
+# Statuses mirror docs/project/14_PROGRESS_LOG.md (only the owner sets ACCEPTED).
+version: 2
 owner: Mia Ho
 status_enum: [NOT_STARTED, IN_PROGRESS, BLOCKED, REVIEW_REQUIRED, ACCEPTED]
 milestones:
   - id: M0
     name: Foundation
-    status: NOT_STARTED
+    status: REVIEW_REQUIRED
     prerequisites: []
     exit: [reproducible_env, synthetic_unit_tests_pass, lint_pass, no_raw_data_in_git]
   - id: M1
     name: Data_Audit
-    status: NOT_STARTED
+    status: REVIEW_REQUIRED
     prerequisites: [M0]
     exit: [source_checksum_verified, native_dat_schema_confirmed, y_labels_verified, group_inventory_audited, parser_tests_pass]
   - id: M2
     name: Baselines
-    status: NOT_STARTED
+    status: REVIEW_REQUIRED
     prerequisites: [M1]
     exit: [preprocess_audited, baselines_measured, no_fit_on_heldout_X]
   - id: M3
     name: LOAO_Evaluation
-    status: NOT_STARTED
+    status: REVIEW_REQUIRED
     prerequisites: [M2]
     exit: [five_folds_scored, disjointness_proven, macro_and_pooled_reported, leakage_tests_pass]
   - id: M4
     name: OT_Replication
-    status: NOT_STARTED
+    status: REVIEW_REQUIRED
     prerequisites: [M3]
     exit: [transductive_mode_enforced, OT_converged_or_failure_documented, comparison_reported]
   - id: M5
@@ -38,8 +39,18 @@ milestones:
     status: NOT_STARTED
     prerequisites: [M5]
     exit: [real_artifacts_rendered, malformed_files_refused, modes_separate, disclaimers_visible]
+  - id: M6.5
+    name: PowerBI_Quality_Intelligence
+    status: NOT_STARTED
+    kind: optional_extension          # ADR-016: M7 does not depend on it
+    prerequisites: [M5, M6]
+    environment_requirement: windows_power_bi_desktop   # cannot be built or validated on macOS
+    spec: [docs/bi/18_POWER_BI_SPEC.md, docs/bi/19_POWER_BI_DATA_MODEL.md, docs/bi/20_POWER_BI_ACCEPTANCE_TESTS.md]
+    tasks: [CP-651, CP-652, CP-653, CP-654, CP-655, CP-656, CP-657, CP-658, CP-659, CP-660]
+    exit: [export_tests_pass_on_real_runs, kpis_reconcile_with_python, dashboard_verified_in_power_bi_desktop_on_windows, protocol_and_mode_never_mixed, no_unsupported_claims]
   - id: M7
     name: Release
     status: NOT_STARTED
     prerequisites: [M6]
+    soft_prerequisites: [M6.5]        # included in the release only if accepted; otherwise the release says "Power BI layer: not delivered"
     exit: [clean_reproduction, source_rights_review, research_report, reviewer_signoff]

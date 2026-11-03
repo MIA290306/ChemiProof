@@ -13,6 +13,7 @@
 | M4 OT replication | REVIEW REQUIRED | `results/M4_20261103T044749Z_7129cde_363deee6/` (validation_report, MILESTONE_REVIEW); two locked runs + stress tests | Owner review (CI green: run 41581270090) |
 | M5 Abstention/robustness | NOT STARTED | None | Await M4 acceptance |
 | M6 Research UI | NOT STARTED | UX spec only | Await validated artifact |
+| M6.5 Power BI quality-analytics layer (optional extension) | NOT STARTED | Specification only: `docs/bi/18_POWER_BI_SPEC.md`, `19_POWER_BI_DATA_MODEL.md`, `20_POWER_BI_ACCEPTANCE_TESTS.md`, `config/bi/export_contract.yaml`; no export code, no Power BI file | Await M5 and M6 acceptance and a Windows environment |
 | M7 Release | NOT STARTED | Templates only | Await M6 acceptance |
 
 ## Current blockers / unknowns
@@ -120,3 +121,15 @@ Acceptance tests: T012, T013, T014, T015 PASS; T016-T023 NOT RUN; GitHub Actions
 Risks / open questions: OT conditional on batch composition and size; published PCA baselines reproduce only with clipping; per-fold published values not compared.
 Owner signoff: pending
 Next milestone (only after ACCEPTED): M5
+
+### 2026-11-03 — Power BI integration (documentation only; M6.5 added to the plan)
+Owner / agent: Mia Ho / Claude Code
+Scope attempted: audit the repository and artifacts, add Power BI as a presentation layer to the architecture, define the export data contract, the four-page dashboard, KPIs, tests and the new milestone M6.5 (tasks CP-651 to CP-660). No code, no export, no Power BI file, no dashboard was built; M0-M7 numbering and the scientific protocols are unchanged.
+Files created: `docs/bi/18_POWER_BI_SPEC.md`, `docs/bi/19_POWER_BI_DATA_MODEL.md`, `docs/bi/20_POWER_BI_ACCEPTANCE_TESTS.md`, `config/bi/export_contract.yaml`, `tests/unit/test_docs_consistency.py`.
+Files modified: `README.md`, `CLAUDE.md` (reading item 8, invariant 11, engineering preference), `AGENTS.md`, `docs/vi/ROADMAP_VI.md`, `docs/vi/START_HERE_VI.md`, `docs/vi/17_GLOSSARY_VI.md`, `docs/00_DOCS_INDEX.md`, `docs/product/01_PRD.md`, `docs/product/08_UX_SPEC.md`, `docs/engineering/04_ARCHITECTURE.md`, `docs/engineering/07_ACCEPTANCE_TESTS.md`, `docs/engineering/11_DEV_SETUP.md`, `docs/engineering/12_AI_PROMPTS.md`, `docs/science/05_EVALUATION_PLAN.md`, `docs/science/09_RISK_REGISTER.md` (R21-R27), `docs/science/10_REFERENCES_AND_LICENSES.md`, `docs/project/06_MILESTONES.md` (M6.5), `docs/project/13_DECISION_LOG.md` (ADR-016), `docs/project/15_RELEASE_AND_RESEARCH_REPORT.md`, `docs/project/16_TASK_BACKLOG.md`, `config/milestones.yaml` (added M6.5, statuses refreshed to match this log), `.gitignore`, `tests/README.md`.
+Actual commands + exit codes: see the verification list in the final summary of this change (docs consistency test, full pytest, ruff).
+Measured results: NONE (documentation only). No model metric was produced or changed.
+Acceptance tests: BI001-BI014 and BI020-BI032 defined, all NOT RUN. T001-T024 unchanged.
+Risks / open questions: Power BI Desktop is Windows-only and the owner works on macOS (M6.5 may end BLOCKED); uncertainty tables depend on M5 metadata that does not exist yet; the protocol map is seeded from five existing runs; ADR-016 needs owner approval (including M7 not depending on M6.5).
+Owner signoff: pending
+Next milestone (only after ACCEPTED): M5 (unchanged); M6.5 only after M5 and M6.

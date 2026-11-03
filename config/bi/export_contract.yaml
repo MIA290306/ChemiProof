@@ -1,0 +1,1173 @@
+# GENERATED from the BI contract definition; edit docs/bi/19_POWER_BI_DATA_MODEL.md and this file together.
+contract_version: bi-contract-1.0.0
+status: SPECIFIED_NOT_IMPLEMENTED
+notes: 'Machine-readable twin of docs/bi/19_POWER_BI_DATA_MODEL.md. Specification only: no exporter exists yet (milestone
+  M6.5). Column lists are generated from one definition and checked by tests/unit/test_docs_consistency.py.'
+tables:
+  dim_adulterant:
+    kind: dimension
+    grain: one row per adulterant system (5)
+    primary_key:
+    - adulterant_key
+    source: reference constants (chemiproof.data.labels; docs/science/03_DATA_CONTRACT.md); NOT measurements
+    status: AVAILABLE_M1
+    columns:
+    - name: adulterant_key
+      type: string
+      unit: null
+      nullable: false
+      description: 'enum: soybean, peanut, rapeseed, corn, walnut'
+    - name: adulterant_label
+      type: string
+      unit: null
+      nullable: false
+      description: English display name, e.g. 'Soybean oil'
+    - name: expected_samples
+      type: int
+      unit: samples
+      nullable: false
+      description: published expectation 60/60/90/90/30; reference value, not a measurement
+    - name: expected_brands
+      type: int
+      unit: brands
+      nullable: false
+      description: 'published design: soybean 2, peanut 2, rapeseed 3, corn 3, walnut 1'
+  dim_brand:
+    kind: dimension
+    grain: one row per EVOO brand (3)
+    primary_key:
+    - brand_key
+    source: reference constants (chemiproof.data.labels; article Table 2 via 03_DATA_CONTRACT)
+    status: AVAILABLE_M1
+    columns:
+    - name: brand_key
+      type: string
+      unit: null
+      nullable: false
+      description: 'enum: luhua, olivera, earl_grey'
+    - name: brand_label
+      type: string
+      unit: null
+      nullable: false
+      description: 'display name: Luhua, OliVera, Earl Grey'
+  dim_sample:
+    kind: dimension
+    grain: one row per validated spectrum (330 expected)
+    primary_key:
+    - sample_id
+    source: data/interim/sample_manifest.csv (M1)
+    status: AVAILABLE_M1
+    columns:
+    - name: sample_id
+      type: string
+      unit: null
+      nullable: false
+      description: stable ID from the manifest; unique
+    - name: adulterant_key
+      type: string
+      unit: null
+      nullable: false
+      description: FK to dim_adulterant
+    - name: brand_key
+      type: string
+      unit: null
+      nullable: false
+      description: FK to dim_brand (a confounder, never an outcome)
+    - name: olive_fraction
+      type: decimal
+      unit: fraction
+      nullable: false
+      description: olive-oil VOLUME fraction a/11 in [0,1] (ADR-008); the label convention
+    - name: olive_percent
+      type: decimal
+      unit: percent
+      nullable: false
+      description: = 100 * olive_fraction (exported for display; validated)
+    - name: olive_ratio_raw
+      type: string
+      unit: null
+      nullable: false
+      description: 'raw folder token, e.g. ''10：1'' (olive : adulterant), kept as evidence'
+    - name: measurement_round
+      type: int
+      unit: round
+      nullable: false
+      description: 1, 2 or 3 (folder name); replicate equivalence is unproven
+    - name: replicate_id
+      type: string
+      unit: null
+      nullable: true
+      description: empty in the current manifest; never guessed
+    - name: source_file_sha256
+      type: string
+      unit: null
+      nullable: false
+      description: SHA-256 of the source .dat (64 hex); provenance
+    - name: source_record_doi
+      type: string
+      unit: null
+      nullable: false
+      description: 10.5281/zenodo.19755088
+    - name: manifest_sha256
+      type: string
+      unit: null
+      nullable: false
+      description: SHA-256 of the manifest this row came from
+    - name: parser_version
+      type: string
+      unit: null
+      nullable: false
+      description: parser that produced the row
+  dim_model:
+    kind: dimension
+    grain: one row per model key
+    primary_key:
+    - model_key
+    source: reference table maintained with the code (chemiproof.modeling); versioned by contract_version
+    status: AVAILABLE_M3_M4
+    columns:
+    - name: model_key
+      type: string
+      unit: null
+      nullable: false
+      description: mean_y, svr_raw, pca_svr, pls, ot_svr, ot_svr_pot, author_pca50, author_pca10, svr_no_adaptation
+    - name: model_family
+      type: string
+      unit: null
+      nullable: false
+      description: 'enum: baseline, svr, pca_svr, pls, optimal_transport, published_style_pca, control'
+    - name: default_mode
+      type: string
+      unit: null
+      nullable: false
+      description: 'enum: inductive, transductive_batch'
+    - name: information_access
+      type: string
+      unit: null
+      nullable: false
+      description: plain-language statement of what the model may read (e.g. 'source labels+features only')
+    - name: is_control
+      type: bool
+      unit: null
+      nullable: false
+      description: true for mean_y and svr_no_adaptation
+    - name: is_published_style
+      type: bool
+      unit: null
+      nullable: false
+      description: true for author_pca50 / author_pca10 / ot_svr_pot
+    - name: description
+      type: string
+      unit: null
+      nullable: false
+      description: short description; no performance claims
+  dim_fold:
+    kind: dimension
+    grain: one row per fold id
+    primary_key:
+    - fold_id
+    source: fold manifests / metrics_by_fold.csv
+    status: AVAILABLE_M3
+    columns:
+    - name: fold_id
+      type: string
+      unit: null
+      nullable: false
+      description: LOAO-soybean, LOAO-peanut, LOAO-rapeseed, LOAO-corn, LOAO-walnut, SI-round1..3
+    - name: fold_type
+      type: string
+      unit: null
+      nullable: false
+      description: 'enum: LOAO, SOURCE_INTERNAL_ROUND'
+    - name: target_adulterant
+      type: string
+      unit: null
+      nullable: true
+      description: held-out adulterant for LOAO folds, null otherwise (text attribute, no relationship)
+    - name: held_out_round
+      type: int
+      unit: round
+      nullable: true
+      description: held-out measurement round for SOURCE_INTERNAL_ROUND folds
+  dim_experiment:
+    kind: dimension
+    grain: one row per evaluation run (run directory)
+    primary_key:
+    - run_id
+    source: results/<run>/summary.json, config_resolved.yaml, git_state.json, results/experiment_registry.csv, protocol map
+    status: AVAILABLE_M2_M4
+    columns:
+    - name: run_id
+      type: string
+      unit: null
+      nullable: false
+      description: UTC timestamp + git hash + config hash (matches the run directory name suffix)
+    - name: run_dir
+      type: string
+      unit: null
+      nullable: false
+      description: run directory name only (no absolute path)
+    - name: experiment_id
+      type: string
+      unit: null
+      nullable: false
+      description: from the resolved config
+    - name: protocol_id
+      type: string
+      unit: null
+      nullable: false
+      description: e.g. LOAO-v1, LOAO-OT-v1, SI-LORO-v1; from the versioned protocol map; 'UNREGISTERED' if unmapped
+    - name: protocol_family
+      type: string
+      unit: null
+      nullable: false
+      description: 'artifact protocol: loao, source_internal_loro, loao_negative_control, loao_ot_batch_sensitivity'
+    - name: run_class
+      type: string
+      unit: null
+      nullable: false
+      description: 'enum: locked, exploratory'
+    - name: mode
+      type: string
+      unit: null
+      nullable: false
+      description: 'enum: inductive, transductive_batch (run-level information access)'
+    - name: subset_brand
+      type: string
+      unit: null
+      nullable: true
+      description: brand restriction (e.g. luhua) or null for all samples
+    - name: preprocessing_version
+      type: string
+      unit: null
+      nullable: false
+      description: e.g. author_v1
+    - name: random_seed
+      type: int
+      unit: null
+      nullable: false
+      description: seed from the config
+    - name: n_samples
+      type: int
+      unit: samples
+      nullable: false
+      description: samples used by the run
+    - name: config_sha256
+      type: string
+      unit: null
+      nullable: false
+      description: SHA-256 of the resolved config (64 hex)
+    - name: manifest_sha256
+      type: string
+      unit: null
+      nullable: false
+      description: dataset manifest hash
+    - name: git_head
+      type: string
+      unit: null
+      nullable: false
+      description: commit of the code that produced the run
+    - name: git_dirty
+      type: bool
+      unit: null
+      nullable: false
+      description: true if tracked files were modified at run time
+    - name: utc_time
+      type: datetime
+      unit: UTC
+      nullable: true
+      description: from the run registry; null for runs that predate it (M2)
+    - name: is_registered
+      type: bool
+      unit: null
+      nullable: false
+      description: protocol_id comes from the protocol map
+    - name: is_headline
+      type: bool
+      unit: null
+      nullable: false
+      description: run_class=locked AND is_registered AND NOT git_dirty; only these feed default KPI views
+    - name: canary_passed
+      type: bool
+      unit: null
+      nullable: true
+      description: label-shuffle canary result for LOAO runs; null where not applicable
+    - name: label_convention
+      type: string
+      unit: null
+      nullable: false
+      description: '''olive_fraction = a/(a+b), a = olive parts by volume (ADR-008)'''
+    - name: transductive_warning
+      type: string
+      unit: null
+      nullable: true
+      description: mandatory wording for transductive runs; null otherwise
+    - name: limitations_text
+      type: string
+      unit: null
+      nullable: false
+      description: run limitations joined with ' || '
+  fact_predictions:
+    kind: fact
+    grain: one row per run x fold x model x held-out sample
+    primary_key:
+    - run_id
+    - fold_id
+    - model_key
+    - sample_id
+    source: results/<run>/predictions.csv
+    status: AVAILABLE_M2_M4
+    columns:
+    - name: run_id
+      type: string
+      unit: null
+      nullable: false
+      description: FK dim_experiment
+    - name: fold_id
+      type: string
+      unit: null
+      nullable: false
+      description: FK dim_fold
+    - name: model_key
+      type: string
+      unit: null
+      nullable: false
+      description: FK dim_model
+    - name: sample_id
+      type: string
+      unit: null
+      nullable: false
+      description: FK dim_sample
+    - name: mode
+      type: string
+      unit: null
+      nullable: false
+      description: information access of THIS model in THIS run (svr_no_adaptation is inductive inside a transductive run)
+    - name: y_true_fraction
+      type: decimal
+      unit: fraction
+      nullable: false
+      description: evaluation label; must equal dim_sample.olive_fraction (validated)
+    - name: y_pred_fraction
+      type: decimal
+      unit: fraction
+      nullable: false
+      description: UNCLIPPED prediction; may fall outside [0,1]
+    - name: y_pred_clipped_fraction
+      type: decimal
+      unit: fraction
+      nullable: false
+      description: clip(y_pred, 0, 1); secondary, reference-style scoring only
+    - name: residual_fraction
+      type: decimal
+      unit: fraction
+      nullable: false
+      description: y_pred - y_true (positive = olive overestimated)
+    - name: abs_error_fraction
+      type: decimal
+      unit: fraction
+      nullable: false
+      description: '|residual|'
+    - name: abs_error_pp
+      type: decimal
+      unit: percentage points
+      nullable: false
+      description: 100 * abs_error_fraction
+    - name: is_out_of_unit_interval
+      type: bool
+      unit: null
+      nullable: false
+      description: y_pred < 0 or y_pred > 1
+    - name: source_sample_hash
+      type: string
+      unit: null
+      nullable: false
+      description: SHA-256 of the source .dat (from predictions.csv)
+  fact_model_metrics:
+    kind: fact
+    grain: one row per run x model x scope x scoring
+    primary_key:
+    - run_id
+    - model_key
+    - scope_type
+    - fold_id
+    - scoring
+    source: results/<run>/metrics_by_fold.csv and summary.json
+    status: AVAILABLE_M2_M4
+    columns:
+    - name: run_id
+      type: string
+      unit: null
+      nullable: false
+      description: FK dim_experiment
+    - name: model_key
+      type: string
+      unit: null
+      nullable: false
+      description: FK dim_model
+    - name: mode
+      type: string
+      unit: null
+      nullable: false
+      description: information access of the model in this run
+    - name: scope_type
+      type: string
+      unit: null
+      nullable: false
+      description: 'enum: fold, macro (unweighted mean over folds), pooled (all held-out predictions)'
+    - name: fold_id
+      type: string
+      unit: null
+      nullable: true
+      description: FK dim_fold for scope_type=fold; null for macro/pooled
+    - name: scoring
+      type: string
+      unit: null
+      nullable: false
+      description: 'enum: unclipped (primary), clipped_to_unit_interval (secondary)'
+    - name: n_samples
+      type: int
+      unit: samples
+      nullable: false
+      description: 'samples scored (macro: sum over folds)'
+    - name: n_folds
+      type: int
+      unit: folds
+      nullable: false
+      description: 1 for fold rows; number of folds for macro; number of folds pooled
+    - name: mae_fraction
+      type: decimal
+      unit: fraction
+      nullable: false
+      description: mean absolute error
+    - name: mae_pp
+      type: decimal
+      unit: percentage points
+      nullable: false
+      description: 100 * mae_fraction
+    - name: rmse_fraction
+      type: decimal
+      unit: fraction
+      nullable: false
+      description: root mean squared error
+    - name: bias_fraction
+      type: decimal
+      unit: fraction
+      nullable: false
+      description: mean(pred - true)
+    - name: r2
+      type: decimal
+      unit: unitless
+      nullable: true
+      description: coefficient of determination, never clamped; null if undefined
+    - name: n_out_of_range
+      type: int
+      unit: predictions
+      nullable: false
+      description: predictions outside [0,1] (unclipped scoring)
+    - name: retention
+      type: decimal
+      unit: fraction
+      nullable: false
+      description: fraction of predictions kept (1.0 until M5 abstention exists)
+    - name: r2_sd_across_folds
+      type: decimal
+      unit: unitless
+      nullable: true
+      description: macro rows only
+    - name: worst_fold_id
+      type: string
+      unit: null
+      nullable: true
+      description: 'macro rows only: fold with the largest MAE'
+    - name: worst_fold_mae_fraction
+      type: decimal
+      unit: fraction
+      nullable: true
+      description: macro rows only
+  fact_uncertainty:
+    kind: fact
+    grain: one row per run x fold x model x held-out sample (only for runs with an uncertainty experiment)
+    primary_key:
+    - run_id
+    - fold_id
+    - model_key
+    - sample_id
+    source: M5 artifacts (planned; predictions.csv already reserves abstain, ood_score, interval_lo, interval_hi)
+    status: PLANNED_M5
+    columns:
+    - name: run_id
+      type: string
+      unit: null
+      nullable: false
+      description: FK dim_experiment
+    - name: fold_id
+      type: string
+      unit: null
+      nullable: false
+      description: FK dim_fold
+    - name: model_key
+      type: string
+      unit: null
+      nullable: false
+      description: FK dim_model
+    - name: sample_id
+      type: string
+      unit: null
+      nullable: false
+      description: FK dim_sample
+    - name: mode
+      type: string
+      unit: null
+      nullable: false
+      description: inductive or transductive_batch
+    - name: abstain
+      type: bool
+      unit: null
+      nullable: false
+      description: research-level review flag; NOT a safety or fraud decision
+    - name: abstain_reason_code
+      type: string
+      unit: null
+      nullable: true
+      description: status code, e.g. ABSTAIN_OOD_RISK, INSUFFICIENT_CALIBRATION
+    - name: ood_score
+      type: decimal
+      unit: method-specific
+      nullable: true
+      description: proxy score; not an oracle of unseen adulterants
+    - name: ood_method
+      type: string
+      unit: null
+      nullable: true
+      description: actual method name (e.g. source-PCA reconstruction residual)
+    - name: ood_threshold
+      type: decimal
+      unit: method-specific
+      nullable: true
+      description: threshold value used
+    - name: threshold_fit_source
+      type: string
+      unit: null
+      nullable: true
+      description: must state source-only fitting, e.g. 'source_only_out_of_fold'; target labels never allowed
+    - name: interval_lo_fraction
+      type: decimal
+      unit: fraction
+      nullable: true
+      description: unclipped lower bound
+    - name: interval_hi_fraction
+      type: decimal
+      unit: fraction
+      nullable: true
+      description: unclipped upper bound
+    - name: interval_width_fraction
+      type: decimal
+      unit: fraction
+      nullable: true
+      description: hi - lo
+    - name: interval_method
+      type: string
+      unit: null
+      nullable: true
+      description: ACTUAL statistical method (e.g. empirical residual quantile from source cross-fitting); never just 'confidence
+        interval'
+    - name: interval_nominal_level
+      type: decimal
+      unit: fraction
+      nullable: true
+      description: nominal level, e.g. 0.90; NOT a guarantee under distribution shift
+    - name: calibration_protocol
+      type: string
+      unit: null
+      nullable: true
+      description: how calibration residuals were obtained (source-only)
+    - name: calibration_n
+      type: int
+      unit: samples
+      nullable: true
+      description: calibration sample count
+    - name: covered
+      type: bool
+      unit: null
+      nullable: true
+      description: lo <= y_true <= hi, computed in the exporter from the evaluation label; observed, empirical
+    - name: status_code
+      type: string
+      unit: null
+      nullable: true
+      description: taxonomy code from docs/engineering/04_ARCHITECTURE.md
+  fact_selective_risk:
+    kind: fact
+    grain: one row per run x model x scope x retention target (only for runs with an abstention experiment)
+    primary_key:
+    - run_id
+    - model_key
+    - scope_type
+    - fold_id
+    - retention_target
+    - rule_id
+    source: M5 selective_risk.csv (planned; columns follow docs/science/05_EVALUATION_PLAN.md section 7)
+    status: PLANNED_M5
+    columns:
+    - name: run_id
+      type: string
+      unit: null
+      nullable: false
+      description: FK dim_experiment
+    - name: model_key
+      type: string
+      unit: null
+      nullable: false
+      description: FK dim_model
+    - name: mode
+      type: string
+      unit: null
+      nullable: false
+      description: inductive or transductive_batch; never merged
+    - name: scope_type
+      type: string
+      unit: null
+      nullable: false
+      description: 'enum: fold, macro'
+    - name: fold_id
+      type: string
+      unit: null
+      nullable: true
+      description: FK dim_fold for fold rows
+    - name: rule_id
+      type: string
+      unit: null
+      nullable: false
+      description: identifier of the preregistered abstention rule
+    - name: retention_target
+      type: decimal
+      unit: fraction
+      nullable: false
+      description: 1.0, 0.9, 0.8, 0.7
+    - name: retention_observed
+      type: decimal
+      unit: fraction
+      nullable: false
+      description: actual fraction retained
+    - name: rejection_rate
+      type: decimal
+      unit: fraction
+      nullable: false
+      description: 1 - retention_observed
+    - name: selective_mae_fraction
+      type: decimal
+      unit: fraction
+      nullable: false
+      description: MAE over retained predictions
+    - name: selective_mae_pp
+      type: decimal
+      unit: percentage points
+      nullable: false
+      description: 100 * selective_mae_fraction
+    - name: rejected_mae_fraction
+      type: decimal
+      unit: fraction
+      nullable: true
+      description: retrospective MAE of rejected samples; analysis only
+    - name: worst_retained_error_fraction
+      type: decimal
+      unit: fraction
+      nullable: true
+      description: max absolute error among retained
+    - name: random_reject_mae_fraction_mean
+      type: decimal
+      unit: fraction
+      nullable: true
+      description: random-abstention control, mean over seeded repeats
+    - name: random_reject_mae_fraction_sd
+      type: decimal
+      unit: fraction
+      nullable: true
+      description: random-abstention control, sd
+    - name: n_random_repeats
+      type: int
+      unit: repeats
+      nullable: true
+      description: number of seeded repeats
+  fact_data_quality:
+    kind: fact
+    grain: one row per validated spectrum
+    primary_key:
+    - sample_id
+    source: data/interim/sample_manifest.csv and M1 qc_summary.csv/data_audit.json
+    status: AVAILABLE_M1
+    columns:
+    - name: sample_id
+      type: string
+      unit: null
+      nullable: false
+      description: FK dim_sample
+    - name: qc_status
+      type: string
+      unit: null
+      nullable: false
+      description: 'enum: PASS, WARN, FAIL'
+    - name: qc_flags
+      type: string
+      unit: null
+      nullable: true
+      description: ''';''-separated flags, e.g. NEGATIVE_INTENSITY'
+    - name: excitation_channels
+      type: int
+      unit: channels
+      nullable: false
+      description: 35 expected
+    - name: emission_channels
+      type: int
+      unit: channels
+      nullable: false
+      description: 270 expected
+    - name: expected_cells
+      type: int
+      unit: cells
+      nullable: false
+      description: reference value 35 x 270 = 9450
+    - name: finite_cells
+      type: int
+      unit: cells
+      nullable: false
+      description: cells with finite intensity
+    - name: spectral_completeness
+      type: decimal
+      unit: fraction
+      nullable: false
+      description: finite_cells / expected_cells in [0,1]
+    - name: negative_cells
+      type: int
+      unit: cells
+      nullable: false
+      description: cells with intensity < 0 (kept raw, flagged)
+    - name: intensity_min
+      type: decimal
+      unit: Counts/uA
+      nullable: false
+      description: minimum raw intensity
+    - name: intensity_max
+      type: decimal
+      unit: Counts/uA
+      nullable: false
+      description: maximum raw intensity
+    - name: is_constant_signal
+      type: bool
+      unit: null
+      nullable: false
+      description: constant spectrum (QC FAIL)
+    - name: is_duplicate_content
+      type: bool
+      unit: null
+      nullable: false
+      description: another sample has the same source SHA-256
+    - name: axis_matches_reference
+      type: bool
+      unit: null
+      nullable: false
+      description: wavelength axes identical to the reference axes
+    - name: source_excitation_order
+      type: string
+      unit: null
+      nullable: false
+      description: order found in the file (descending in the current data); reordered by one recorded rule
+    - name: normalization_factor
+      type: decimal
+      unit: null
+      nullable: false
+      description: '''Normalized by'' header value'
+    - name: parser_version
+      type: string
+      unit: null
+      nullable: false
+      description: parser version
+  fact_data_issues:
+    kind: fact
+    grain: one row per rejected file, discrepancy or informational audit note
+    primary_key:
+    - issue_id
+    source: M1 data_audit.json (problems, discrepancy_ledger, extra_duplicate_copy_files)
+    status: AVAILABLE_M1
+    columns:
+    - name: issue_id
+      type: string
+      unit: null
+      nullable: false
+      description: 'stable ID: sha256 of (severity, path_rel, description)[:16]'
+    - name: severity
+      type: string
+      unit: null
+      nullable: false
+      description: 'enum: REJECTED_FILE, DISCREPANCY, INFORMATIONAL'
+    - name: path_rel
+      type: string
+      unit: null
+      nullable: true
+      description: path relative to the dataset root, Unicode NFC; never an absolute path
+    - name: description
+      type: string
+      unit: null
+      nullable: false
+      description: audit text
+    - name: audit_source
+      type: string
+      unit: null
+      nullable: false
+      description: problems | discrepancy_ledger | extra_duplicate_copy_files
+    - name: manifest_sha256
+      type: string
+      unit: null
+      nullable: false
+      description: manifest the audit belongs to
+  fact_ot_diagnostics:
+    kind: fact
+    grain: one row per run x fold x transductive model
+    primary_key:
+    - run_id
+    - fold_id
+    - model_key
+    source: results/<run>/ot_diagnostics.csv (M4)
+    status: AVAILABLE_M4
+    columns:
+    - name: run_id
+      type: string
+      unit: null
+      nullable: false
+      description: FK dim_experiment
+    - name: fold_id
+      type: string
+      unit: null
+      nullable: false
+      description: FK dim_fold
+    - name: model_key
+      type: string
+      unit: null
+      nullable: false
+      description: FK dim_model
+    - name: solver
+      type: string
+      unit: null
+      nullable: false
+      description: sinkhorn_log_domain, pot_sinkhorn, pca_source_plus_target_X, none
+    - name: epsilon
+      type: decimal
+      unit: cost units
+      nullable: true
+      description: entropic regularization
+    - name: n_source
+      type: int
+      unit: samples
+      nullable: false
+      description: source batch size
+    - name: n_target
+      type: int
+      unit: samples
+      nullable: false
+      description: unlabeled target batch size
+    - name: n_iter
+      type: int
+      unit: iterations
+      nullable: true
+      description: solver iterations (POT value is an estimate from its error log)
+    - name: converged
+      type: bool
+      unit: null
+      nullable: true
+      description: recorded honestly; false rows are shown, never dropped
+    - name: pot_nonconvergence_warning
+      type: bool
+      unit: null
+      nullable: true
+      description: POT warned about non-convergence
+    - name: row_marginal_l1
+      type: decimal
+      unit: null
+      nullable: true
+      description: L1 error of source marginal
+    - name: col_marginal_l1
+      type: decimal
+      unit: null
+      nullable: true
+      description: L1 error of target marginal
+    - name: col_marginal_sq_l2
+      type: decimal
+      unit: null
+      nullable: true
+      description: stopping statistic (squared L2 of target-marginal error)
+    - name: total_mass
+      type: decimal
+      unit: null
+      nullable: true
+      description: transported mass, should be 1
+    - name: cost_min
+      type: decimal
+      unit: Euclidean distance
+      nullable: true
+      description: minimum cost entry
+    - name: cost_median
+      type: decimal
+      unit: Euclidean distance
+      nullable: true
+      description: median cost entry
+    - name: cost_max
+      type: decimal
+      unit: Euclidean distance
+      nullable: true
+      description: maximum cost entry
+    - name: n_components
+      type: int
+      unit: components
+      nullable: true
+      description: PCA size for published-style PCA baselines
+    - name: mode
+      type: string
+      unit: null
+      nullable: false
+      description: information access of this model
+  fact_robustness:
+    kind: fact
+    grain: one row per run x stress type x fold x batch kind x model (or per control model)
+    primary_key:
+    - run_id
+    - stress_type
+    - fold_id
+    - batch_kind
+    - model_key
+    source: M3 control_summary.json, M4 batch_sensitivity.json, M5 perturbation results (planned)
+    status: AVAILABLE_M3_M4_PLANNED_M5
+    columns:
+    - name: run_id
+      type: string
+      unit: null
+      nullable: false
+      description: FK dim_experiment (an exploratory run)
+    - name: stress_type
+      type: string
+      unit: null
+      nullable: false
+      description: 'enum: permuted_source_labels, batch_size, batch_brand, batch_label_skew, synthetic_perturbation'
+    - name: fold_id
+      type: string
+      unit: null
+      nullable: true
+      description: FK dim_fold; null for controls summarized over folds
+    - name: batch_kind
+      type: string
+      unit: null
+      nullable: true
+      description: random_10, random_20, brand_<key>, skew_low_olive, skew_high_olive, ...
+    - name: model_key
+      type: string
+      unit: null
+      nullable: false
+      description: FK dim_model
+    - name: mode
+      type: string
+      unit: null
+      nullable: false
+      description: information access
+    - name: n_batches
+      type: int
+      unit: batches
+      nullable: true
+      description: number of batches or permutation repeats
+    - name: n_failed
+      type: int
+      unit: batches
+      nullable: true
+      description: batches that raised an error
+    - name: mae_fraction_mean
+      type: decimal
+      unit: fraction
+      nullable: true
+      description: mean MAE over batches
+    - name: mae_fraction_max
+      type: decimal
+      unit: fraction
+      nullable: true
+      description: worst MAE over batches
+    - name: r2_mean
+      type: decimal
+      unit: unitless
+      nullable: true
+      description: mean R2 over batches (or mean macro R2 for controls)
+    - name: r2_min
+      type: decimal
+      unit: unitless
+      nullable: true
+      description: worst R2 over batches
+    - name: scored_on
+      type: string
+      unit: null
+      nullable: false
+      description: what the numbers describe, e.g. 'the stress batch itself' or 'true held-out labels'
+  fact_published_reference:
+    kind: fact
+    grain: one row per published number used for comparison
+    primary_key:
+    - reference_id
+    source: published values recorded in docs/science/02_RESEARCH_PROTOCOL.md and the M3/M4 reports
+    status: AVAILABLE_M4
+    columns:
+    - name: reference_id
+      type: string
+      unit: null
+      nullable: false
+      description: e.g. sun2026_raw_mean_r2
+    - name: source_doi
+      type: string
+      unit: null
+      nullable: false
+      description: 10.1038/s41538-026-01037-6
+    - name: model_label
+      type: string
+      unit: null
+      nullable: false
+      description: the authors' column name (e.g. 'PARAFAC')
+    - name: metric
+      type: string
+      unit: null
+      nullable: false
+      description: mean_r2 over five LOAO systems
+    - name: value
+      type: decimal
+      unit: unitless
+      nullable: false
+      description: published number
+    - name: sd
+      type: decimal
+      unit: unitless
+      nullable: true
+      description: published sd if given
+    - name: is_measured
+      type: bool
+      unit: null
+      nullable: false
+      description: 'ALWAYS false: published, not measured by ChemiProof'
+    - name: comparable_model_key
+      type: string
+      unit: null
+      nullable: true
+      description: our closest model, for display pairing only; never joined into metrics
+    - name: caveat
+      type: string
+      unit: null
+      nullable: false
+      description: e.g. 'authors clip predictions to [0,1]'
+relationships:
+- one: dim_experiment[run_id]
+  many: fact_predictions[run_id]
+  cardinality: 1:*
+  filter_direction: single (dim -> fact)
+  active: true
+- one: dim_experiment[run_id]
+  many: fact_model_metrics[run_id]
+  cardinality: 1:*
+  filter_direction: single
+  active: true
+- one: dim_experiment[run_id]
+  many: fact_uncertainty[run_id]
+  cardinality: 1:*
+  filter_direction: single
+  active: true
+- one: dim_experiment[run_id]
+  many: fact_selective_risk[run_id]
+  cardinality: 1:*
+  filter_direction: single
+  active: true
+- one: dim_experiment[run_id]
+  many: fact_ot_diagnostics[run_id]
+  cardinality: 1:*
+  filter_direction: single
+  active: true
+- one: dim_experiment[run_id]
+  many: fact_robustness[run_id]
+  cardinality: 1:*
+  filter_direction: single
+  active: true
+- one: dim_model[model_key]
+  many: fact_predictions[model_key]
+  cardinality: 1:*
+  filter_direction: single
+  active: true
+- one: dim_model[model_key]
+  many: fact_model_metrics[model_key]
+  cardinality: 1:*
+  filter_direction: single
+  active: true
+- one: dim_model[model_key]
+  many: fact_uncertainty[model_key]
+  cardinality: 1:*
+  filter_direction: single
+  active: true
+- one: dim_model[model_key]
+  many: fact_selective_risk[model_key]
+  cardinality: 1:*
+  filter_direction: single
+  active: true
+- one: dim_model[model_key]
+  many: fact_ot_diagnostics[model_key]
+  cardinality: 1:*
+  filter_direction: single
+  active: true
+- one: dim_model[model_key]
+  many: fact_robustness[model_key]
+  cardinality: 1:*
+  filter_direction: single
+  active: true
+- one: dim_fold[fold_id]
+  many: fact_predictions[fold_id]
+  cardinality: 1:*
+  filter_direction: single
+  active: true
+- one: dim_fold[fold_id]
+  many: fact_model_metrics[fold_id]
+  cardinality: 1:*
+  filter_direction: single (null fold_id for macro/pooled rows)
+  active: true
+- one: dim_fold[fold_id]
+  many: fact_uncertainty[fold_id]
+  cardinality: 1:*
+  filter_direction: single
+  active: true
+- one: dim_fold[fold_id]
+  many: fact_ot_diagnostics[fold_id]
+  cardinality: 1:*
+  filter_direction: single
+  active: true
+- one: dim_fold[fold_id]
+  many: fact_robustness[fold_id]
+  cardinality: 1:*
+  filter_direction: single
+  active: true
+- one: dim_sample[sample_id]
+  many: fact_predictions[sample_id]
+  cardinality: 1:*
+  filter_direction: single
+  active: true
+- one: dim_sample[sample_id]
+  many: fact_uncertainty[sample_id]
+  cardinality: 1:*
+  filter_direction: single
+  active: true
+- one: dim_sample[sample_id]
+  many: fact_data_quality[sample_id]
+  cardinality: '1:1'
+  filter_direction: single
+  active: true
+- one: dim_adulterant[adulterant_key]
+  many: dim_sample[adulterant_key]
+  cardinality: 1:*
+  filter_direction: single
+  active: true
+- one: dim_brand[brand_key]
+  many: dim_sample[brand_key]
+  cardinality: 1:*
+  filter_direction: single
+  active: true
+no_relationship:
+- fact_published_reference
+- fact_data_issues
+- fact_selective_risk.fold_id (dim_fold optional; macro rows have null)

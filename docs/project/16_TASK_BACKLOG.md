@@ -1,6 +1,6 @@
 # AI Coding Task Backlog — bite-sized, dependency-aware work orders
 
-**Read first:** `CLAUDE.md`. Status is NOT STARTED for all tasks below. This backlog turns stage goals into reviewable tasks. The agent implements tasks **within** the active milestone, not all at once. Use task IDs in commits/reviews.
+**Read first:** `CLAUDE.md`. Task status lives in `docs/project/14_PROGRESS_LOG.md`; M5-M7 and M6.5 (CP-651 to CP-660, full cards in `docs/project/06_MILESTONES.md`) are NOT STARTED. This backlog turns stage goals into reviewable tasks. The agent implements tasks **within** the active milestone, not all at once. Use task IDs in commits/reviews.
 
 | Task ID | Milestone | Task | Dependencies | Evidence to submit |
 |---|---|---|---|---|
@@ -41,6 +41,16 @@
 | CP-602 | M6 | Build valid/invalid EEM explorer and source-only single screening | CP-601 | upload+error tests |
 | CP-603 | M6 | Build explicit transductive batch research mode with guardrails | CP-602 | batch workflow demo |
 | CP-604 | M6 | Add provenance export, accessible status wording and mode docs | CP-603 | export check and walkthrough |
+| CP-651 | M6.5 | BI requirements and data-contract specification (contract v1.0.0, protocol map, KPI catalog) | M3, M4 accepted; M5 metadata fields agreed | approved `config/bi/export_contract.yaml`, protocol map, consistency test |
+| CP-652 | M6.5 | Validated `chemiproof export bi` pipeline (CSV, optional Parquet, reconciliation, provenance) | CP-651, M3-M5, M6 | tests BI001-BI014 PASS, real export with manifest |
+| CP-653 | M6.5 | Power BI semantic model and relationships (`.pbip`, TMDL) on Windows | CP-652, Windows + Power BI Desktop | model view, TMDL diff, BI020 |
+| CP-654 | M6.5 | DAX measures and KPI definitions with run guard | CP-653 | reconciliation table, BI021, BI022 |
+| CP-655 | M6.5 | Dashboard Page 1: Dataset and Quality Overview | CP-654, M1 | page checklist, BI023/BI025 |
+| CP-656 | M6.5 | Dashboard Page 2: Machine Learning Performance | CP-654, M3, M4 | page checklist, BI023/BI026 |
+| CP-657 | M6.5 | Dashboard Page 3: Uncertainty and Screening Assessment | CP-654, M5 (hard) | page checklist, BI023/BI028 |
+| CP-658 | M6.5 | Dashboard Page 4: Scientific Research Insights | CP-654, CP-656, M4, M5 | page checklist, BI023/BI026 |
+| CP-659 | M6.5 | Data refresh and reproducibility procedure | CP-655-CP-658 | README procedure, BI027, BI032 |
+| CP-660 | M6.5 | Dashboard testing, documentation and portfolio presentation | CP-659 | evidence table, milestone review |
 | CP-701 | M7 | Clean-environment reproduce all five folds with locked configs | CP-604 | commands/hashes and equality analysis |
 | CP-702 | M7 | Write short research report and model/data cards | CP-701 | evidence-based reports |
 | CP-703 | M7 | Licenses, citations, raw-data redaction and scientific third-party review | CP-702 | review checklist |

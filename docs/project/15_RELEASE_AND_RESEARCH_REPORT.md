@@ -39,6 +39,7 @@ Model ID/version; owner; date; task and target units; supported matrix and instr
 5. Baseline vs method evaluation with five domains and reported limitations.
 6. `How to reproduce` commands requiring official external data.
 7. Technical stack, CI tests, exact contribution list, roadmap/known caveats.
+7a. *(only if M6.5 is accepted)* the Power BI dashboard with screenshots taken from real exports and the Windows/Desktop version used; otherwise state "Power BI layer: not delivered".
 8. `Not a certified authenticity test` prominent near result section.
 
 ## External review questions
@@ -46,6 +47,7 @@ Model ID/version; owner; date; task and target units; supported matrix and instr
 - Can a food chemistry instructor verify spectral preprocessing is physically plausible?
 - Can an ML reviewer verify no labels from target domain influence selection?
 - Can another student reproduce figures from a fresh environment?
+- If a Power BI dashboard is included: does every KPI reproduce from the exported data with Python, and does any visual combine protocols or modes?
 - Can a reviewer tell exactly which methods were proposed by Sun et al. and which pieces are your extension?
 - Are errors, odd samples, group imbalance, model refusal and transductive dependency visible rather than buried?
 

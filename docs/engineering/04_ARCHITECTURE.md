@@ -25,6 +25,8 @@ flowchart TD
     J --> K[Science report and figures]
     I --> L[Approved model artifacts]
     L --> M[Streamlit research explorer]
+    I --> N[Validated BI export tables, M6.5]
+    N --> O[Power BI dashboard, M6.5, Windows]
 ```
 
 ## Proposed package layout (directories to implement during M0–M6)
@@ -46,6 +48,7 @@ ChemiProof/
 │   ├── modeling/{baselines,ot,artifacts}.py
 │   ├── evaluation/{splits,metrics,runner,calibration,robustness}.py
 │   ├── reports/{tables,render,provenance}.py
+│   ├── bi/{contract,export,kpis}.py   # M6.5: validated export to Power BI tables (planned)
 │   └── ui/app.py              # Streamlit after M6
 ├── tests/{unit,integration,science}_*.py
 ├── data/{raw,interim,processed,fixtures}/
@@ -122,8 +125,13 @@ results/<run_id>/
 - `INSUFFICIENT_CALIBRATION`
 - `NUMERICAL_NONCONVERGENCE`
 - `LICENSE_REVIEW_PENDING`
+- *(planned with M6.5)* `BI_CONTRACT_VIOLATION`, `BI_RECONCILIATION_FAILED`, `BI_RUN_REJECTED`, `BI_UNREGISTERED_PROTOCOL`
 
 All statuses have a human-readable description and recorded technical context. UI must not pretend all are “negative for adulteration”.
+
+## BI export layer (M6.5, specification only)
+
+`export_bi(run_dirs, manifest, out_dir) -> ExportManifest` reads finished run directories (no retraining, no raw spectra) and writes the contract tables of `docs/bi/19_POWER_BI_DATA_MODEL.md` (CSV, optional Parquet) with an `export_manifest.json` carrying run, protocol, config/manifest hashes, git state and file hashes. It validates keys, units and provenance, reconciles metrics from predictions, rejects LOAO runs without a passed leakage canary, never writes inside `data/` or a source run folder, and exports empty uncertainty tables (flagged) when M5 outputs do not exist. Power BI consumes the folder read-only; nothing flows back to the models. Machine-readable contract: `config/bi/export_contract.yaml`.
 
 ## Versioning and test architecture
 
@@ -137,4 +145,5 @@ All statuses have a human-readable description and recorded technical context. U
 
 **M0–M5:** Python project with CLI and local filesystem, no DB/server.  
 **M6:** Streamlit local interactive research explorer.  
+**M6.5 (optional extension):** Power BI Desktop (Windows) as a read-only presentation layer fed by the validated export; no server, gateway or cloud publishing assumed.  
 **Future:** external DB/API/cloud only when multiple users, collaboration or authenticated deployment are a proven requirement.

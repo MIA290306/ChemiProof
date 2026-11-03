@@ -40,7 +40,12 @@ Published dataset summary: **330 EEM measurements**, five adulterants (**soybean
 - Five leave-one-adulterant-out evaluations with **per-adulterant** MAE, RMSE, R², bias, plus macro-average and dispersion.
 - Source-only baseline, published-style OT benchmark, an **abstention/robustness extension**, negative controls and reproducibility artifacts.
 - A local Streamlit research explorer with **clear non-clinical/non-regulatory warnings**, model mode and limitations visible.
+- *(Planned extension M6.5, specification only)* A **Power BI quality-analytics dashboard**, "ChemiProof: Food Authenticity & Quality Intelligence", built from validated experiment exports for Food Science, QA/QC and laboratory audiences. Python stays the only place where metrics are computed. Power BI Desktop is Windows-only, so macOS users need a Windows machine, VM or cloud desktop to build or verify it. See [`docs/bi/18_POWER_BI_SPEC.md`](docs/bi/18_POWER_BI_SPEC.md).
 - A short research report that cites baseline work and separates replicated findings from original additions.
+
+## Power BI layer (planned, milestone M6.5)
+
+Architecture: **Zenodo dataset → Python data processing → machine learning and uncertainty evaluation → validated analysis outputs → export pipeline → Power BI dashboard**. Power BI never trains models, tunes thresholds or reads raw spectra; every KPI must reproduce from the exported outputs with Python; protocols and modes are never mixed. Status: **specification only, nothing built**. Documents: [`docs/bi/18_POWER_BI_SPEC.md`](docs/bi/18_POWER_BI_SPEC.md), [`docs/bi/19_POWER_BI_DATA_MODEL.md`](docs/bi/19_POWER_BI_DATA_MODEL.md), [`docs/bi/20_POWER_BI_ACCEPTANCE_TESTS.md`](docs/bi/20_POWER_BI_ACCEPTANCE_TESTS.md).
 
 ## Quick start status
 
@@ -52,6 +57,6 @@ Do **not** commit raw Zenodo data or authors' code into this repository. Verify 
 
 ## Roadmap
 
-**M0** Repo setup → **M1** Dataset audit → **M2** Chemometric baselines → **M3** Open-world evaluation → **M4** OT reproduction → **M5** Uncertainty/abstention → **M6** App/reports → **M7** Validation/public release.
+**M0** Repo setup → **M1** Dataset audit → **M2** Chemometric baselines → **M3** Open-world evaluation → **M4** OT reproduction → **M5** Uncertainty/abstention → **M6** App/reports → *(optional extension)* **M6.5** Power BI food-quality intelligence → **M7** Validation/public release. M6.5 does not change M0-M7 and does not block M7.
 
 All status indicators and metrics must be computed from real runs; **never manufacture a result or mark a milestone complete to make the demo look impressive.**

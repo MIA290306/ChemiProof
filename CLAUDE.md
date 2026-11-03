@@ -11,6 +11,7 @@ You are acting as a senior research-software engineer and chemometrics collabora
 5. `docs/project/06_MILESTONES.md`, `docs/engineering/07_ACCEPTANCE_TESTS.md`
 6. `docs/science/09_RISK_REGISTER.md`, `docs/science/10_REFERENCES_AND_LICENSES.md`
 7. Current `docs/project/14_PROGRESS_LOG.md` and `docs/project/13_DECISION_LOG.md`
+8. Only when working on milestone M6.5 (Power BI): `docs/bi/18_POWER_BI_SPEC.md`, `docs/bi/19_POWER_BI_DATA_MODEL.md`, `docs/bi/20_POWER_BI_ACCEPTANCE_TESTS.md`
 
 ## Mandatory execution protocol
 
@@ -34,6 +35,7 @@ You are acting as a senior research-software engineer and chemometrics collabora
 8. Hard-reject files that violate input format, axis integrity, size or value constraints; do not quietly interpolate unsupported wavelength grids.
 9. Track instrument/protocol limitations, unbalanced groups (60/60/90/90/30) and EVOO brand imbalance as confounders.
 10. Never commit raw licensed third-party data/code, credentials, or unreviewed downloads. Reference source URLs, hashes and license findings.
+11. **Any dashboard or BI layer (M6.5) only shows validated, provenance-carrying outputs.** Every number carries its run, protocol, mode, model and scoring identity; results of different protocols or information-access modes are never combined; BI tools never fit models, tune thresholds or compute the metrics of record; no pass/fail, regulatory or "adulterated/safe" statements; published values stay separate from measured ones. A dashboard is not reported as built or validated without its acceptance evidence.
 
 ## Engineering preferences
 
@@ -41,7 +43,7 @@ You are acting as a senior research-software engineer and chemometrics collabora
 - Use `pyproject.toml` with **resolved compatible versions**, not guessed "latest" pins. Record Python version and lock/constraints; prioritize maintained stable releases and native Apple Silicon compatibility.
 - Deterministic experiment config and split manifest; fixed explicit seeds; saved model/version provenance.
 - Separation: immutable raw data → validated metadata/arrays → preprocessing → model/evaluation → presentation.
-- Prefer minimal components: NumPy, Pandas, SciPy, Scikit-learn, Plotly, Streamlit; investigate POT for OT later. No LLM API, database, FastAPI, cloud, GPU or frontend framework until a demonstrated need.
+- Prefer minimal components: NumPy, Pandas, SciPy, Scikit-learn, Plotly, Streamlit; investigate POT for OT later. Power BI is allowed only as the M6.5 presentation layer fed by a validated CSV/Parquet export (Parquet via an optional extra); it is Windows-only and never replaces Python or Streamlit. No LLM API, database, FastAPI, cloud, GPU or frontend framework until a demonstrated need.
 - Each numerical output declares units; e.g., `MAE = 0.06 fraction = 6 percentage points` (illustration, NOT actual score).
 - Treat external datasets and downloaded research code as **untrusted input**. Sanitize archive extraction paths. Never execute or eval .dat contents.
 

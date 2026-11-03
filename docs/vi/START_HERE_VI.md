@@ -23,7 +23,7 @@ Bạn đang phát triển **một hệ thống nghiên cứu về gian lận d�
 5. **LOAO:** giữ lại TOÀN BỘ một loại dầu pha trộn để test; train trên các loại còn lại.
 6. **Transductive OT:** phương pháp dùng dữ liệu quang phổ **không có nhãn** của nhóm test để điều chỉnh biểu diễn; không được sử dụng y của test để train hoặc chọn hyperparameter.
 
-Xem thêm bản roadmap tổng quan bằng tiếng Việt: [`docs/vi/ROADMAP_VI.md`](docs/vi/ROADMAP_VI.md).
+Xem thêm bản roadmap tổng quan bằng tiếng Việt: [`docs/vi/ROADMAP_VI.md`](ROADMAP_VI.md).
 
 ## Lộ trình đọc
 
@@ -36,6 +36,11 @@ Xem thêm bản roadmap tổng quan bằng tiếng Việt: [`docs/vi/ROADMAP_VI.
 | Muốn làm theo từng tuần | `docs/project/06_MILESTONES.md` |
 | Muốn biết kết quả nào “đạt” | `docs/engineering/07_ACCEPTANCE_TESTS.md` |
 | Muốn làm sản phẩm trông đẹp | `docs/product/08_UX_SPEC.md` |
+| Muốn thêm dashboard Power BI cho góc nhìn QA/QC | `docs/bi/18_POWER_BI_SPEC.md` (đặc tả, chưa xây) |
+
+## Về Power BI (mốc M6.5, tùy chọn)
+
+Power BI là công cụ trình bày bảng điều khiển (dashboard). Trong dự án này nó **chỉ hiển thị kết quả đã được Python kiểm chứng**, không tự huấn luyện mô hình và không đưa ra kết luận gian lận hay an toàn. Lưu ý cho người dùng macOS: **Power BI Desktop chỉ chạy trên Windows**; tài khoản Gmail cá nhân thường không đăng ký được dịch vụ Power BI trên web (Desktop thì không cần đăng nhập). Hiện mới có đặc tả và hợp đồng dữ liệu, **chưa có file dashboard nào**.
 
 ## Cách dùng với Claude Code
 

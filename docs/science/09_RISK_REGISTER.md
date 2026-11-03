@@ -24,6 +24,13 @@
 | R18 | Single-device paper appears production-ready | 4×4 | no external lab validation caveat | model card; recommend confirmatory testing | Owner / M7 |
 | R19 | Artificially injected noise treated as actual robustness evidence | 4×3 | “validated on other instruments” | label synthetic perturbation only | Research / M5 |
 | R20 | Agent overbuilds infrastructure instead of science | 4×3 | auth/db/LLM integrations before LOAO | strict milestone limits, local-first MVP | Owner / M0–M5 |
+| R21 | A BI visual or measure mixes protocols or information-access modes (for example inductive and OT results in one series) | 4×5 | numbers change when a slicer moves; series without protocol labels | run guard, protocol/mode shown in every visual, rules P-1 to P-4, tests BI006/BI022/BI026 | BI engineer / M6.5 |
+| R22 | A Power BI KPI cannot be reproduced from the Python outputs | 3×5 | reconciliation mismatch; hard-coded numbers | no hard-coded metrics, exporter reconciliation V-05, KPI recompute BI021 | BI engineer / M6.5 |
+| R23 | Dashboard wording or colours read as a fraud, safety or compliance verdict | 3×5 | words like adulterated/safe/compliant, traffic lights, thresholds | wording rules, no thresholds, lint BI024, owner review of wording | UX + owner / M6.5 |
+| R24 | Power BI Desktop is Windows-only; a macOS-only environment cannot build or verify the report, tempting an unverified "done" claim | 4×4 | `.pbip` files without screenshots or open logs | record the limitation, mark BLOCKED, Windows verification evidence required (BI020-BI032) | Owner / M6.5 |
+| R25 | Stale or inconsistent exports (old runs, schema drift, unregistered protocols) feed the dashboard | 3×4 | contract-version mismatch, config hash not in the protocol map | immutable versioned exports, protocol map with `UNREGISTERED`, refresh guard BI027 | Data engineer / M6.5 |
+| R26 | Derived data or an embedded-data `.pbix` is committed or published publicly before the rights review | 2×4 | `.pbix` in Git, "publish to web" used | `.gitignore`, no public publishing before M7, attribution footer BI030, rights checklist | Owner / M6.5-M7 |
+| R27 | Uncertainty or abstention shown without its method, level, calibration or retention, creating false assurance | 3×5 | label "90% interval" only; error shown without retention | method card, validation V-09, tests BI013/BI028 | Research lead / M6.5 |
 
 ## Escalation rules
 

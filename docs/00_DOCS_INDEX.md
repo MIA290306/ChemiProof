@@ -10,9 +10,10 @@ docs/
   science/      protocol, data, evaluation, risk  (02, 03, 05, 09, 10)
   engineering/  how we build and verify it        (04, 07, 11, 12)
   project/      plan, decisions, progress, release (06, 13, 14, 15, 16)
+  bi/           Power BI quality-analytics layer, milestone M6.5 (18, 19, 20) - specification only
   vi/           Vietnamese onboarding for the owner (START_HERE, ROADMAP, 17)
 templates/      MILESTONE_REVIEW.md, RESEARCH_REPORT.md
-config/         project.yaml, milestones.yaml, experiments/
+config/         project.yaml, milestones.yaml, experiments/, bi/export_contract.yaml
 ```
 
 ## Product — `docs/product/`
@@ -50,6 +51,14 @@ config/         project.yaml, milestones.yaml, experiments/
 | `14_PROGRESS_LOG.md` | Which gates have evidence of completion? | All |
 | `15_RELEASE_AND_RESEARCH_REPORT.md` | What must be presented before public release? | Owner |
 | `16_TASK_BACKLOG.md` | What exact task should the agent implement next? | Agent |
+
+## Power BI layer (M6.5, specification only) — `docs/bi/`
+
+| Document | Main question | Reader |
+|---|---|---|
+| `18_POWER_BI_SPEC.md` | What is the dashboard, which rules bind it, and what are its environment limits? | Owner + BI engineer |
+| `19_POWER_BI_DATA_MODEL.md` | Which tables, columns, units, relationships, KPIs and validation rules does the export need? | Data engineer + BI engineer |
+| `20_POWER_BI_ACCEPTANCE_TESTS.md` | How do we prove the export and the dashboard are correct (and when is M6.5 done)? | QA + owner |
 
 ## Vietnamese guides — `docs/vi/`
 

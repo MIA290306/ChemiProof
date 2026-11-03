@@ -105,3 +105,13 @@ At predefined retention goals 100/90/80/70%, compare selective risk against rand
 ## 10. Minimum interpretation standard
 
 The report must identify which hypothesis was supported, unsupported or inconclusive; provide adverse cases and plots, not cherry-picked best-fold screenshots. An inconclusive or negative selective-prediction result is a valid research finding.
+
+## 11. Consumption of results by dashboards and BI (M6.5)
+
+Any dashboard or BI report (see `docs/bi/18_POWER_BI_SPEC.md`) is a reader of finished evaluation outputs, never a participant in the protocol:
+
+- It may not fit models, select hyper-parameters, set or tune abstention thresholds, or pick a "best" model using held-out labels.
+- Each displayed number must identify its run, protocol id (for example `LOAO-v1`, `LOAO-OT-v1`), information-access mode (inductive or transductive), model key, scoring (unclipped primary, clipped secondary) and aggregation (fold, macro, pooled). Results from different protocols or modes are never merged into one value or series; published reference values stay in a separate, labeled area.
+- Locked and exploratory runs are distinguishable; only locked, registered, clean-tree runs are headline results.
+- Intervals are shown with their actual method, nominal level, calibration protocol and the statement that observed coverage is empirical and not guaranteed under distribution shift; abstention is always shown with its retention.
+- Every KPI must be reproducible from the exported outputs with Python before it is shown (reconciliation tolerance in `docs/bi/20_POWER_BI_ACCEPTANCE_TESTS.md`).

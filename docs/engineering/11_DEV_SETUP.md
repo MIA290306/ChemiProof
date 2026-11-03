@@ -34,6 +34,7 @@ chemiproof experiment run --config config/experiments/baseline.yaml
 chemiproof experiment run --config config/experiments/ot_transductive.yaml
 chemiproof experiment report --run-id <id>
 chemiproof app
+chemiproof export bi --run results/M3_<run_id> --run results/M4_<run_id> --output exports/bi   # planned, M6.5
 ```
 
 CLI must fail with a clear message when a command is not yet implemented. Do not mock completed ML results.
@@ -62,6 +63,14 @@ The default `pytest` and CI must run using tiny generated EEM fixtures with clea
 - Store experiment output summaries in small public JSON/CSV only if license/privacy permits; large arrays under ignored `results/` unless specifically approved.
 - Add a reproducible `results/README.md` documenting exactly how results were obtained and how public extracts relate to private raw data.
 - Keep schemas validated at boundaries and clear exception messages for novice maintainers.
+
+## Power BI (M6.5 only; optional, specification-level)
+
+- **Where it runs:** Power BI Desktop requires Windows 10 or later (checked against Microsoft Learn on 2026-11-03). There is **no macOS version**. On a Mac use a Windows PC, a Windows VM (verify compatibility with Apple silicon first), or a cloud Windows desktop (Windows 365 or Azure Virtual Desktop, which Microsoft documents as supported). Desktop works without signing in; the Power BI service (web, sharing, scheduled refresh) needs a work or school account and personal e-mail addresses such as Gmail are not accepted directly.
+- **What can be done on macOS:** write and test the Python export (`src/chemiproof/bi/`), the data contract and KPI recomputation; edit `.pbip` text files (TMDL/PBIR) in VS Code. **What cannot:** open, refresh or verify the report. Text generated outside Desktop is unvalidated until opened there; record this in the milestone review.
+- **Files:** use the `.pbip` project format; `.pbix`, `.pbi/cache.abf` and `exports/bi/` are git-ignored. Exports are produced by `chemiproof export bi` and pointed to by the `ExportFolder` parameter. No gateway, scheduled refresh or publishing is assumed.
+- **Optional dependency:** Parquet output needs `pip install -e '.[bi]'` (adds `pyarrow`, added only when M6.5 starts); CSV needs nothing.
+- Full procedure and tests: `docs/bi/18_POWER_BI_SPEC.md`, `docs/bi/20_POWER_BI_ACCEPTANCE_TESTS.md`.
 
 ## CI minimum proposed
 

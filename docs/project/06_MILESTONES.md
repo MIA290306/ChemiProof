@@ -13,6 +13,7 @@
 | **M4** OT Replication | Weeks 8–10 | unlabeled-target-batch OT+SVR, method comparison | reproducible benchmark; explicit mode distinction |
 | **M5** Trustworthiness Research | Weeks 11–13 | uncertainty/abstention, risk-coverage plots, robustness | empirical analysis including failures |
 | **M6** Research Explorer | Weeks 14–15 | Streamlit UI, controlled upload, explainable report | realistic researcher walkthrough |
+| **M6.5** Power BI Food Quality Intelligence (optional extension) | After M6; can overlap M7 drafting | validated BI export pipeline, data contract, four-page Power BI dashboard, KPI reconciliation | export tests pass on real runs; dashboard opened and verified in Power BI Desktop on Windows; every KPI reproduces from Python |
 | **M7** Scientific Release | Weeks 16–18 | report, model card, reproducibility bundle, portfolio README | third-party rerun checklist and no overclaims |
 
 ## M0 — Foundation / Ready to Develop
@@ -137,6 +138,130 @@
 **Artifacts:** functioning local UI, UI tests, screenshots, walkthrough demo, export fixture.
 
 **Exit gate:** reviewer can inspect genuine test-run artifacts, upload valid and invalid examples and see honest methodological labels.
+
+## M6.5 — Power BI Food Quality Intelligence (extension; NOT STARTED)
+
+**Scientific and product purpose:** give Food Science, QA/QC and laboratory readers a business-intelligence view of dataset quality, model performance, uncertainty and research findings, built **only** from validated experiment outputs. Power BI is a presentation layer; Python remains the only place where metrics, intervals and abstention are computed. This milestone neither renumbers nor changes M0–M7 and does not alter the scientific protocols.
+
+**Specification documents:** `docs/bi/18_POWER_BI_SPEC.md` (dashboard, rules, environment), `docs/bi/19_POWER_BI_DATA_MODEL.md` (data contract, relationships, KPIs, DAX drafts), `docs/bi/20_POWER_BI_ACCEPTANCE_TESTS.md` (tests BI001 to BI032, Definition of Done), `config/bi/export_contract.yaml`. Decision: ADR-016.
+
+**Prerequisites:** M5 accepted (uncertainty/abstention outputs and their method metadata) and M6 accepted (shared artifact conventions). Task-level dependencies are listed below; data-quality work needs only M1, performance work only M3 and M4. M7 does **not** depend on M6.5 (ADR-016): if M6.5 is not accepted the release states "Power BI layer: not delivered".
+
+**Environment limitation:** Power BI Desktop runs on Windows only. The development machine is macOS, so the dashboard cannot be built or validated there. If no Windows environment is available the dashboard tasks (CP-653 to CP-660) are recorded as `BLOCKED`, never as done. Python-side tasks (CP-651, CP-652, KPI recomputation in CP-654) run on macOS.
+
+**Global rules for every task:** no fabricated results; no hard-coded metrics; no leakage; protocol, mode, model version and provenance on every number; published values kept separate; no raw data or `.pbix` committed; no claim that the dashboard is built or validated before its tests have evidence.
+
+### Task CP-651: BI requirements and data-contract specification
+
+- **Objective:** freeze what the dashboard needs and the exact tables, columns, units, relationships, protocol map and KPI definitions the exporter must provide.
+- **Dependencies:** M3 and M4 accepted (artifact shapes are final); the M5 method-metadata fields agreed with the M5 owner (soft dependency, completes before CP-657).
+- **Files to create or modify:** `docs/bi/18_POWER_BI_SPEC.md`, `docs/bi/19_POWER_BI_DATA_MODEL.md`, `docs/bi/20_POWER_BI_ACCEPTANCE_TESTS.md`, `config/bi/export_contract.yaml`, new `config/bi/protocol_map.yaml`, `docs/project/13_DECISION_LOG.md`.
+- **Technical implementation requirements:** re-check every column against the real artifacts of the accepted runs; add the M5 uncertainty fields; protocol map entries with accepted `config_sha256`; contract versioned (`contract_version`); the YAML twin and the Markdown tables stay identical.
+- **Expected deliverables:** approved contract (version 1.0.0), protocol map, KPI catalog with a Python recompute rule per KPI.
+- **Acceptance criteria:** the contract covers all fields of the artifacts present; every KPI has a source and a recompute rule; no table can mix protocols without identifiers; owner approves the contract.
+- **Verification procedure:** `pytest tests/unit/test_docs_consistency.py`; a review checklist signed by the owner; schema cross-check against `results/*/predictions.csv`, `metrics_by_fold.csv`, `summary.json`.
+- **Definition of Done:** contract and protocol map merged, tests green, ADR updated, review recorded in `docs/project/14_PROGRESS_LOG.md`.
+
+### Task CP-652: Validated model-output export pipeline
+
+- **Objective:** a reproducible, validated `chemiproof export bi` that turns finished run directories into the contract tables (CSV, optional Parquet) with provenance.
+- **Dependencies:** CP-651; M3, M4 and M5 outputs; M6 conventions.
+- **Files to create or modify:** `src/chemiproof/bi/` (`contract.py`, `export.py`, `kpis.py`), `src/chemiproof/cli.py`, `src/chemiproof/errors.py` (BI status codes), `pyproject.toml` (optional extra `bi`), `constraints.txt`, `.gitignore` (`exports/bi/`), `tests/unit/test_bi_export.py`, `tests/integration/test_bi_export_real.py` (dataset marker), `docs/engineering/11_DEV_SETUP.md`.
+- **Technical implementation requirements:** rules V-01 to V-12; read-only access to runs and dataset; deterministic output; refuse to overwrite; `uncertainty_available=false` and empty tables when M5 output is absent; protocol identity and provenance on every row; metrics reconciled from predictions; an `expected_kpis.json` written from Python for BI021; no intensity data in the export.
+- **Expected deliverables:** the CLI, the test suite, one real export folder with `export_manifest.json`, a reconciliation report.
+- **Acceptance criteria:** BI001 to BI014 PASS on synthetic fixtures and, where applicable, on the real runs (M2, M3, M4 and the M5 runs); export is byte-identical on rerun.
+- **Verification procedure:** `pytest -q -m "not dataset"`, `pytest -q -m dataset`, `chemiproof export bi ...` twice and compare hashes, dataset hash before/after.
+- **Definition of Done:** code, tests, documented commands, real-export evidence, docs updated, CI green, progress log updated.
+
+### Task CP-653: Data model and relationships
+
+- **Objective:** a Power BI semantic model that loads the export and implements the star-schema relationships of the contract.
+- **Dependencies:** CP-652; a Windows machine with Power BI Desktop.
+- **Files to create or modify:** `bi/powerbi/ChemiProofBI.pbip`, `bi/powerbi/ChemiProofBI.SemanticModel/` (TMDL), `bi/powerbi/README.md`, `docs/bi/19_POWER_BI_DATA_MODEL.md`.
+- **Technical implementation requirements:** import mode from CSV/Parquet through the `ExportFolder` parameter; column types and formats as in the contract; the 22 relationships single-direction; no calculated tables; no auto date tables; key columns hidden; `contract_version` check query.
+- **Expected deliverables:** the semantic model project files and a model-view screenshot from a real export.
+- **Acceptance criteria:** BI020 PASS; wrong `contract_version` stops refresh with a visible error.
+- **Verification procedure:** open the `.pbip` in Power BI Desktop, compare the model with `config/bi/export_contract.yaml` (TMDL diff), refresh.
+- **Definition of Done:** model committed as text, BI020 evidence stored, Windows environment and Desktop version recorded.
+
+### Task CP-654: DAX measures and KPI definitions
+
+- **Objective:** implement the KPI catalog as measures that reproduce the Python values and refuse ambiguous selections.
+- **Dependencies:** CP-653 and the `expected_kpis.json` from CP-652.
+- **Files to create or modify:** measures in `bi/powerbi/ChemiProofBI.SemanticModel/`, `docs/bi/19_POWER_BI_DATA_MODEL.md` (final DAX), `tests/unit/test_bi_kpis.py`.
+- **Technical implementation requirements:** the `m_RunGuardOK` guard; BLANK instead of zero on ambiguous or empty selections; pooled and macro metrics named separately; unclipped primary; no hard-coded numbers or invented thresholds; units in measure names.
+- **Expected deliverables:** the measure set and a reconciliation table (Power BI value vs Python value).
+- **Acceptance criteria:** BI021 and BI022 PASS for every headline run.
+- **Verification procedure:** run the Python KPI script, compare with the report cards, test multi-run selections.
+- **Definition of Done:** all KPIs reconcile, DAX documented, evidence recorded.
+
+### Task CP-655: Dashboard Page 1, Dataset & Quality Overview
+
+- **Objective:** the data-quality page described in `docs/bi/18_POWER_BI_SPEC.md` section 6.2.
+- **Dependencies:** CP-654; M1 data (`dim_sample`, `fact_data_quality`, `fact_data_issues`).
+- **Files to create or modify:** `bi/powerbi/ChemiProofBI.Report/` page definition.
+- **Technical implementation requirements:** cards, observed-vs-expected bars, adulterant x brand x round matrix, concentration distribution, QC table, issues table with an explicit empty state; header strip and footer; published expectation captioned as such.
+- **Expected deliverables:** the page and screenshots from a real export.
+- **Acceptance criteria:** BI023 (page 1), BI025, BI029, BI030.
+- **Verification procedure:** page checklist against section 6.2, KPI reconciliation of K01 to K08.
+- **Definition of Done:** checklist complete, evidence stored, wording lint clean.
+
+### Task CP-656: Dashboard Page 2, Machine Learning Performance
+
+- **Objective:** the performance page of section 6.3 with the LOAO evaluation.
+- **Dependencies:** CP-654; M3 and M4 runs.
+- **Files to create or modify:** report page definition.
+- **Technical implementation requirements:** MAE (pp), RMSE, bias, R2 with scope and scoring shown; actual-vs-predicted, residual plots, per-adulterant fold results, a by-experiment table with protocol, mode, run class and subset visible; transductive warning for OT runs; no chart mixing protocols.
+- **Expected deliverables:** the page and screenshots.
+- **Acceptance criteria:** BI023 (page 2), BI026, BI021 for K09 to K14.
+- **Verification procedure:** checklist and reconciliation against the M3/M4 reports.
+- **Definition of Done:** as CP-655.
+
+### Task CP-657: Dashboard Page 3, Uncertainty & Screening Assessment
+
+- **Objective:** the uncertainty page of section 6.4.
+- **Dependencies:** CP-654; **M5 accepted** (hard). Without M5 only the empty-state version can be built and verified; the task is then not complete.
+- **Files to create or modify:** report page definition.
+- **Technical implementation requirements:** interval plot, observed coverage labeled empirical, abstention rate with retention, error-vs-coverage with the random-abstain control, "flagged for additional review" table, method card with interval method, nominal level, calibration protocol and threshold fitting source; standing caution text.
+- **Expected deliverables:** the page and screenshots from a real M5 export.
+- **Acceptance criteria:** BI023 (page 3), BI025, BI028, K15 to K19 reconcile.
+- **Verification procedure:** checklist; confirm every threshold in the report was fitted on source data only according to the M5 artifacts.
+- **Definition of Done:** as CP-655, plus the owner confirms the wording.
+
+### Task CP-658: Dashboard Page 4, Scientific Research Insights
+
+- **Objective:** the research page of section 6.5.
+- **Dependencies:** CP-654 and CP-656; M4; M5 for OOD and perturbation robustness.
+- **Files to create or modify:** report page definition.
+- **Technical implementation requirements:** baseline comparison inside one protocol, separate transductive panel with the warning and the no-adaptation control, condition comparison (all samples vs one brand), brand view, robustness and negative-control charts, OT diagnostics, OOD view only if M5 provides it, published-reference panel, findings and limitations fed from artifacts.
+- **Expected deliverables:** the page and screenshots.
+- **Acceptance criteria:** BI023 (page 4), BI026, K20 and K21 reconcile.
+- **Verification procedure:** checklist; confirm that no published number shares a series with a measured value.
+- **Definition of Done:** as CP-655.
+
+### Task CP-659: Data refresh and reproducibility
+
+- **Objective:** a refresh procedure that a second person can follow to get the same KPIs.
+- **Dependencies:** CP-655 to CP-658.
+- **Files to create or modify:** `bi/powerbi/README.md`, `docs/engineering/11_DEV_SETUP.md`, optional helper script for KPI reconciliation.
+- **Technical implementation requirements:** documented `ExportFolder` parameter, export-manifest hash check, contract-version guard, versioned immutable exports, no gateway or cloud refresh assumed.
+- **Expected deliverables:** the README procedure and one successful refresh log.
+- **Acceptance criteria:** BI027 and BI032 PASS.
+- **Verification procedure:** a reviewer follows the README on a clean Windows machine.
+- **Definition of Done:** reviewer log stored, limitations documented.
+
+### Task CP-660: Dashboard testing, documentation and portfolio presentation
+
+- **Objective:** complete the verification, documentation and honest presentation.
+- **Dependencies:** CP-659.
+- **Files to create or modify:** `docs/bi/20_POWER_BI_ACCEPTANCE_TESTS.md` (results), `README.md` (BI section with real screenshots), `docs/project/14_PROGRESS_LOG.md`, a milestone review from `templates/MILESTONE_REVIEW.md`, `docs/project/15_RELEASE_AND_RESEARCH_REPORT.md`.
+- **Technical implementation requirements:** run every test of `docs/bi/20_POWER_BI_ACCEPTANCE_TESTS.md`; screenshots only from real exports; state the Windows/Desktop version, export id and commit; list known limitations.
+- **Expected deliverables:** test evidence table, milestone review, portfolio section.
+- **Acceptance criteria:** the Definition of Done of `docs/bi/20_POWER_BI_ACCEPTANCE_TESTS.md` section 4.
+- **Verification procedure:** owner review of the evidence; independent reviewer run (BI032).
+- **Definition of Done:** all required tests PASS with evidence, docs and README updated, no overclaim, owner sets `ACCEPTED`.
+
+**Exit gate:** reproducible export with passing tests on real runs; Power BI project opened and verified on Windows; all KPIs reconcile with Python; four pages meet the checklists; no unsupported claim. **Do not** start building the dashboard before M5 and M6 are accepted, unless the owner explicitly changes the scope for the data-quality and performance pages (CP-655, CP-656).
 
 ## M7 — Reproducible Public Portfolio Release
 

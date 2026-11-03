@@ -21,6 +21,8 @@ Supports: replication reference. **Check whether this repo contains a license be
 - Introduction to conformal limitations under shift: https://aims.stanford.edu/textbook/src/chap9.html. Ordinary coverage guarantees assume exchangeability; unseen adulterants may violate it.
 - General concept: Peyré & Cuturi (2019), *Computational Optimal Transport*. https://arxiv.org/abs/1803.00567.
 
+- Microsoft Learn, Power BI documentation (checked 2026-11-03; context for milestone M6.5, not scientific evidence): Power BI Desktop download and minimum requirements (Windows 10 or later; no macOS) https://learn.microsoft.com/en-us/power-bi/fundamentals/desktop-get-the-desktop ; signing up for the Power BI service (work or school account needed; Desktop needs no sign-in) https://learn.microsoft.com/en-us/power-bi/fundamentals/service-self-service-signup-purchase-for-power-bi ; Power BI Desktop projects (.pbip, text-based) https://learn.microsoft.com/en-us/power-bi/developer/projects/projects-overview .
+
 ## Rights checklist — MUST complete at M1/M7
 
 - [x] Zenodo dataset license, read from the record's machine-readable metadata (`https://zenodo.org/api/records/19755088`, queried 2026-11-02): `license.id = cc-by-4.0`, `access_right = open`. (The HTML page does not show it; the API does.) Attribution is required.
@@ -30,6 +32,7 @@ Supports: replication reference. **Check whether this repo contains a license be
 - [ ] Choose license for **ChemiProof original code** and keep upstream software and dataset licensing separate.
 - [ ] Cite original researchers/DOI prominently in README, results and scientific report. Credit is required even if redistribution is not used.
 - [ ] List any third-party Python package licenses from lockfile / environment at release.
+- [ ] (M6.5) Power BI: no `.pbix`/data cache or exported tables committed without owner approval; no "publish to web" or public sharing before this rights review; any published dashboard carries the attribution footer (Sun et al. 2026, Zenodo DOI 10.5281/zenodo.19755088, CC BY 4.0); confirm the Power BI Desktop/service licence terms that apply to the person building the report.
 
 ## Evidence vs claim table
 

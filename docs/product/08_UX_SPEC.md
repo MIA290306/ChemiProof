@@ -79,3 +79,7 @@ Minimalist laboratory notebook look: off-white/very light neutral background, in
 6. Export reproducibility report and cite original dataset/paper.
 
 **Do not design a standalone app authentication system or SaaS backend during MVP.**
+
+## Power BI dashboard (M6.5, specification only)
+
+The optional BI dashboard follows the same trust language as this explorer: research screening, not a certified test; estimated olive-oil volume fraction in percentage points; "review required" instead of any verdict; protocol, mode and model version always visible; the transductive warning on every OT view. Page layouts, slicers, wording rules (including forbidden phrases) and the empty states are in `docs/bi/18_POWER_BI_SPEC.md` section 6. The BI report must not offer capabilities this UI deliberately withholds (no single-file OT, no quality verdicts, no thresholds).

@@ -139,6 +139,16 @@
 - **Prediction (stated in advance):** if OT relies on a matching label distribution, OT's error will grow clearly on skewed batches while the no-adaptation control stays roughly the same. This is a stress test, not a tuning step.
 - **Owner signoff:** delegated; review pending
 
+## ADR-016: Power BI as a presentation layer (milestone M6.5), specification only
+
+- **Date:** 2026-11-03 · **Status:** ACCEPTED as a plan; implementation NOT STARTED
+- **Context:** the owner wants the project to speak to Food Science, QA/QC and laboratory-data audiences. Power BI is a common tool in that world. The scientific pipeline (M0-M5) and the Streamlit explorer (M6) must stay intact.
+- **Decision:** (1) Power BI is an **extension layer** that reads validated experiment outputs through a documented, versioned export contract; it never trains, tunes, or computes the metrics of record. (2) The work is a new milestone **M6.5** between M6 and M7 with prerequisites M5 and M6; M0-M7 keep their numbers and meaning. (3) **M7 does not depend on M6.5**: Power BI Desktop is Windows-only and the owner develops on macOS, so making the release depend on it would let tooling availability block the scientific release; if M6.5 is not accepted, the release states "Power BI layer: not delivered". The owner may change this. (4) Export format: **CSV default**, Parquet optional behind an optional extra `bi` (`pyarrow`); CSV needs no new dependency and keeps the "minimal components" preference of `CLAUDE.md`. (5) **Protocol identity** is mandatory: `protocol_id` comes from a versioned protocol map seeded with the five runs that exist; unmapped runs are `UNREGISTERED` and never headline. (6) Project format **`.pbip` (text)** rather than `.pbix` (binary, embeds data); `.pbix` and caches are git-ignored. (7) Documents live in `docs/bi/` as numbers 18-20 (instead of the root-level `docs/18_...` suggested in the request) to follow the topic folders of the reorganized docs; `docs/00_DOCS_INDEX.md` lists them.
+- **Alternatives considered:** BI before M6 (rejected: needs M5 uncertainty data); Power BI inside the release gate (rejected, see above); a second Python dashboard only (kept as M6 Streamlit, unchanged); computing metrics in DAX (rejected: not reproducible against the protocol, breaks the "Python computes" rule).
+- **Environment facts (Microsoft Learn, checked 2026-11-03):** Power BI Desktop requires Windows 10 or later (Windows on ARM needs a specific update; supported on Azure Virtual Desktop and Windows 365); the Power BI service needs a work or school account (personal e-mail not accepted directly; Desktop needs no sign-in); `.pbip` is plain text (TMDL/PBIR) that can be edited externally but is loaded and checked by Desktop. Consequence: in this macOS environment no dashboard can be built or validated, and M6.5 must be reported as `BLOCKED` rather than done if no Windows environment is available.
+- **Consequences:** new documents `docs/bi/18-20`, `config/bi/export_contract.yaml`, new acceptance tests BI001-BI032, risks R21-R26, backlog CP-651 to CP-660, a docs-consistency test; no change to code, protocols or results.
+- **Owner signoff:** pending
+
 ## Future ADR template
 
 ```text

@@ -54,3 +54,11 @@ Khoảng ước lượng có thể được tạo từ lỗi hiệu chuẩn. Con
 1. Vì sao phải giữ hoàn toàn dầu walnut ra khỏi train trong một LOAO fold? (Đáp án: kiểm tra generalization trước loại adulterant chưa gặp.)
 2. Một mô hình dự đoán `olive_fraction=0.75`. Nếu là binary volume blend, tỷ lệ adulterant suy ra bằng bao nhiêu? (Đáp án: 0.25 = 25%; chỉ trong mô hình binary blend.)
 3. Vì sao không được nói prediction interval “90% guaranteed” trên adulterant chưa thấy? (Đáp án: phân bố bị shift, giả định exchangeability của standard conformal có thể không còn.)
+
+## K. Power BI và lớp BI (mốc M6.5)
+
+- **BI (business intelligence):** công cụ xem và tóm tắt kết quả bằng bảng, biểu đồ cho người làm QA/QC, không phải nơi huấn luyện mô hình.
+- **Dashboard Power BI trong dự án:** chỉ đọc các bảng kết quả đã xuất từ Python; mỗi con số phải ghi rõ chạy nào (run), protocol nào, chế độ nào (inductive hay transductive).
+- **Vì sao không trộn protocol:** kết quả LOAO inductive và OT transductive dùng lượng thông tin khác nhau; đặt chung một biểu đồ sẽ gây hiểu lầm.
+- **Cờ "cần xem lại" (review required):** gợi ý nghiên cứu, **không** phải kết luận mẫu bị pha trộn.
+- **Windows:** Power BI Desktop chỉ chạy trên Windows; dashboard chưa được coi là "đã xây" nếu chưa kiểm tra được ở đó.

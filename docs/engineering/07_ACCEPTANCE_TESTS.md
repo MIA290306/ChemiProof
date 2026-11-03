@@ -44,6 +44,11 @@
 - Model modes conflated — **hard fail**.
 - External publication result copied into our performance table without distinguishing source — **hard fail**.
 - Scientifically unsupported UI claims — **hard fail**.
+- *(M6.5)* A BI visual or measure mixing protocols or modes, a KPI that does not reproduce from the export, or a dashboard reported as built/validated without Windows verification evidence — **hard fail** (see below).
+
+## Power BI layer (milestone M6.5)
+
+Tests BI001 to BI014 (automated export checks, any platform) and BI020 to BI032 (Power BI Desktop on Windows, manual with evidence) are defined in `docs/bi/20_POWER_BI_ACCEPTANCE_TESTS.md`, together with the M6.5 Definition of Done. Status of all of them: `NOT RUN` (nothing is implemented). They add to, and never replace, T001 to T024; the general evidence rules below apply.
 
 ## Minimum engineering standards
 

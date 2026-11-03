@@ -10,6 +10,7 @@ Food authenticity studies use analytical chemistry to estimate composition from 
 
 - **Food science student / researcher:** import a legitimate EEM measurement, inspect raw/processed spectra, reproduce experiments and explain quantitative estimates.
 - **Chemometrics researcher:** compare source-only and transductive methods under a defensible LOAO protocol; export methods, artifacts and per-fold metrics.
+- **QA/QC analyst or supervisor (optional BI layer, M6.5):** review dataset quality, model performance and uncertainty summaries in a Power BI dashboard built from validated exports; no model training or decisions happen there.
 - **QA/Food authenticity trainee:** learn how a research screening model differs from confirmatory lab testing and regulation.
 
 **Not intended for:** consumers uploading food photos; clinicians; inspectors making compliance determinations; automatic counterfeit/alarm enforcement; replacement for confirmatory chemical methods.
@@ -45,6 +46,7 @@ Food authenticity studies use analytical chemistry to estimate composition from 
 
 - **F-12 Streamlit explorer:** validated file uploader, spectrum viewer, model/mode badges, prediction with units and clear warnings, batch analysis.
 - **F-13 Scientific report export:** reproducibility appendix, model and dataset IDs, assumptions, fold metrics, limitations and reference citations.
+- **F-15 Power BI quality-analytics layer (optional extension, M6.5):** a validated, versioned CSV/Parquet export from Python and a four-page Power BI dashboard (dataset quality, ML performance, uncertainty/screening, research insights). Python remains the only place where metrics are computed; every KPI reproduces from the export; protocols and modes are never combined; Windows-only tooling limits are documented. Specification: `docs/bi/18_POWER_BI_SPEC.md`. Status: not started.
 - **F-14 Portfolio release:** clean GitHub README, demonstration with **labeled synthetic example data** if dataset cannot be redistributed, demo GIF/screenshots and honest research result table.
 
 ## 5. Explicitly out of scope
@@ -54,6 +56,7 @@ Food authenticity studies use analytical chemistry to estimate composition from 
 - Determining physical safety or toxicity from spectra.
 - Claiming inference on every oil, unknown product, region, brand, instrument, or wavelength grid.
 - A generative AI chatbot, auth system, payments, cloud backend or automated surveillance.
+- Power BI as a decision tool: no pass/fail or regulatory thresholds, no "adulterated/safe" verdicts, no model training or tuning in Power BI, no public publishing before the M7 rights review.
 - Deployment before minimum research gates pass.
 
 ## 6. Usability and trust requirements
@@ -83,7 +86,7 @@ Food authenticity studies use analytical chemistry to estimate composition from 
 
 ## 9. Deliverables
 
-Open reproducible repository + data dictionary + evidence-based figures + experiment logs + trained artifact(s) *only if legally redistributable* + lightweight UI + 4–8 page research-style report + model card.
+Open reproducible repository + data dictionary + (optional, M6.5) validated BI export contract and Power BI dashboard specification/report + evidence-based figures + experiment logs + trained artifact(s) *only if legally redistributable* + lightweight UI + 4–8 page research-style report + model card.
 
 ## 10. Constraints and open questions
 

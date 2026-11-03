@@ -15,7 +15,12 @@ Mục tiêu: dùng dữ liệu EEM fluorescence đo từ dầu olive pha trộn 
 | **M4 — OT Replication** | Optimal Transport, miền nguồn/miền đích | Căn chỉnh phổ nguồn theo batch test không nhãn rồi dự đoán | Kết quả và khác biệt so với paper, log OT convergence, không dùng nhãn target để train |
 | **M5 — Trustworthy AI** | Uncertainty, OOD, selective risk | Thêm quy tắc từ chối, đo error–coverage, thử nhiễu | Biểu đồ retention vs MAE, empirical interval coverage và các failure cases |
 | **M6 — Research Explorer** | Kết nối khoa học với app | Streamlit hiển thị phổ, benchmark, upload, report | Demo hoạt động với dữ liệu thật; file lỗi bị từ chối; single vs batch rõ ràng |
+| **M6.5 — Power BI (tùy chọn, mở rộng)** | BI cho Food Science/QA/QC: KPI, dashboard, đọc kết quả khoa học | Xuất bảng kết quả đã kiểm chứng từ Python sang CSV/Parquet, dựng dashboard 4 trang trong Power BI | Mỗi KPI trùng với giá trị Python tính lại; dashboard mở và kiểm tra được trên Windows; không trộn protocol; chưa xây thì ghi rõ chưa xây |
 | **M7 — Research Portfolio** | Viết báo cáo, khoa học tái lập | Research report, model card, README, demo, review | Người khác chạy lại được, có DOI/citations, không khẳng định kết quả chưa chứng minh |
+
+## Power BI nằm ở đâu trong lộ trình?
+
+Power BI là **lớp trình bày** thêm vào sau M6 (mốc M6.5, tùy chọn, không chặn M7). Python vẫn là nơi duy nhất tính MAE/RMSE/R² và độ bất định; Power BI chỉ đọc kết quả đã kiểm chứng. **Power BI Desktop chỉ chạy trên Windows**, không có bản macOS, nên bạn cần một máy Windows, máy ảo Windows hoặc Windows trên đám mây để dựng và kiểm tra dashboard. Hiện tại mới có **đặc tả**, chưa có dashboard nào. Xem `docs/bi/18_POWER_BI_SPEC.md`.
 
 ## Cách tổ chức công việc với Claude Code
 

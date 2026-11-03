@@ -44,6 +44,12 @@ Read the docs numbered 02,05,06,07,09. Propose a preregistered, implementable se
 Read the docs numbered 01,04,07,08. Implement a minimal local Streamlit research explorer reading validated models and real benchmark artifacts. Six planned sections: Overview, EEM Explorer, Benchmarks, Single-sample inductive screening, Batch transductive research, Methods/Provenance. Invalid or unsupported file must refuse output; abstention says Review Required. Show olive-oil volume fraction, mode, model provenance, uncertainty caveat and not-for-certification disclaimer. No fake dashboard metrics, no login/database/cloud. Test malformed uploads and mode mismatch. Stop for review.
 ```
 
+## PROMPT 6.5 — Power BI food-quality intelligence (optional extension)
+
+```text
+Read CLAUDE.md (invariant 11), docs/bi/18, 19, 20, config/bi/export_contract.yaml, the docs numbered 05, 06, 07, 09, 13 and the accepted M3, M4, M5 and M6 reports. Work ONLY on M6.5 and only after M5 and M6 are accepted (the owner may explicitly allow CP-655 and CP-656 earlier). First state whether a Windows machine with Power BI Desktop is available; if not, implement only the Python-side tasks (CP-651, CP-652 and KPI recomputation) and record the dashboard tasks as BLOCKED. Implement the validated export pipeline first (tests BI001-BI014 on real runs), then the Power BI project tasks in order CP-653 to CP-660. Python computes every metric; Power BI only presents the exported results; never mix protocols or modes; never fit or tune anything in Power BI; no thresholds, no fraud/safety/compliance wording; published values stay separate. Do not report the dashboard as built or validated without the evidence required by docs/bi/20. Do not commit .pbix files or raw data. Update the progress and decision logs, write a milestone review, set REVIEW REQUIRED (never ACCEPTED) and stop. Respond in Vietnamese for the owner, keep technical names in English.
+```
+
 ## PROMPT 7 — Portfolio release M7
 
 ```text
