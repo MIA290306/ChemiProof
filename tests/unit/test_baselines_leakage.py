@@ -8,7 +8,7 @@ from chemiproof.evaluation import runner
 from chemiproof.evaluation.metrics import compute_metrics
 from chemiproof.evaluation.protocols import Fold, source_internal_loro_folds
 from chemiproof.evaluation.runner import run_models
-from chemiproof.modeling.baselines import MODEL_KEYS, SelectedModel, model_factory
+from chemiproof.modeling.baselines import MODEL_KEYS, PLS_GRID, SelectedModel, model_factory
 from chemiproof.spectra.preprocess import preprocess_features
 from helpers import fake_rows, mixture_eem
 
@@ -99,8 +99,8 @@ def test_selected_hyperparameters_come_from_training_groups_only():
     rows, X, y, rounds = _dataset()
     tr = rounds != 3
     m = SelectedModel("pls").fit(X[tr], y[tr], groups=rounds[tr])
-    assert m.selected_["n_components"] in (2, 4, 6, 8, 12)
-    assert set(m.selected_["inner_cv_mae_by_n"]) <= {2, 4, 6, 8, 12}
+    assert m.selected_["n_components"] in PLS_GRID
+    assert set(m.selected_["inner_cv_mae_by_n"]) <= set(PLS_GRID)
 
 
 def test_tunable_models_refuse_to_tune_without_groups_and_unknown_keys_fail():

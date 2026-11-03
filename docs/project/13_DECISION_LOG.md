@@ -99,6 +99,14 @@
 - **M2 evaluation protocol (`source_internal_loro`):** leave-one-measurement-round-out over all 330 spectra (3 folds), hyperparameters selected by an inner leave-one-round-out inside the training rounds only. It measures replicate/round generalization **within known adulterants**, is optimistic by construction, and is **not** evidence of unseen-adulterant generalization (that is the LOAO benchmark of M3).
 - **Owner signoff:** delegated; review pending
 
+## ADR-012 — Wider inner-CV grids for pca_svr and pls (development decision, inner CV only)
+
+- **Date:** 2026-11-02 · **Status:** ACCEPTED (agent, under owner delegation)
+- **Observation:** in the first complete M2 run (grid v1: PCA 5/10/20/40, PLS 2/4/6/8/12; run `20261103T041046Z_54def60_4097e86f`, discarded after this ADR) PLS selected its largest candidate (12) in 3 of 3 folds, so the grid was probably too narrow. v1 macro results (leave-one-round-out): mean_y 22.73 pp / R2 0.000, svr_raw 5.10 pp / 0.947, pca_svr 7.08 pp / 0.903, pls 1.98 pp / 0.991.
+- **Decision:** grid v2 = PCA 5/10/20/40/80, PLS 2/4/6/8/12/16/24/32, still selected only by the inner leave-one-round-out CV inside each training set (components are capped by the smallest inner fold). No held-out round, and no adulterant label from any future outer fold, took part in this choice; the M2 protocol is not the M3 benchmark.
+- **Why it is allowed and its limit:** it is a within-training model-selection refinement, but it was prompted by looking at the M2 outer-round scores, so M2 numbers are exploratory-development numbers. M3 will freeze grid v2 and the protocol before scoring any held-out adulterant (docs/science/05_EVALUATION_PLAN.md section 2).
+- **Owner signoff:** delegated; review pending
+
 ## Future ADR template
 
 ```text

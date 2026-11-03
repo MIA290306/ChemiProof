@@ -21,8 +21,9 @@ from sklearn.svm import SVR
 
 SEED = 20261024
 MODEL_KEYS = ("mean_y", "svr_raw", "pca_svr", "pls")
-PCA_GRID = (5, 10, 20, 40)
-PLS_GRID = (2, 4, 6, 8, 12)
+# v2 grids (ADR-012): v1 was PCA (5,10,20,40) / PLS (2,4,6,8,12) and PLS hit its upper bound 3/3.
+PCA_GRID = (5, 10, 20, 40, 80)
+PLS_GRID = (2, 4, 6, 8, 12, 16, 24, 32)
 
 
 def reference_svr() -> SVR:
