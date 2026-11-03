@@ -80,7 +80,9 @@ class ExperimentConfig(BaseModel):
     status: Literal["NOT_RUN"]  # only real runs may change this, never a hand edit
     random_seed: int
     mode: Literal["inductive", "transductive_batch"]
-    outer_cv: Literal["leave_one_adulterant_out"]
+    protocol: Literal["source_internal_loro", "loao"] = "loao"
+    outer_cv: Literal["leave_one_adulterant_out"] | None = None
+    models: list[Literal["mean_y", "svr_raw", "pca_svr", "pls"]] | None = None
     metrics: list[Literal["mae", "rmse", "bias", "r2"]]
     allowed_target_information: Literal["unlabeled_X_only"] | None = None
     forbidden_target_information: list[str] = []
@@ -88,6 +90,8 @@ class ExperimentConfig(BaseModel):
 
     @model_validator(mode="after")
     def _mode_rules(self) -> ExperimentConfig:
+        if self.protocol == "loao" and self.outer_cv is None:
+            raise ValueError("protocol 'loao' requires outer_cv: leave_one_adulterant_out")
         if self.mode == "transductive_batch":
             if self.allowed_target_information != "unlabeled_X_only":
                 raise ValueError(

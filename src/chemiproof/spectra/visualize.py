@@ -57,3 +57,37 @@ def plot_gallery(
     fig.savefig(out_png, dpi=110)
     plt.close(fig)
     return used
+
+
+def plot_preprocessing(data_dir: Path, rows: list[ManifestRow], out_png: Path) -> list[str]:
+    """Raw vs author_v1-processed EEM for a high- and a low-olive Luhua/corn sample (read-only)."""
+    from chemiproof.spectra.preprocess import AUTHOR_V1, preprocess_intensity
+
+    pool = [
+        r
+        for r in rows
+        if r.adulterant_type == "corn" and r.evoo_brand == "luhua" and r.measurement_round == 1
+    ]
+    picks = [max(pool, key=lambda r: r.olive_fraction), min(pool, key=lambda r: r.olive_fraction)]
+    fig, axes = plt.subplots(2, 2, figsize=(11, 8))
+    for i, row in enumerate(picks):
+        spec = parse_dat(data_dir / row.relative_path, row.sample_id).spectrum
+        _draw(axes[i][0], fig, spec, f"RAW {row.sample_id}\nolive = {row.olive_fraction:.4f}")
+        done = EEMSpectrum(
+            row.sample_id,
+            spec.excitation_nm,
+            spec.emission_nm,
+            preprocess_intensity(spec.intensity),
+        )
+        _draw(
+            axes[i][1],
+            fig,
+            done,
+            f"author_v1 (subtract-min, SG emission, max-norm)\n{row.sample_id}",
+        )
+        axes[i][1].collections[0].colorbar.set_label("Intensity [relative to max = 1]")
+    out_png.parent.mkdir(parents=True, exist_ok=True)
+    fig.tight_layout()
+    fig.savefig(out_png, dpi=110)
+    plt.close(fig)
+    return [r.sample_id for r in picks] + [AUTHOR_V1.version]

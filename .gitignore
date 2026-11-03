@@ -36,3 +36,5 @@ results/*
 !results/M0_foundation/validation_report.md
 !results/M1_*/
 results/M1_*/*.png
+!results/M2_*/
+results/M2_*/*.png

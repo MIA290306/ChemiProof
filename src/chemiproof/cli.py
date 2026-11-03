@@ -20,6 +20,7 @@ from chemiproof.data.manifest import (
 )
 from chemiproof.data.zipsafe import inspect_zip
 from chemiproof.errors import ChemiProofError, StatusCode
+from chemiproof.experiments import run_source_internal
 from chemiproof.pipeline import load_dataset
 from chemiproof.provenance import environment_info, make_run_id
 
@@ -133,11 +134,25 @@ def _cmd_spectra_plot(args: argparse.Namespace) -> int:
     return EXIT_OK
 
 
+def _cmd_spectra_compare(args: argparse.Namespace) -> int:
+    from chemiproof.spectra.visualize import plot_preprocessing
+
+    rows = read_manifest_csv(Path(args.manifest))
+    used = plot_preprocessing(Path(args.data_dir), rows, Path(args.output))
+    print(f"wrote {args.output} (raw vs processed; raw files untouched): {', '.join(used)}")
+    return EXIT_OK
+
+
 def _cmd_experiment(args: argparse.Namespace) -> int:
     cfg = load_experiment_config(Path(args.config))  # validate BEFORE anything else
     manifest = Path(cfg.model_dump().get("dataset_manifest", DEFAULT_MANIFEST))
-    load_dataset(manifest, Path(args.data_dir))
-    raise _not_implemented("M2-M4", "experiment run")
+    if cfg.protocol == "loao":
+        load_dataset(manifest, Path(args.data_dir))  # fails honestly if the data is absent
+        raise _not_implemented("M3", "the LOAO benchmark")
+    out_dir = run_source_internal(cfg, Path(args.data_dir), manifest, Path(args.output_root))
+    print(f"run artifacts: {out_dir}")
+    print((out_dir / "run_report.md").read_text(encoding="utf-8"))
+    return EXIT_OK
 
 
 def _unavailable(milestone: str, what: str) -> Callable[[argparse.Namespace], int]:
@@ -183,17 +198,23 @@ def build_parser() -> argparse.ArgumentParser:
     a.set_defaults(func=_cmd_dataset_audit)
 
     sp = sub.add_parser("spectra", help="spectrum plots from real data")
-    p = sp.add_subparsers(dest="action", required=True).add_parser("plot")
+    sp_sub = sp.add_subparsers(dest="action", required=True)
+    p = sp_sub.add_parser("plot")
     _add_data_args(p)
     p.add_argument("--sample", default=None, help="sample_id; default: gallery of 10 samples")
     p.add_argument("--output", required=True)
     p.set_defaults(func=_cmd_spectra_plot)
+    c = sp_sub.add_parser("compare", help="raw vs preprocessed EEM (reads raw, never overwrites)")
+    _add_data_args(c)
+    c.add_argument("--output", required=True)
+    c.set_defaults(func=_cmd_spectra_compare)
 
     ex = sub.add_parser("experiment", help="experiments (available from M2)")
     ex_sub = ex.add_subparsers(dest="action", required=True)
     run = ex_sub.add_parser("run")
     run.add_argument("--config", required=True)
     run.add_argument("--data-dir", default=str(DEFAULT_DATA_DIR))
+    run.add_argument("--output-root", default=str(DEFAULT_RESULTS))
     run.set_defaults(func=_cmd_experiment)
     ex_sub.add_parser("report").set_defaults(func=_unavailable("M7", "experiment report"))
 

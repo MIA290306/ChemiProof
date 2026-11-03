@@ -92,3 +92,18 @@ def test_inductive_must_not_declare_target_access(repo, tmp_path):
     cfg["allowed_target_information"] = "unlabeled_X_only"
     with pytest.raises(ChemiProofError):
         load_experiment_config(_write(tmp_path, cfg))
+
+
+def test_loao_protocol_requires_outer_cv_and_source_internal_does_not(repo, tmp_path):
+    cfg = _load(repo / "config/experiments/baseline.yaml")
+    cfg.pop("outer_cv")
+    with pytest.raises(ChemiProofError):
+        load_experiment_config(_write(tmp_path, cfg))
+    load_experiment_config(repo / "config/experiments/m2_source_internal.yaml")
+
+
+def test_unknown_model_key_rejected(repo, tmp_path):
+    cfg = _load(repo / "config/experiments/m2_source_internal.yaml")
+    cfg["models"] = ["mean_y", "deep_magic"]
+    with pytest.raises(ChemiProofError):
+        load_experiment_config(_write(tmp_path, cfg))

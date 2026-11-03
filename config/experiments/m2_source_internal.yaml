@@ -1,0 +1,17 @@
+# M2: source-internal evaluation (leave-one-measurement-round-out over all 330 spectra).
+# Optimistic by construction; NOT evidence of unseen-adulterant generalization (that is M3 LOAO).
+experiment_id: chemiproof-m2-source-internal
+status: NOT_RUN        # real runs write results/M2_<run_id>/; configs are never edited to claim a run
+protocol: source_internal_loro
+random_seed: 20261024
+mode: inductive
+label_unit: fraction
+dataset_manifest: data/interim/sample_manifest.csv
+preprocessing:
+  version: author_v1
+  baseline_correction: subtract_global_min
+  savitzky_golay: {window: 5, polyorder: 2, axes: [emission]}
+  intensity_normalization: divide_by_global_max
+models: [mean_y, svr_raw, pca_svr, pls]
+metrics: [mae, rmse, bias, r2]
+outputs: results/

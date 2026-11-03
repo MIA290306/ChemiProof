@@ -7,11 +7,13 @@ label_unit: fraction
 dataset_manifest: data/interim/sample_manifest.csv
 outer_cv: leave_one_adulterant_out
 inner_cv: source_only_leave_one_group_out
-preprocessing:
+protocol: loao
+preprocessing:  # resolved in M2 (ADR-011): prespecified from the authors' code, never tuned on labels
+  version: author_v1
   orient_from_axes: true
-  baseline_correction: TBD_VERIFY_FROM_AUTHOR_CODE
-  savitzky_golay: TBD_VERIFY_FROM_AUTHOR_CODE
-  intensity_normalization: TBD_VERIFY_FROM_AUTHOR_CODE
+  baseline_correction: subtract_global_min
+  savitzky_golay: {window: 5, polyorder: 2, axes: [emission]}
+  intensity_normalization: divide_by_global_max
 models:
   - mean_y
   - svr_raw
