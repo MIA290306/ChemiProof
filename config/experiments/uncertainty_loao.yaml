@@ -1,0 +1,40 @@
+# M5: abstention, prediction intervals and robustness on the LOAO benchmark, INDUCTIVE mode.
+# Preregistered by ADR-017 (protocol LOAO-UQ-v1) BEFORE any M5 scoring. Every constant below is
+# fixed; none may be tuned on a held-out adulterant. Not a safety decision tool.
+experiment_id: chemiproof-uq-loao
+status: NOT_RUN
+run_class: locked
+protocol: loao
+random_seed: 20261024
+mode: inductive
+label_unit: fraction
+dataset_manifest: data/interim/sample_manifest.csv
+outer_cv: leave_one_adulterant_out
+preprocessing:
+  version: author_v1
+models: [svr_raw, pca_svr, pls]
+metrics: [mae, rmse, bias, r2]
+uncertainty:
+  protocol_id: LOAO-UQ-v1
+  scores: [ood_maha, model_disagreement]       # ood_maha is primary; no combination allowed
+  primary_score: ood_maha
+  pca_components_for_ood: 10
+  calibration: cross_fitted_leave_one_source_adulterant_out
+  min_calibration_points: 100
+  min_calibration_groups: 3
+  interval:
+    nominal_level: 0.90
+    variants: [pooled, max_domain]
+  retention_goals: [1.0, 0.9, 0.8, 0.7]
+  curve_retention_percent: [100, 95, 90, 85, 80, 75, 70, 65, 60, 55, 50, 45, 40, 35, 30, 25, 20, 15, 10]
+  random_rejection_repeats: 200
+  usefulness_rule:
+    goal: 0.8
+    min_folds_improved: 4
+    must_beat_random_p05_in_folds: 4
+perturbations:
+  noise_fraction_of_max: [0.001, 0.003, 0.01, 0.03]
+  noise_seeds: [20261024, 20261025, 20261026, 20261027, 20261028]
+  baseline_offset_fraction_of_max: [0.01, 0.03, 0.1]
+  intensity_scale: [0.5, 0.8, 1.25, 2.0]
+outputs: results/
