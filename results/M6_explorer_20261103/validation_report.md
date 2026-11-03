@@ -26,7 +26,7 @@
 
 | Command / test | Exit | Result | Status |
 |---|---|---|---|
-| `pytest -q -m "not dataset"` | 0 | 221 passed, 9 deselected | PASS |
+| `pytest -q -m "not dataset"` | 0 | 229 passed, 9 deselected | PASS |
 | `pytest -q -m dataset` (real data present) | 0 | 9 passed (incl. new `test_m6_final_model_rebuilds_the_committed_card`) | PASS |
 | `ruff check .`; `ruff format --check .` | 0; 0 | clean | PASS |
 | `chemiproof model train-final` (twice, clean tree) | 0; 0 | identical `model.npz` sha256 | PASS |

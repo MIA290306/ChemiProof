@@ -98,3 +98,41 @@ def test_batch_page_requires_dataset(synthetic, tmp_path, monkeypatch):
     res, _ = synthetic
     text = _text(_app(monkeypatch, res, tmp_path, "Batch research"))
     assert "transductive" in text.lower() and "dataset is not present" in text
+
+
+def test_benchmark_runs_dedupe_and_missing(tmp_path):
+    from chemiproof.ui import artifacts as A
+
+    for d in ("run_a", "run_b"):
+        (tmp_path / d).mkdir()
+        (tmp_path / d / "summary.json").write_text("{}")
+    head = (
+        "utc_time,run_id,experiment_id,protocol,run_class,subset_brand,config_sha256,"
+        "git_head,git_dirty,output_dir\n"
+    )
+    rows = [
+        "t1,A,exp,loao,locked,,cfg1,h,False,run_a",
+        "t2,A2,exp,loao,locked,,cfg1,h,False,run_b",  # identical config rerun: hidden
+        "t3,B,exp,loao,locked,,cfg2,h,False,run_missing",  # locked, no folder: reported
+        "t4,C,exp,loao,exploratory,,cfg3,h,False,run_b",  # not locked: ignored
+    ]
+    (tmp_path / "experiment_registry.csv").write_text(head + "\n".join(rows) + "\n")
+    runs, missing = A.benchmark_runs_and_missing(tmp_path)
+    assert [r.run_id for r in runs] == ["A"] and missing == ["B"]
+
+
+def test_dataset_integrity_error_is_not_disguised_as_missing(world, tmp_path, monkeypatch):  # noqa: F811
+    import shutil
+
+    _, root, manifest = world
+    data = tmp_path / "data"
+    shutil.copytree(root, data)
+    victim = next(data.rglob("*.dat"))
+    victim.write_text(victim.read_text().replace("Normalized by 1.00", "Normalized by 1.01"))
+    monkeypatch.setenv("CHEMIPROOF_RESULTS_DIR", str(tmp_path))
+    monkeypatch.setenv("CHEMIPROOF_DATA_DIR", str(data))
+    monkeypatch.setenv("CHEMIPROOF_MANIFEST", str(manifest))
+    at = AppTest.from_file(APP, default_timeout=60).run()
+    at.sidebar.radio[0].set_value("Explore EEM").run()
+    assert not at.exception
+    assert "BAD_FILE_FORMAT" in " ".join(e.value for e in at.error)

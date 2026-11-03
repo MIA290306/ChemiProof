@@ -12,7 +12,7 @@
 | M3 LOAO benchmark | REVIEW REQUIRED | `results/M3_20261103T042740Z_01a9d42_b1c2dfa1/` (validation_report, MILESTONE_REVIEW); two locked runs + controls | Owner review (CI green: run 41581270090) |
 | M4 OT replication | REVIEW REQUIRED | `results/M4_20261103T044749Z_7129cde_363deee6/` (validation_report, MILESTONE_REVIEW); two locked runs + stress tests | Owner review (CI green: run 41581270090) |
 | M5 Abstention/robustness | REVIEW REQUIRED | `results/M5_20261103T054226Z_914e8ed_ac6bfcef/` (validation_report, MILESTONE_REVIEW); one locked run, largely unfavourable findings | Owner review of ADR-017 and results |
-| M6 Research UI | REVIEW REQUIRED | `results/M6_explorer_20261103/` (validation_report, MILESTONE_REVIEW); `results/M6_final_20261103T074605Z_ce2423b_82b39d6c/model_card.json`; 221 + 9 tests | Owner review of ADR-018 and a walkthrough |
+| M6 Research UI | REVIEW REQUIRED | `results/M6_explorer_20261103/` (validation_report, MILESTONE_REVIEW); `results/M6_final_20261103T074605Z_ce2423b_82b39d6c/model_card.json`; 229 + 9 tests | Owner review of ADR-018 and a walkthrough |
 | M6.5 Power BI quality-analytics layer (optional extension) | NOT STARTED | Specification only: `docs/bi/18_POWER_BI_SPEC.md`, `19_POWER_BI_DATA_MODEL.md`, `20_POWER_BI_ACCEPTANCE_TESTS.md`, `config/bi/export_contract.yaml`; no export code, no Power BI file | Await M5 and M6 acceptance and a Windows environment |
 | M7 Release | NOT STARTED | Templates only | Await M6 acceptance |
 
@@ -185,10 +185,18 @@ Owner signoff: pending
 ### 2026-11-03 — M6 — REVIEW REQUIRED
 Owner / agent: Mia Ho (instruction relayed by Bruce1508 after PR #2: continue the milestones without waiting for her ACCEPTED) / Claude Code for Bruce1508
 Scope attempted: ADR-018 (FINAL-PLS-v1, declared before training); `modeling/final.py` (npz + JSON card, sha256-checked, no pickle); `pipeline.screen_single` / `screen_batch`; CLI `model train-final`, `app`; Streamlit explorer `ui/app.py` + `ui/artifacts.py` (six pages of `08_UX_SPEC`); optional extra `ui` (streamlit 1.66.1, plotly 7.1.0; lock updated); tests `test_final_model.py`, `test_ui_app.py`, real-data card test.
-Actual commands + exit codes: `chemiproof model train-final` exit 0 twice (identical `model.npz` sha256 `bbcff343...`); `pytest -q -m "not dataset"` 221 passed exit 0; `pytest -q -m dataset` 9 passed exit 0; `ruff check .` / `ruff format --check .` exit 0; Playwright walkthrough of all pages (see `results/M6_explorer_20261103/validation_report.md`).
+Actual commands + exit codes: `chemiproof model train-final` exit 0 twice (identical `model.npz` sha256 `bbcff343...`); `pytest -q -m "not dataset"` 229 passed exit 0; `pytest -q -m dataset` 9 passed exit 0; `ruff check .` / `ruff format --check .` exit 0; Playwright walkthrough of all pages (see `results/M6_explorer_20261103/validation_report.md`).
 Measured results: NONE new. Model card facts: n_components 6 (inner leave-one-adulterant-out selection MAE 5.61 pp, optimistic, not a test); OOD threshold 5.32; 90 % half-widths pooled 10.5 pp, max_domain 16.0 pp. The explorer only displays the existing M3-M5 numbers.
 Artifact paths + checksums: `results/M6_final_20261103T074605Z_ce2423b_82b39d6c/` (card tracked, npz git-ignored, git ce2423b clean); an earlier identical-array run `M6_final_20261103T074230Z_f22ae1d_82b39d6c` (card lacked training-file hashes) stays local; `results/M6_explorer_20261103/` (screenshots git-ignored).
 Acceptance tests: T013, T019, T020, T023 PASS; contrast / screen-reader audit NOT RUN; T021, T022 NOT RUN (M7).
 Risks / open questions: no independent test of FINAL-PLS-v1; the OOD flag failed its M5 usefulness rule but still withholds (cautious choice, ADR-018); batch OT with source = all 330 is unevaluated and fails on label-skewed batches (ADR-015); demo uploads were training spectra and are labelled IN_SAMPLE.
 Owner signoff: pending
 Next milestone (only after ACCEPTED): M7 (owner allows continuing without formal ACCEPTED); M6.5 needs Windows.
+
+### 2026-11-03 — M6 PR #3 review fixes (no status change)
+Owner / agent: Bruce1508 (collaborator) / Claude Code; five Sonnet review agents (code, silent failures, tests, comments, types)
+Findings fixed: (critical) the explorer reported a dataset integrity failure (file SHA-256 differs from the manifest) as "dataset not present"; now shown as `BAD_FILE_FORMAT`. `latest_artifact` now requires both `model.npz` and `model_card.json`. `ScreeningResult` enforces "ESTIMATE has estimate + interval, a withheld result has neither". Locked runs without a result folder are listed instead of silently hidden. ADR-018 review notes added (threshold vs deployed scorer, byte-exact IN_SAMPLE flag).
+Tests added: independent recomputation of the interval half-widths and OOD threshold from held-out fits (fails on calibration leakage), report-export content, out-of-range warning, batch in-sample count, incomplete-artifact skip, registry dedupe/missing, integrity error in the UI.
+Actual commands + exit codes: `pytest -q -m "not dataset"` 229 passed exit 0; `pytest -q -m dataset` 9 passed exit 0; `ruff check .` / `ruff format --check .` exit 0.
+Measured results: NONE new. Comment/doc audit found no inaccurate numbers or overclaims.
+Owner signoff: pending

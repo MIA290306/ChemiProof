@@ -62,9 +62,13 @@ def current_model():
 
 
 def dataset_or_none():
+    """None only when the dataset is absent; any other failure (e.g. a file whose SHA-256 no
+    longer matches the manifest) is shown as an error, never disguised as 'not present'."""
     try:
         return _dataset(str(A.manifest_path()), str(A.data_dir()))
-    except ChemiProofError:
+    except ChemiProofError as err:
+        if err.code is not A.StatusCode.DATASET_NOT_AVAILABLE:
+            st.error(A.user_message(err))
         return None
 
 
@@ -112,7 +116,12 @@ def page_overview() -> None:
         "Experimental estimates of olive-oil volume fraction from EEM fluorescence spectra."
     )
     st.info(DISCLAIMER)
-    runs = A.benchmark_runs(A.results_dir())
+    runs, missing = A.benchmark_runs_and_missing(A.results_dir())
+    if missing:
+        st.warning(
+            f"{len(missing)} locked run(s) in the registry have no result folder here and are "
+            "not shown: " + ", ".join(missing)
+        )
     if not runs:
         st.warning("No verified benchmark results yet.")
         return

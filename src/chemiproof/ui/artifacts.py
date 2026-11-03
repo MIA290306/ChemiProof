@@ -88,29 +88,34 @@ class Run:
         return f"{self.experiment_id}{subset} ({self.run_id})"
 
 
-def benchmark_runs(root: Path) -> list[Run]:
-    """Locked benchmark runs present on disk; reruns with an identical config hash are hidden."""
+def benchmark_runs_and_missing(root: Path) -> tuple[list[Run], list[str]]:
+    """Locked benchmark runs present on disk (first run per config hash; identical reruns are
+    hidden) and the run ids of locked configs that have no result folder here at all."""
     reg = root / "experiment_registry.csv"
     if not reg.is_file():
-        return []
+        return [], []
     seen: set[str] = set()
-    out = []
+    out, absent = [], {}
     with reg.open(encoding="utf-8", newline="") as fh:
         for r in csv.DictReader(fh):
+            if r["run_class"] != "locked" or r["protocol"] not in BENCHMARK_PROTOCOLS:
+                continue
             path = root / r["output_dir"]
-            if (
-                r["run_class"] != "locked"
-                or r["protocol"] not in BENCHMARK_PROTOCOLS
-                or r["config_sha256"] in seen
-                or not (path / "summary.json").is_file()
-            ):
+            if not (path / "summary.json").is_file():
+                absent.setdefault(r["config_sha256"], r["run_id"])
+                continue
+            if r["config_sha256"] in seen:
                 continue
             seen.add(r["config_sha256"])
             out.append(
                 Run(r["run_id"], path, r["experiment_id"], r["protocol"],
                     r["subset_brand"], r["utc_time"])
             )  # fmt: skip
-    return out
+    return out, [rid for sha, rid in absent.items() if sha not in seen]
+
+
+def benchmark_runs(root: Path) -> list[Run]:
+    return benchmark_runs_and_missing(root)[0]
 
 
 def read_json(path: Path) -> dict[str, Any]:

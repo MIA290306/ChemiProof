@@ -85,6 +85,17 @@ class ScreeningResult:
     spectrum: EEMSpectrum
     warnings: list[str] = field(default_factory=list)
 
+    def __post_init__(self) -> None:
+        has_estimate = self.olive_fraction is not None and self.interval is not None
+        has_nothing = self.olive_fraction is None and self.interval is None
+        if not (
+            (self.status == "ESTIMATE" and has_estimate)
+            or (self.status == StatusCode.ABSTAIN_OOD_RISK.value and has_nothing)
+        ):
+            raise ValueError(
+                "ESTIMATE needs estimate + interval; a withheld result carries neither"
+            )
+
 
 def _validated_spectrum(data: bytes, name: str, model: FinalModel) -> EEMSpectrum:
     spec = parse_dat_bytes(data, name).spectrum

@@ -31,7 +31,7 @@
 
 | Command / test ID | Exit code | Measured result or diagnostic | PASS/FAIL/NOT RUN |
 |---|---|---|---|
-| `pytest -q -m "not dataset"` | 0 | 221 passed | PASS |
+| `pytest -q -m "not dataset"` | 0 | 229 passed | PASS |
 | `pytest -q -m dataset` | 0 | 9 passed | PASS |
 | `ruff check .`, `ruff format --check .` | 0 | clean | PASS |
 | T013, T019, T020, T023 | - | see validation report | PASS |

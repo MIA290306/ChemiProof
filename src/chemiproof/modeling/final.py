@@ -162,8 +162,11 @@ def load_final(art_dir: Path) -> FinalModel:
 
 
 def latest_artifact(results_root: Path) -> Path | None:
-    """Newest `M6_final_*` folder that holds a model (run ids start with a UTC timestamp)."""
+    """Newest complete `M6_final_*` folder (npz and card); run ids start with a UTC timestamp,
+    so an interrupted training run without a card never hides an older valid artifact."""
     dirs = sorted(
-        p for p in results_root.glob(f"{ARTIFACT_PREFIX}*") if (p / "model.npz").is_file()
+        p
+        for p in results_root.glob(f"{ARTIFACT_PREFIX}*")
+        if (p / "model.npz").is_file() and (p / "model_card.json").is_file()
     )
     return dirs[-1] if dirs else None
