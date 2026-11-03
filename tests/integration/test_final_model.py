@@ -126,3 +126,20 @@ def test_cli_train_final_writes_card_and_registry(world, tmp_path):  # noqa: F81
     assert card["protocol_id"] == "FINAL-PLS-v1" and card["n_train"] == 150
     assert "FINAL-PLS-v1" in (out / "experiment_registry.csv").read_text()
     assert final.latest_artifact(out) == art
+
+
+def test_in_sample_upload_is_flagged(trained):
+    ds, _, m, _ = trained
+    text = dat_text(ds.spectra[7])
+    import hashlib
+    from dataclasses import replace
+
+    marked = replace(
+        m, card=m.card | {"train_file_sha256": [hashlib.sha256(text.encode()).hexdigest()]}
+    )
+    assert any(
+        w.startswith("IN_SAMPLE") for w in pipeline.screen_single(text, "t.dat", marked).warnings
+    )
+    assert not any(
+        w.startswith("IN_SAMPLE") for w in pipeline.screen_single(text, "t.dat", m).warnings
+    )

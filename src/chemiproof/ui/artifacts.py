@@ -134,7 +134,8 @@ def headline_rows(runs: list[Run]) -> list[dict[str, Any]]:
         for model, m in summary["models"].items():
             macro = m["macro_over_folds"]
             rows.append({
-                "run": run.label,
+                "run": run.experiment_id,
+                "subset": run.subset_brand or "all brands",
                 "model": model,
                 "mode": MODE_LABEL.get(modes.get(model, ""), modes.get(model, "")),
                 "macro MAE (pp)": round(100 * macro["mae_fraction"], 2),

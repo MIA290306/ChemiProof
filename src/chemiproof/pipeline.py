@@ -116,22 +116,28 @@ def screen_single(
         )
     raw = data.encode() if isinstance(data, str) else data
     spec = _validated_spectrum(raw, name, model)
+    sha = hashlib.sha256(raw).hexdigest()
     x = preprocess_intensity(spec.intensity).reshape(1, -1)
     y_hat = float(model.predict(x)[0])
     score = float(model.ood_score(x)[0])
     warnings = []
+    if sha in set(model.card.get("train_file_sha256", [])):
+        warnings.append(
+            "IN_SAMPLE: this file is one of the training spectra, so the estimate is in-sample "
+            "and is not a test of the model"
+        )
     if spec.intensity.min() < 0:
         warnings.append("NEGATIVE_INTENSITY: raw spectrum has negative cells (kept, not clamped)")
     if score > model.threshold:
         return ScreeningResult(
-            name, hashlib.sha256(raw).hexdigest(), StatusCode.ABSTAIN_OOD_RISK.value, None, None,
+            name, sha, StatusCode.ABSTAIN_OOD_RISK.value, None, None,
             score, model.threshold, spec, warnings,
         )  # fmt: skip
     if not 0.0 <= y_hat <= 1.0:
         warnings.append("model output lies outside [0, 1]; shown unclipped")
     interval = {k: (y_hat - q, y_hat + q) for k, q in model.halfwidth.items()}
     return ScreeningResult(
-        name, hashlib.sha256(raw).hexdigest(), "ESTIMATE", y_hat, interval, score,
+        name, sha, "ESTIMATE", y_hat, interval, score,
         model.threshold, spec, warnings,
     )  # fmt: skip
 

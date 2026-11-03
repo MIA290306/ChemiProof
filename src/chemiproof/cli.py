@@ -208,6 +208,7 @@ def _cmd_train_final(args: argparse.Namespace) -> int:
         "config_sha256": config_hash(constants),
         "manifest_sha256": file_sha256(manifest),
         "train_sample_ids_hash": hashlib.sha256("\n".join(ids).encode()).hexdigest(),
+        "train_file_sha256": sorted(r.sha256 for r in ds.rows),  # flags in-sample uploads
         "data_source_doi": ds.rows[0].source_record_doi,
         "git": git_state(),
         "environment": environment_info(),

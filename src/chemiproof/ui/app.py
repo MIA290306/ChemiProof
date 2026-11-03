@@ -126,7 +126,9 @@ def page_overview() -> None:
     )
     st.subheader("Our measured results (LOAO: each adulterant held out in turn)")
     rows = pd.DataFrame(A.headline_rows(runs))
-    st.dataframe(rows, hide_index=True)
+    for mode, group in rows.groupby("mode", sort=False):  # never one table across access modes
+        st.markdown(f"**{mode}**")
+        st.dataframe(group.drop(columns="mode"), hide_index=True)
     st.caption(
         "MAE in percentage points of olive-oil volume fraction (1 pp = 0.01 fraction); macro = "
         "unweighted mean over the five held-out adulterants. Group sizes 60/60/90/90/30 and EVOO "
@@ -254,7 +256,7 @@ def page_benchmarks() -> None:
         + "; ".join(f"{r.model} {r.fold_id} {r.mae_pp:.2f} pp" for r in worst.itertuples())
     )
     models = st.multiselect(
-        "Models in the plot", sorted(p["model"].unique()), default=sorted(p["model"].unique())[:2]
+        "Models in the plot", sorted(p["model"].unique()), default=sorted(p["model"].unique())
     )
     q = p[p["model"].isin(models)]
     st.plotly_chart(_fold_plot(q), use_container_width=True)
