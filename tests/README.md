@@ -1,3 +1,9 @@
-# Tests to implement in M0 onward
+# Tests
 
-See test IDs `T001`–`T024` in `docs/engineering/07_ACCEPTANCE_TESTS.md`. No executable test has been supplied in the documentation-only project starter, and no test run has been claimed.
+Run: `.venv/bin/python -m pytest -q -m "not dataset"` (synthetic fixtures only; no network, no dataset).
+
+- `unit/`: EEM schema + synthetic fixture (T001), config validation, provenance, status codes.
+- `integration/`: CLI behaviour and honest failure of unimplemented stages.
+- `@pytest.mark.dataset`: needs the real Zenodo archive; fails loudly (never silently skips) without it. Not run in CI.
+
+Remaining IDs `T002`-`T024` in `docs/engineering/07_ACCEPTANCE_TESTS.md` belong to later milestones.

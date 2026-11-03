@@ -1,3 +1,5 @@
-# Planned Python package
+# `chemiproof` package
 
-This folder is intentionally a **placeholder**. M0 AI coding agent must create an installable `chemiproof` Python package; no working code currently exists. Follow `docs/engineering/04_ARCHITECTURE.md` and `docs/project/06_MILESTONES.md`.
+Implemented in M0: `errors` (status codes), `config` (validated YAML configs), `provenance` (config hash, run ID, environment info), `logging_utils`, `data/schema` (EEM record contract), `data/synthetic` (synthetic test fixtures only), `pipeline` (stages that fail honestly), `cli`.
+
+Everything else (parser, preprocessing, models, evaluation, UI) is planned for M1+ per `docs/engineering/04_ARCHITECTURE.md`. No stage produces predictions or metrics today.

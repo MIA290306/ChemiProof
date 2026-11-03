@@ -20,14 +20,14 @@
 **Scientific purpose:** make all later experiments inspectable and reproducible; do NOT build fake predictions.
 
 **Tasks**
-- [ ] Create `pyproject.toml`, compatible Python interpreter/lock and `src/chemiproof` package with CLI placeholder.
-- [ ] Set up `ruff`, `pytest`, optional type checker, pre-commit and GitHub Actions for **synthetic data only**.
-- [ ] Create `.gitignore` excluding external datasets, cache, weights, outputs containing proprietary/uncleared content, secrets.
-- [ ] Create `config/project.yaml`, `config/experiments/baseline.yaml`, validate CLI configuration before any training.
-- [ ] Implement deterministic synthetic EEM fixture with explicit wavelengths for parser/unit tests (not marketed as real data).
-- [ ] Add provenance/run ID helper, simple structured logging and standardized errors.
-- [ ] Set up empty pipeline stages and tests that fail meaningfully on missing dataset; do not fabricate passing scientific tests.
-- [ ] Read all docs and resolve any blocking ambiguities; write `docs/project/13_DECISION_LOG.md` entry.
+- [x] Create `pyproject.toml`, compatible Python interpreter/lock and `src/chemiproof` package with CLI placeholder.
+- [x] Set up `ruff`, `pytest`, pre-commit and GitHub Actions for **synthetic data only** (type checker deferred; CI run NOT RUN yet).
+- [x] Create `.gitignore` excluding external datasets, cache, weights, outputs containing proprietary/uncleared content, secrets.
+- [x] Create `config/project.yaml`, `config/experiments/baseline.yaml`, validate CLI configuration before any training.
+- [x] Implement deterministic synthetic EEM fixture with explicit wavelengths for parser/unit tests (not marketed as real data).
+- [x] Add provenance/run ID helper, simple structured logging and standardized errors.
+- [x] Set up empty pipeline stages and tests that fail meaningfully on missing dataset; do not fabricate passing scientific tests.
+- [x] Read all docs and resolve any blocking ambiguities; write `docs/project/13_DECISION_LOG.md` entry.
 
 **Artifacts:** `pyproject.toml`, lockfile, `src/`, `tests/`, `.github/workflows/ci.yml`, `results/M0.../validation_report.md`.
 

@@ -1,12 +1,12 @@
 # Milestone Progress / Evidence Ledger
 
 **Updated:** 2026-10-24  
-**Current overall state:** DOCUMENTATION COMPLETED; IMPLEMENTATION NOT STARTED.  
+**Current overall state:** M0 REVIEW REQUIRED (tooling only); no data, model or experimental results.  
 **Rule:** Agent may set `REVIEW REQUIRED`; **only owner** may mark `ACCEPTED` after evidence review.
 
 | Milestone | Status | Evidence / artifacts | Next action |
 |---|---|---|---|
-| M0 Foundations | NOT STARTED | Documentation pack only | Bootstrap Python repository |
+| M0 Foundations | REVIEW REQUIRED | `results/M0_foundation/validation_report.md`, `MILESTONE_REVIEW.md`; 41 tests pass locally | Owner review; push and confirm green GitHub Actions run |
 | M1 Dataset audit | NOT STARTED | Published Zenodo link only; no archive downloaded | Perform safe M1 acquisition and parse |
 | M2 Chemometric baselines | NOT STARTED | None | Await M1 acceptance |
 | M3 LOAO benchmark | NOT STARTED | None | Await M2 acceptance |
@@ -19,7 +19,7 @@
 
 1. `.dat` actual internal schema, wavelength grid orientation, exact filename-to-label mapping unverified.
 2. Data Zenodo license not yet verified from an explicit machine-readable rights field; source GitHub code license not checked.
-3. No project environment or machine-executed test currently exists.
+3. Local environment and 41 synthetic-fixture tests now exist (M0); GitHub Actions has not run yet.
 4. No ChemiProof benchmark results, UI or proof of model generalization exist.
 
 ## Agent update format (append; do not overwrite history)
@@ -46,3 +46,15 @@ Actual commands + exit codes: mv/sed batch, link-existence check over all `docs|
 Measured results: NONE (documentation only). Milestone statuses unchanged (M0 still NOT STARTED).
 Risks / open questions: prompts in `docs/engineering/12_AI_PROMPTS.md` now say "the docs numbered 02,05" instead of "docs/02,05".
 Owner signoff: pending
+
+### 2026-11-02 — M0 — REVIEW REQUIRED
+Owner / agent: Mia Ho / Claude Code
+Scope attempted: CP-001..CP-006 (package, CLI, config validation, synthetic EEM, lint/test/CI, provenance helper).
+Files changed: `pyproject.toml`, `constraints.txt`, `.python-version`, `src/chemiproof/*`, `tests/*`, `.github/workflows/ci.yml`, `.pre-commit-config.yaml`, `.gitignore`, `config/project.yaml` (stage), docs (decision log ADR-006/007, this log, milestones).
+Actual commands + exit codes: see `results/M0_foundation/validation_report.md` (pytest exit 0 with 41 passed; ruff exit 0; clean-venv install exit 0; CLI DATASET_NOT_AVAILABLE exit 3).
+Measured results (with units; if none say NONE): NONE (no experiments).
+Artifact paths + checksums: `results/M0_foundation/` (no checksums needed; text reports).
+Acceptance tests (IDs / PASS, FAIL, NOT RUN): T001 PASS; T002-T024 NOT RUN (later milestones); GitHub Actions NOT RUN.
+Risks / open questions: ADR-007 needs owner approval; CP-006 example provenance artifact not produced; pre-commit hook not installed.
+Owner signoff: pending
+Next milestone (only after ACCEPTED): M1

@@ -43,10 +43,19 @@
 ## ADR-006 — Basic stack
 
 - **Date:** 2026-10-24
-- **Status:** PROPOSED (resolve at M0)
+- **Status:** ACCEPTED at M0 (2026-11-02), pending owner sign-off with M0 review
 - **Decision proposal:** Python + NumPy/Pandas/SciPy/scikit-learn, Pytest/Ruff, POT only in M4, Streamlit in M6. No backend/auth/LLM services.
 - **Why:** Appropriate to single-user reproducible scientific research.
-- **To decide:** Actual interpreter/package versions and environment manager after checking supported stable releases.
+- **Resolved at M0:** CPython 3.12 (Homebrew 3.12.15, arm64); `python -m venv` + pip with a `constraints.txt` produced by `pip freeze` (no `uv`); `argparse` CLI; Pydantic + PyYAML (`safe_load` only) for config. Verified via `pip install --dry-run --only-binary=:all:` that NumPy, SciPy, scikit-learn, pandas, Pydantic, PyYAML, pytest, ruff, pre-commit all have arm64 wheels for 3.12. Runtime deps at M0 are only numpy, pydantic, PyYAML; SciPy/scikit-learn/pandas are added when first needed (M1/M2) and the lock is regenerated then. Locked versions: see `constraints.txt`.
+
+## ADR-007 — M0 additions to the status taxonomy and artifact policy
+
+- **Date:** 2026-11-02
+- **Status:** PROPOSED (needs owner approval)
+- **Problem:** The taxonomy in docs/engineering/04_ARCHITECTURE.md had no code for a missing dataset, an invalid config or an unimplemented stage; M0 acceptance requires an explicit `DATASET_NOT_AVAILABLE` path. Also `.gitignore` blocked `results/*`, which conflicts with the required `results/M0.../validation_report.md`.
+- **Decision:** Add `DATASET_NOT_AVAILABLE`, `INVALID_CONFIG`, `NOT_IMPLEMENTED` to `chemiproof.errors.StatusCode`; use directory name `results/M0_foundation/` and un-ignore only that directory.
+- **Consequences:** No scientific methodology changed. Experiment configs must keep `status: NOT_RUN` (validator rejects anything else) so a hand edit cannot claim a finished run; `ui.allow_transductive_single_sample` must be `false` (ADR-002 enforced in code).
+- **Owner signoff:** pending
 
 ## Future ADR template
 
