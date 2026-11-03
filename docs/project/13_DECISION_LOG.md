@@ -67,6 +67,7 @@
 - **Decision proposed:** `olive_fraction = a / (a + b)` where folder is `a：b`; record `label_source = zenodo_description_19755088` plus the probe as evidence; manifest rows must keep the raw folder string. Adulterant fraction = 1 - olive_fraction (binary mixtures only).
 - **Open caveats:** the Zenodo text is a description, not a methods section; the full-text methods of the paper were not obtained (only the abstract page loaded). Owner may ask the corresponding authors to confirm.
 - **Owner signoff:** delegated to agent 2026-11-02; explicit review pending
+- **Update 2026-11-02 (author code, read-only):** the authors' loader (`code/src/data_loader.py`, `_parse_ratio`) documents `10:1 -> 10/(10+1) = 0.909`, i.e. label = a/(a+b) with a = olive. This independently confirms the convention from the primary code (the repo is unlicensed, so it was only read, not copied).
 - **Update 2026-11-02 (visual check):** the real EEM gallery shows the ~675 nm emission / ~400 nm excitation chlorophyll peak strongest at `10：1` and clearly weaker at `1：10` for all five adulterants, with broad 400-500 nm emission (excitation ~350 nm) growing at `1：10`, consistent with ADR-008.
 
 ## ADR-009 — Dataset provided as an extracted folder, no zip
@@ -86,6 +87,16 @@
 - **replicate_id left empty:** three folders ("rounds") per level are probably the 3 replicates, but this is not proven; the leakage-safe grouping used from M2 on is the stronger `(brand, adulterant, ratio)` cell, not `replicate_id`.
 - **Plots:** matplotlib added (dev + `plot` extra) for static PNG QC galleries; Plotly remains the choice for the M6 UI. PNGs are git-ignored because they are derived from third-party data.
 - **Licenses:** dataset CC BY 4.0 (Zenodo API); authors' code has no license (read-only reference, independent reimplementation). See docs/science/10_REFERENCES_AND_LICENSES.md.
+- **Owner signoff:** delegated; review pending
+
+## ADR-011 — M2 preprocessing and reference-protocol findings (from READING the authors' unlicensed code)
+
+- **Date:** 2026-11-02 · **Status:** ACCEPTED (agent, under owner delegation)
+- **Facts read** (`code/reproduce.py`, `code/src/preprocessing.py`; nothing copied): default pipeline = NaN->0, reverse the 640->300 nm axis to ascending, **no Rayleigh/Raman removal**, baseline = subtract the global minimum of the EEM, Savitzky-Golay window 5 / polyorder 2 applied along the **emission** axis only (the paper text says both axes), divide by the spectrum's global maximum, flatten to 9,450. Reference SVR: `kernel=poly, degree=3, C=1.0, gamma='scale'`, epsilon left at the scikit-learn default 0.1, labels in fraction [0,1] (so epsilon = 10 percentage points), no feature standardization, predictions clipped to [0,1] before scoring.
+- **Decision:** preprocessing `author_v1` = exactly the pipeline above, **prespecified** from the code (not tuned on any labels) and used by every model. Versions with other choices (e.g. smoothing on both axes) must be new named versions and cannot be chosen using outer-fold scores. Our feature order is (excitation, emission) C-order whereas the authors' is (emission, excitation); poly-kernel SVR, PCA, PLS and Euclidean OT are invariant to feature permutation, so results are unaffected.
+- **Label scale / epsilon (CP-204):** y = fraction in [0,1]; reference epsilon 0.1 = 0.1 fraction. We keep epsilon = 0.1 for the paper-fixed `svr_raw`.
+- **Reference-protocol deviations we will NOT copy** (for the discrepancy table in M4): (1) predictions clipped to [0,1] before scoring (we score unclipped and report clipped separately, as required by docs/science/05_EVALUATION_PLAN.md); (2) their PCA/CORAL/MMD baselines are fitted on source + unlabeled target X (transductive; we also provide a source-only PCA); (3) their CORAL/MMD `n_components` is selected using the labels of the corn target fold (target-label tuning, which our protocol forbids); (4) one-line OT: Euclidean cost, entropic Sinkhorn reg=0.1, numItermax=1000, stopThr=1e-9, row-normalized plan, barycentric projection of source onto target (to be reimplemented independently in M4).
+- **M2 evaluation protocol (`source_internal_loro`):** leave-one-measurement-round-out over all 330 spectra (3 folds), hyperparameters selected by an inner leave-one-round-out inside the training rounds only. It measures replicate/round generalization **within known adulterants**, is optimistic by construction, and is **not** evidence of unseen-adulterant generalization (that is the LOAO benchmark of M3).
 - **Owner signoff:** delegated; review pending
 
 ## Future ADR template

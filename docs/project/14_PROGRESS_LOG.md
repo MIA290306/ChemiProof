@@ -7,7 +7,7 @@
 | Milestone | Status | Evidence / artifacts | Next action |
 |---|---|---|---|
 | M0 Foundations | REVIEW REQUIRED | `results/M0_foundation/validation_report.md`, `MILESTONE_REVIEW.md`; 41 tests pass locally and in CI | Owner review and ADR-007 approval (CI green: run 41572684248) |
-| M1 Dataset audit | REVIEW REQUIRED | `results/M1_20261103T034431Z_b050b36-dirty_33c0ba5b/` (validation_report, MILESTONE_REVIEW); 330/330 parsed, ledger empty; 93 tests | Owner review; push and confirm CI |
+| M1 Dataset audit | REVIEW REQUIRED | `results/M1_20261103T034431Z_b050b36-dirty_33c0ba5b/` (validation_report, MILESTONE_REVIEW); 330/330 parsed, ledger empty; 93 tests | Owner review (CI green: run 41574366884) |
 | M2 Chemometric baselines | NOT STARTED | None | Await M1 acceptance |
 | M3 LOAO benchmark | NOT STARTED | None | Await M2 acceptance |
 | M4 OT replication | NOT STARTED | Published paper numbers, not our results | Await M3 acceptance |
@@ -83,7 +83,7 @@ Scope attempted: CP-101..CP-107. Files changed: `src/chemiproof/data/{parser,lab
 Actual commands + exit codes: see `results/M1_20261103T034431Z_b050b36-dirty_33c0ba5b/validation_report.md` (audit exit 0; pytest 90 passed exit 0; dataset tests 3 passed exit 0; ruff exit 0).
 Measured results: data facts only: 330 spectra, 60/60/90/90/30, 35x270 grid, 0 NaN, 0 duplicates, 22,982 negative cells in 330/330 files. Model metrics: NONE.
 Artifact paths + checksums: manifest sha256 `31c718edd95b4faca5f0f3fe68871870dc6f1b5d2307a8af93e8ce3712765495`; run `20261103T034431Z_b050b36-dirty_33c0ba5b`.
-Acceptance tests: T001-T006 PASS (T003 limitation: MD5 unverified; T002 on synthetic zips); T007+ NOT RUN; CI for M1 commits NOT RUN.
+Acceptance tests: T001-T006 PASS (T003 limitation: MD5 unverified; T002 on synthetic zips); T007+ NOT RUN; GitHub Actions PASS on 2d6e03b (run 41574366884).
 Risks / open questions: ADR-008 direction evidence (documentary + spectral; 3 weak OliVera pairs); MD5; negative intensities (M2); brand confounding.
 Owner signoff: pending
 Next milestone (only after ACCEPTED): M2

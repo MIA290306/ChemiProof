@@ -27,7 +27,7 @@
 
 ## Executed verification
 
-pytest (not dataset) exit 0, 90 passed; pytest (dataset, real data) exit 0, 3 passed; ruff check/format exit 0; audit exit 0. T001-T006 PASS (T003 with the MD5 limitation). CI on GitHub for these commits: NOT RUN yet.
+pytest (not dataset) exit 0, 90 passed; pytest (dataset, real data) exit 0, 3 passed; ruff check/format exit 0; audit exit 0. T001-T006 PASS (T003 with the MD5 limitation). GitHub Actions `ci` on head commit 2d6e03b: PASS (run 41574366884, https://github.com/MIA290306/ChemiProof/actions/runs/41574366884).
 
 ## Scientific results (if any)
 
@@ -43,5 +43,5 @@ pytest (not dataset) exit 0, 90 passed; pytest (dataset, real data) exit 0, 3 pa
 ## Recommendations and next action
 
 - Decision requested: review ADR-008/009/010.
-- Conditions before M1 may be ACCEPTED: owner review; green CI on the pushed commits.
+- Conditions before M1 may be ACCEPTED: owner review (CI condition met: green run 41574366884).
 - Suggested next milestone AFTER approval: M2 (preprocessing + baselines).

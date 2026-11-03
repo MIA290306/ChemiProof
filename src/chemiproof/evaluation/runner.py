@@ -123,7 +123,10 @@ def git_state(repo: Path | None = None) -> dict[str, Any]:
         except (OSError, subprocess.CalledProcessError):
             return "unavailable"
 
-    return {"head": run("rev-parse", "HEAD"), "dirty": bool(run("status", "--porcelain"))}
+    return {
+        "head": run("rev-parse", "HEAD"),
+        "dirty": bool(run("status", "--porcelain", "--untracked-files=no")),
+    }
 
 
 def write_run_artifacts(

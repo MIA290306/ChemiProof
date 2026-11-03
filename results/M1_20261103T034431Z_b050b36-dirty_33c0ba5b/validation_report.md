@@ -34,6 +34,7 @@
 | T004 ratio -> olive volume fraction | PASS | `tests/unit/test_labels.py`, real-data test; direction per ADR-008 (documentary + chlorophyll evidence) |
 | T005 bad/missing axes or size | PASS | `tests/unit/test_parser.py`, `tests/integration/test_manifest.py` (error carries sample path) |
 | T006 duplicates | PASS | synthetic duplicate test; real data has 0 duplicate hashes |
+| GitHub Actions `ci` (commit 2d6e03b) | PASS | run 41574366884: https://github.com/MIA290306/ChemiProof/actions/runs/41574366884 |
 | T007-T024 | NOT RUN | later milestones |
 
 ## Known limitations

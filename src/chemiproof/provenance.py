@@ -44,7 +44,7 @@ def git_short_hash(repo: Path | None = None) -> str:
             cwd=cwd,
         ).stdout.strip()
         dirty = subprocess.run(
-            ["git", "status", "--porcelain"],
+            ["git", "status", "--porcelain", "--untracked-files=no"],
             capture_output=True,
             text=True,
             check=True,
