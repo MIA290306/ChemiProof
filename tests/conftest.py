@@ -5,6 +5,6 @@ import pytest
 REPO = Path(__file__).resolve().parents[1]
 
 
-@pytest.fixture
+@pytest.fixture(scope="session")
 def repo() -> Path:
     return REPO

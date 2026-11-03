@@ -34,3 +34,5 @@ results/*
 !results/README.md
 !results/M0_foundation/
 !results/M0_foundation/validation_report.md
+!results/M1_*/
+results/M1_*/*.png
