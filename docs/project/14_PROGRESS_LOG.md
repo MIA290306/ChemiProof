@@ -1,14 +1,14 @@
 # Milestone Progress / Evidence Ledger
 
 **Updated:** 2026-10-24  
-**Current overall state:** M0 and M1 REVIEW REQUIRED; data audited (330 spectra), no model or experimental results.  
+**Current overall state:** M0, M1, M2 REVIEW REQUIRED; data audited (330 spectra); first source-internal (optimistic) baseline results exist; no LOAO / unseen-adulterant results yet.  
 **Rule:** Agent may set `REVIEW REQUIRED`; **only owner** may mark `ACCEPTED` after evidence review.
 
 | Milestone | Status | Evidence / artifacts | Next action |
 |---|---|---|---|
 | M0 Foundations | REVIEW REQUIRED | `results/M0_foundation/validation_report.md`, `MILESTONE_REVIEW.md`; 41 tests pass locally and in CI | Owner review and ADR-007 approval (CI green: run 41572684248) |
 | M1 Dataset audit | REVIEW REQUIRED | `results/M1_20261103T034431Z_b050b36-dirty_33c0ba5b/` (validation_report, MILESTONE_REVIEW); 330/330 parsed, ledger empty; 93 tests | Owner review (CI green: run 41574366884) |
-| M2 Chemometric baselines | NOT STARTED | None | Await M1 acceptance |
+| M2 Chemometric baselines | REVIEW REQUIRED | `results/M2_20261103T041143Z_ca43062_4097e86f/` (validation_report, MILESTONE_REVIEW); 124 tests; source-internal results exported | Owner review; push and confirm CI |
 | M3 LOAO benchmark | NOT STARTED | None | Await M2 acceptance |
 | M4 OT replication | NOT STARTED | Published paper numbers, not our results | Await M3 acceptance |
 | M5 Abstention/robustness | NOT STARTED | None | Await M4 acceptance |
@@ -87,3 +87,14 @@ Acceptance tests: T001-T006 PASS (T003 limitation: MD5 unverified; T002 on synth
 Risks / open questions: ADR-008 direction evidence (documentary + spectral; 3 weak OliVera pairs); MD5; negative intensities (M2); brand confounding.
 Owner signoff: pending
 Next milestone (only after ACCEPTED): M2
+
+### 2026-11-02 — M2 — REVIEW REQUIRED
+Owner / agent: Mia Ho (blanket delegation) / Claude Code
+Scope attempted: CP-201..CP-205. Files changed: `src/chemiproof/{spectra/preprocess,modeling/baselines,evaluation/{metrics,protocols,runner},experiments}.py`, `cli.py` (`experiment run`, `spectra compare`), `config.py` (protocol/models), `config/experiments/{m2_source_internal,baseline}.yaml`, tests (preprocess, metrics, leakage, experiment run, real-data), `pyproject.toml`/`constraints.txt` (scipy, scikit-learn), ADR-011/012.
+Actual commands + exit codes: see `results/M2_20261103T041143Z_ca43062_4097e86f/validation_report.md` (run exit 0, git dirty=false; pytest 124 passed exit 0; ruff exit 0).
+Measured results (source-internal leave-one-round-out, 3 folds x n=110; OPTIMISTIC, same adulterants in train; macro MAE in percentage points, R2): mean_y 22.73 pp / 0.000; svr_raw 5.10 pp / 0.947; pca_svr 7.09 pp / 0.903; pls 1.37 pp / 0.996. Not unseen-adulterant evidence.
+Artifact paths + checksums: `results/M2_20261103T041143Z_ca43062_4097e86f/`; config sha256 `5ddb4697c349f887...`; manifest sha256 `31c718edd95b4fac...`.
+Acceptance tests: T007, T008, T009, T011 (M2 protocol), T024 PASS; T010, T012-T023 NOT RUN; GitHub Actions for M2 commits NOT RUN.
+Risks / open questions: grids widened after first run (ADR-012: scores are exploratory-development numbers; M3 must freeze); PCA-SVR underperforms raw SVR (unexplained); round-as-replicate unproven; brand confounding.
+Owner signoff: pending
+Next milestone (only after ACCEPTED): M3

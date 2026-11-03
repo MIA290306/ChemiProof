@@ -1,0 +1,13 @@
+{
+  "python": "3.12.15",
+  "platform": "macOS-26.5.1-arm64-arm-64bit",
+  "machine": "arm64",
+  "packages": {
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "scikit-learn": "1.9.1",
+    "pydantic": "2.14.2",
+    "PyYAML": "6.0.3",
+    "chemiproof": "0.0.1"
+  }
+}

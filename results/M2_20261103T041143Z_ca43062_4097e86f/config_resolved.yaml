@@ -1,0 +1,46 @@
+_config_sha256: 5ddb4697c349f887ffb61cf5f4c4327659736ac695b3e330febdce696d3784e2
+allowed_target_information: null
+dataset_manifest: data/interim/sample_manifest.csv
+experiment_id: chemiproof-m2-source-internal
+forbidden_target_information: []
+label_unit: fraction
+manifest_sha256: 31c718edd95b4faca5f0f3fe68871870dc6f1b5d2307a8af93e8ce3712765495
+metrics:
+- mae
+- rmse
+- bias
+- r2
+mode: inductive
+models:
+- mean_y
+- svr_raw
+- pca_svr
+- pls
+n_features: 9450
+outer_cv: null
+outputs: results/
+preprocessing:
+  baseline_correction: subtract_global_min
+  intensity_normalization: divide_by_global_max
+  savitzky_golay:
+    axes:
+    - emission
+    polyorder: 2
+    window: 5
+  version: author_v1
+preprocessing_resolved:
+  baseline: subtract_min
+  normalize: max
+  sg_polyorder: 2
+  sg_window: 5
+  smooth_axes:
+  - emission
+  version: author_v1
+preprocessing_steps:
+- 'baseline: subtract global minimum of the EEM (never clamps negatives away)'
+- savitzky_golay(window=5, polyorder=2) along ['emission']
+- 'normalize: divide by global maximum of the EEM'
+- flatten (excitation, emission) C-order -> 9450 features
+protocol: source_internal_loro
+random_seed: 20261024
+status: NOT_RUN

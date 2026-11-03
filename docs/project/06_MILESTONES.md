@@ -59,13 +59,13 @@
 **Scientific purpose:** produce simple **inductive** methods that establish a defensible floor for later OT.
 
 **Tasks**
-- [ ] Build physically justified processing: orientation, baseline correction, axis-wise Savitzky–Golay smoothing, intensity normalization.
-- [ ] Match published preprocessing from author code if accessible; version any alternative.
-- [ ] Implement source-only mean predictor and at least two baselines (raw SVR, PLS or source-only PCA+SVR).
-- [ ] Fit all learned transforms **inside** train-only pipeline; unit tests prevent leakage.
-- [ ] Include one synthetic benchmark and a real **source-internal** evaluation with MAE/RMSE/R²/bias.
-- [ ] Validate `y` scale and compare SVR epsilon against actual reference implementation.
-- [ ] Verify consistent feature length (9450) after parsing; visualize before/after spectra without overwriting raw data.
+- [x] Build physically justified processing (author_v1: orientation, subtract-min baseline, SG along emission, max-norm; Rayleigh removal deliberately off, as in the reference): orientation, baseline correction, axis-wise Savitzky–Golay smoothing, intensity normalization.
+- [x] Match published preprocessing (read-only from the unlicensed author code; ADR-011) from author code if accessible; version any alternative.
+- [x] Implement source-only mean predictor and at least two baselines (raw SVR, PLS or source-only PCA+SVR).
+- [x] Fit all learned transforms **inside** train-only pipeline; unit tests prevent leakage.
+- [x] Include one synthetic benchmark and a real **source-internal** evaluation with MAE/RMSE/R²/bias.
+- [x] Validate `y` scale (fraction; reference epsilon 0.1 fraction) and compare SVR epsilon against actual reference implementation.
+- [x] Verify consistent feature length (9450) after parsing; visualize before/after spectra without overwriting raw data.
 
 **Artifacts:** model implementations/tests, preprocessing notebook or script, source-only evaluation report, frozen config.
 
