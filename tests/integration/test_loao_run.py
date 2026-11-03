@@ -292,6 +292,7 @@ def test_batch_sensitivity_runs_and_labels_itself_exploratory(world, repo, tmp_p
     walnut = doc["folds"]["LOAO-walnut"]
     assert {"random_10|ot_svr", "random_20|svr_no_adaptation"} <= set(walnut)
     assert walnut["random_10|ot_svr"]["n_batches"] == 5
+    assert {"skew_low_olive|ot_svr", "skew_high_olive|svr_no_adaptation"} <= set(walnut)  # ADR-015
     reg = list(csv.DictReader((out / "experiment_registry.csv").open()))
     assert (
         reg[-1]["run_class"] == "exploratory" and reg[-1]["protocol"] == "loao_ot_batch_sensitivity"

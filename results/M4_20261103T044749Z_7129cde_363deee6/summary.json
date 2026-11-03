@@ -1,0 +1,576 @@
+{
+  "run_id": "20261103T044749Z_7129cde_363deee6",
+  "config_sha256": "417e41b5b302909977eab952f19b11f56b925ee2542318918c580bcea4916ee3",
+  "manifest_sha256": "31c718edd95b4faca5f0f3fe68871870dc6f1b5d2307a8af93e8ce3712765495",
+  "git": {
+    "head": "7129cded6db6b734c0317fc50bb4990a8b9de6dc",
+    "dirty": false
+  },
+  "units": "MAE/RMSE/bias: olive volume FRACTION (0.01 = 1 percentage point); R2 unitless",
+  "models": {
+    "ot_svr": {
+      "mode": "transductive_batch",
+      "macro_over_folds": {
+        "mae_fraction": 0.04094824822521054,
+        "rmse_fraction": 0.04916140735038926,
+        "bias_fraction": -0.0049877059131947015,
+        "r2": 0.9644526529312325,
+        "r2_std_across_folds": 0.0038323554869466704,
+        "worst_fold_mae_fraction": 0.04640638340871621
+      },
+      "macro_over_folds_clipped_to_unit_interval": {
+        "mae_fraction": 0.04094824822521054,
+        "rmse_fraction": 0.04916140735038926,
+        "bias_fraction": -0.0049877059131947015,
+        "r2": 0.9644526529312325,
+        "r2_std_across_folds": 0.0038323554869466704,
+        "worst_fold_mae_fraction": 0.04640638340871621
+      },
+      "pooled_unclipped": {
+        "n": 330,
+        "mae_fraction": 0.040774573647562484,
+        "rmse_fraction": 0.04938954858738234,
+        "bias_fraction": -0.005991494155614973,
+        "r2": 0.9642231965249074,
+        "mae_pp": 4.077457364756248,
+        "n_out_of_range": 0
+      },
+      "pooled_clipped_to_unit_interval": {
+        "n": 330,
+        "mae_fraction": 0.040774573647562484,
+        "rmse_fraction": 0.04938954858738234,
+        "bias_fraction": -0.005991494155614973,
+        "r2": 0.9642231965249074,
+        "mae_pp": 4.077457364756248,
+        "n_out_of_range": 0
+      },
+      "worst_fold": "LOAO-soybean",
+      "descriptive_by_brand": {
+        "LOAO-soybean": {
+          "luhua": {
+            "n": 30,
+            "mae_fraction": 0.056121012965924554,
+            "bias_fraction": -0.022311625020556294
+          },
+          "olivera": {
+            "n": 30,
+            "mae_fraction": 0.03669175385150784,
+            "bias_fraction": 0.024702189134758242
+          }
+        },
+        "LOAO-peanut": {
+          "luhua": {
+            "n": 30,
+            "mae_fraction": 0.04297147193900339,
+            "bias_fraction": -0.02432523555636364
+          },
+          "olivera": {
+            "n": 30,
+            "mae_fraction": 0.044568347607520424,
+            "bias_fraction": 0.002521142489076103
+          }
+        },
+        "LOAO-rapeseed": {
+          "earl_grey": {
+            "n": 30,
+            "mae_fraction": 0.053222692239290256,
+            "bias_fraction": -0.03776974575380659
+          },
+          "luhua": {
+            "n": 30,
+            "mae_fraction": 0.028219982368293327,
+            "bias_fraction": 0.007616741179195469
+          },
+          "olivera": {
+            "n": 30,
+            "mae_fraction": 0.03045275459244,
+            "bias_fraction": 0.006372286806603447
+          }
+        },
+        "LOAO-corn": {
+          "earl_grey": {
+            "n": 30,
+            "mae_fraction": 0.03192821561967842,
+            "bias_fraction": -0.00434786011346183
+          },
+          "luhua": {
+            "n": 30,
+            "mae_fraction": 0.03415305413877627,
+            "bias_fraction": 0.01955594561484334
+          },
+          "olivera": {
+            "n": 30,
+            "mae_fraction": 0.052427464764256575,
+            "bias_fraction": -0.03831908023724642
+          }
+        },
+        "LOAO-walnut": {
+          "luhua": {
+            "n": 30,
+            "mae_fraction": 0.037763560036496266,
+            "bias_fraction": 0.00039880574519348213
+          }
+        }
+      }
+    },
+    "ot_svr_pot": {
+      "mode": "transductive_batch",
+      "macro_over_folds": {
+        "mae_fraction": 0.04091385214457027,
+        "rmse_fraction": 0.0491068734187402,
+        "bias_fraction": -0.004953266889106037,
+        "r2": 0.9645318843923544,
+        "r2_std_across_folds": 0.0038184063353153192,
+        "worst_fold_mae_fraction": 0.046375047724432135
+      },
+      "macro_over_folds_clipped_to_unit_interval": {
+        "mae_fraction": 0.04091385214457027,
+        "rmse_fraction": 0.0491068734187402,
+        "bias_fraction": -0.004953266889106037,
+        "r2": 0.9645318843923544,
+        "r2_std_across_folds": 0.0038184063353153192,
+        "worst_fold_mae_fraction": 0.046375047724432135
+      },
+      "pooled_unclipped": {
+        "n": 330,
+        "mae_fraction": 0.04073560490784107,
+        "rmse_fraction": 0.04932643091044948,
+        "bias_fraction": -0.0059574232466330715,
+        "r2": 0.964314580466671,
+        "mae_pp": 4.073560490784107,
+        "n_out_of_range": 0
+      },
+      "pooled_clipped_to_unit_interval": {
+        "n": 330,
+        "mae_fraction": 0.04073560490784107,
+        "rmse_fraction": 0.04932643091044948,
+        "bias_fraction": -0.0059574232466330715,
+        "r2": 0.964314580466671,
+        "mae_pp": 4.073560490784107,
+        "n_out_of_range": 0
+      },
+      "worst_fold": "LOAO-soybean",
+      "descriptive_by_brand": {
+        "LOAO-soybean": {
+          "luhua": {
+            "n": 30,
+            "mae_fraction": 0.05615556609184223,
+            "bias_fraction": -0.022316982774118067
+          },
+          "olivera": {
+            "n": 30,
+            "mae_fraction": 0.036594529357022024,
+            "bias_fraction": 0.024624084424847627
+          }
+        },
+        "LOAO-peanut": {
+          "luhua": {
+            "n": 30,
+            "mae_fraction": 0.04293680313535179,
+            "bias_fraction": -0.024160608158315056
+          },
+          "olivera": {
+            "n": 30,
+            "mae_fraction": 0.04448490619366986,
+            "bias_fraction": 0.0024622517148349577
+          }
+        },
+        "LOAO-rapeseed": {
+          "earl_grey": {
+            "n": 30,
+            "mae_fraction": 0.053182500037941206,
+            "bias_fraction": -0.03763722208491453
+          },
+          "luhua": {
+            "n": 30,
+            "mae_fraction": 0.028190858956734417,
+            "bias_fraction": 0.007731204715351157
+          },
+          "olivera": {
+            "n": 30,
+            "mae_fraction": 0.03033622987235686,
+            "bias_fraction": 0.006266957576362711
+          }
+        },
+        "LOAO-corn": {
+          "earl_grey": {
+            "n": 30,
+            "mae_fraction": 0.031894513427844676,
+            "bias_fraction": -0.004347391435705653
+          },
+          "luhua": {
+            "n": 30,
+            "mae_fraction": 0.034191990839828976,
+            "bias_fraction": 0.01963483039534514
+          },
+          "olivera": {
+            "n": 30,
+            "mae_fraction": 0.05235864317697996,
+            "bias_fraction": -0.038252919973026316
+          }
+        },
+        "LOAO-walnut": {
+          "luhua": {
+            "n": 30,
+            "mae_fraction": 0.0377651128966797,
+            "bias_fraction": 0.00046413988637424947
+          }
+        }
+      }
+    },
+    "author_pca50": {
+      "mode": "transductive_batch",
+      "macro_over_folds": {
+        "mae_fraction": 0.2241483288116818,
+        "rmse_fraction": 0.38510818738136343,
+        "bias_fraction": -0.09472288623249361,
+        "r2": -1.3942660040569004,
+        "r2_std_across_folds": 1.483930023731677,
+        "worst_fold_mae_fraction": 0.2868451004046796
+      },
+      "macro_over_folds_clipped_to_unit_interval": {
+        "mae_fraction": 0.1184018512814563,
+        "rmse_fraction": 0.13918297409212022,
+        "bias_fraction": 0.009149781373353916,
+        "r2": 0.6925921476673664,
+        "r2_std_across_folds": 0.1911258453275266,
+        "worst_fold_mae_fraction": 0.16946683403584345
+      },
+      "pooled_unclipped": {
+        "n": 330,
+        "mae_fraction": 0.2263506821212254,
+        "rmse_fraction": 0.41676291308066477,
+        "bias_fraction": -0.08379868721782469,
+        "r2": -1.5474727772190655,
+        "mae_pp": 22.63506821212254,
+        "n_out_of_range": 46
+      },
+      "pooled_clipped_to_unit_interval": {
+        "n": 330,
+        "mae_fraction": 0.12360619538729377,
+        "rmse_fraction": 0.15269275857254558,
+        "bias_fraction": 0.017242335948490572,
+        "r2": 0.6580455150327592,
+        "mae_pp": 12.360619538729377,
+        "n_out_of_range": 0
+      },
+      "worst_fold": "LOAO-corn",
+      "descriptive_by_brand": {
+        "LOAO-soybean": {
+          "luhua": {
+            "n": 30,
+            "mae_fraction": 0.21176966655945045,
+            "bias_fraction": -0.12690561432259906
+          },
+          "olivera": {
+            "n": 30,
+            "mae_fraction": 0.22999213205529395,
+            "bias_fraction": 0.08018928213853146
+          }
+        },
+        "LOAO-peanut": {
+          "luhua": {
+            "n": 30,
+            "mae_fraction": 0.2718023564987488,
+            "bias_fraction": -0.2424067596639288
+          },
+          "olivera": {
+            "n": 30,
+            "mae_fraction": 0.19941982567455507,
+            "bias_fraction": 0.003186949870964704
+          }
+        },
+        "LOAO-rapeseed": {
+          "earl_grey": {
+            "n": 30,
+            "mae_fraction": 0.17857707113841537,
+            "bias_fraction": 0.07989173218130882
+          },
+          "luhua": {
+            "n": 30,
+            "mae_fraction": 0.1777133082375256,
+            "bias_fraction": 0.0870275790547099
+          },
+          "olivera": {
+            "n": 30,
+            "mae_fraction": 0.15211012273158944,
+            "bias_fraction": 0.1126956420746044
+          }
+        },
+        "LOAO-corn": {
+          "earl_grey": {
+            "n": 30,
+            "mae_fraction": 0.3817785032306618,
+            "bias_fraction": -0.3490274558234571
+          },
+          "luhua": {
+            "n": 30,
+            "mae_fraction": 0.2800259460578429,
+            "bias_fraction": -0.2544188115032685
+          },
+          "olivera": {
+            "n": 30,
+            "mae_fraction": 0.19873085192553397,
+            "bias_fraction": -0.13397327185152894
+          }
+        },
+        "LOAO-walnut": {
+          "luhua": {
+            "n": 30,
+            "mae_fraction": 0.20793771922386198,
+            "bias_fraction": -0.17804483155140835
+          }
+        }
+      }
+    },
+    "author_pca10": {
+      "mode": "transductive_batch",
+      "macro_over_folds": {
+        "mae_fraction": 0.25584915749716725,
+        "rmse_fraction": 0.45305984506805413,
+        "bias_fraction": -0.11987243538655609,
+        "r2": -2.494318818449795,
+        "r2_std_across_folds": 2.687782035232347,
+        "worst_fold_mae_fraction": 0.35419632440282406
+      },
+      "macro_over_folds_clipped_to_unit_interval": {
+        "mae_fraction": 0.12576049981464005,
+        "rmse_fraction": 0.14755173032336677,
+        "bias_fraction": 0.009853854562259911,
+        "r2": 0.6592892216334395,
+        "r2_std_across_folds": 0.1833494319819072,
+        "worst_fold_mae_fraction": 0.17556584070207515
+      },
+      "pooled_unclipped": {
+        "n": 330,
+        "mae_fraction": 0.25406583958115403,
+        "rmse_fraction": 0.49764764072873335,
+        "bias_fraction": -0.10532769786729558,
+        "r2": -2.632246556735492,
+        "mae_pp": 25.4065839581154,
+        "n_out_of_range": 44
+      },
+      "pooled_clipped_to_unit_interval": {
+        "n": 330,
+        "mae_fraction": 0.131070041038803,
+        "rmse_fraction": 0.1591352375640463,
+        "bias_fraction": 0.01733867546259076,
+        "r2": 0.6285809837597067,
+        "mae_pp": 13.107004103880298,
+        "n_out_of_range": 0
+      },
+      "worst_fold": "LOAO-corn",
+      "descriptive_by_brand": {
+        "LOAO-soybean": {
+          "luhua": {
+            "n": 30,
+            "mae_fraction": 0.2185719837233157,
+            "bias_fraction": -0.12839908811982828
+          },
+          "olivera": {
+            "n": 30,
+            "mae_fraction": 0.26385257324203204,
+            "bias_fraction": 0.10510813145662005
+          }
+        },
+        "LOAO-peanut": {
+          "luhua": {
+            "n": 30,
+            "mae_fraction": 0.2381009948324902,
+            "bias_fraction": -0.19972137662534883
+          },
+          "olivera": {
+            "n": 30,
+            "mae_fraction": 0.19138268359628105,
+            "bias_fraction": 0.005628929696032864
+          }
+        },
+        "LOAO-rapeseed": {
+          "earl_grey": {
+            "n": 30,
+            "mae_fraction": 0.18325899412806324,
+            "bias_fraction": 0.06837344753986799
+          },
+          "luhua": {
+            "n": 30,
+            "mae_fraction": 0.18322221939927905,
+            "bias_fraction": 0.07450294659876061
+          },
+          "olivera": {
+            "n": 30,
+            "mae_fraction": 0.16021630857888322,
+            "bias_fraction": 0.09913822612754847
+          }
+        },
+        "LOAO-corn": {
+          "earl_grey": {
+            "n": 30,
+            "mae_fraction": 0.4696366266046977,
+            "bias_fraction": -0.4321606907509787
+          },
+          "luhua": {
+            "n": 30,
+            "mae_fraction": 0.3501573766337724,
+            "bias_fraction": -0.3169431981697948
+          },
+          "olivera": {
+            "n": 30,
+            "mae_fraction": 0.242794969970002,
+            "bias_fraction": -0.16873692806221682
+          }
+        },
+        "LOAO-walnut": {
+          "luhua": {
+            "n": 30,
+            "mae_fraction": 0.2935295046838775,
+            "bias_fraction": -0.265395076230914
+          }
+        }
+      }
+    },
+    "svr_no_adaptation": {
+      "mode": "inductive",
+      "macro_over_folds": {
+        "mae_fraction": 0.08373371683044693,
+        "rmse_fraction": 0.10052496847301076,
+        "bias_fraction": 0.013640859235176727,
+        "r2": 0.8310550812290585,
+        "r2_std_across_folds": 0.12615515689492082,
+        "worst_fold_mae_fraction": 0.12973513627386776
+      },
+      "macro_over_folds_clipped_to_unit_interval": {
+        "mae_fraction": 0.08371787648201286,
+        "rmse_fraction": 0.1005125340906778,
+        "bias_fraction": 0.013656699583610815,
+        "r2": 0.8310984261914254,
+        "r2_std_across_folds": 0.12614202987323436,
+        "worst_fold_mae_fraction": 0.12973513627386776
+      },
+      "pooled_unclipped": {
+        "n": 330,
+        "mae_fraction": 0.0860164895935113,
+        "rmse_fraction": 0.11233698288587728,
+        "bias_fraction": 0.02015593122504119,
+        "r2": 0.8149125667161057,
+        "mae_pp": 8.60164895935113,
+        "n_out_of_range": 1
+      },
+      "pooled_clipped_to_unit_interval": {
+        "n": 330,
+        "mae_fraction": 0.08600208927675303,
+        "rmse_fraction": 0.1123250241606063,
+        "bias_fraction": 0.020170331541799452,
+        "r2": 0.8149519712273484,
+        "mae_pp": 8.600208927675302,
+        "n_out_of_range": 0
+      },
+      "worst_fold": "LOAO-rapeseed",
+      "descriptive_by_brand": {
+        "LOAO-soybean": {
+          "luhua": {
+            "n": 30,
+            "mae_fraction": 0.04667499089946257,
+            "bias_fraction": 0.0004330784938403248
+          },
+          "olivera": {
+            "n": 30,
+            "mae_fraction": 0.1426992100128,
+            "bias_fraction": 0.13782866798891832
+          }
+        },
+        "LOAO-peanut": {
+          "luhua": {
+            "n": 30,
+            "mae_fraction": 0.08080942681735855,
+            "bias_fraction": -0.08080942681735855
+          },
+          "olivera": {
+            "n": 30,
+            "mae_fraction": 0.060243823820327086,
+            "bias_fraction": 0.03383884495263286
+          }
+        },
+        "LOAO-rapeseed": {
+          "earl_grey": {
+            "n": 30,
+            "mae_fraction": 0.1296626000785877,
+            "bias_fraction": 0.08375003868414854
+          },
+          "luhua": {
+            "n": 30,
+            "mae_fraction": 0.12692048683783658,
+            "bias_fraction": 0.08006816619255029
+          },
+          "olivera": {
+            "n": 30,
+            "mae_fraction": 0.13262232190517906,
+            "bias_fraction": 0.12835394836152714
+          }
+        },
+        "LOAO-corn": {
+          "earl_grey": {
+            "n": 30,
+            "mae_fraction": 0.05960893621933027,
+            "bias_fraction": -0.05960893621933027
+          },
+          "luhua": {
+            "n": 30,
+            "mae_fraction": 0.062174906325639795,
+            "bias_fraction": -0.05560030368349695
+          },
+          "olivera": {
+            "n": 30,
+            "mae_fraction": 0.032459362035549624,
+            "bias_fraction": -0.015164865849569243
+          }
+        },
+        "LOAO-walnut": {
+          "luhua": {
+            "n": 30,
+            "mae_fraction": 0.07230532057655292,
+            "bias_fraction": -0.031373968628409334
+          }
+        }
+      }
+    }
+  },
+  "selected_hyperparameters": [],
+  "limitations": [
+    "TRANSDUCTIVE RESEARCH MODE: these predictions need a BATCH of unlabeled target spectra from the same unseen adulterant. Metrics from this mode must never be advertised as single-file (inductive) deployment performance.",
+    "Each fold uses the WHOLE held-out adulterant (30-90 spectra spanning all ten levels and every brand of that adulterant) as the unlabeled batch; a batch with a different composition (fewer samples, one level, one brand) is a different problem (see the batch-sensitivity run).",
+    "Only the target-batch FEATURES are read; target labels are used for scoring only (canary: shuffling them changes nothing). This is still not an inductive protocol: compare with svr_no_adaptation, which uses the same SVR and features without the batch.",
+    "Our OT solver is an independent log-domain implementation; ot_svr_pot calls POT the way the authors describe. Their gap quantifies solver sensitivity of the polynomial SVR.",
+    "author_pca50/author_pca10 are published-style PCA baselines fitted on source + unlabeled target X with prespecified sizes; the authors' 'PARAFAC-10' column is PCA with 10 components in their code. CORAL/MMD are not reproduced: the authors tune their size on target labels.",
+    "Brand imbalance, five folds, one instrument, laboratory binary mixtures: see LOAO-v1 limits.",
+    "Published numbers are shown separately and were not measured by ChemiProof; the authors clip predictions to [0, 1], we score unclipped (clipped values are reported as secondary)."
+  ],
+  "published_reference_not_measured": {
+    "source": "Sun et al. 2026 abstract, doi:10.1038/s41538-026-01037-6 (LOAO mean R2)",
+    "status": "published; NOT a ChemiProof measurement",
+    "raw_mean_r2": 0.831,
+    "pca_mean_r2": 0.693,
+    "parafac_mean_r2": 0.659,
+    "ot_svr_mean_r2": 0.965,
+    "ot_svr_sd": 0.004,
+    "caveat": "their protocol clips predictions to [0,1], fits PCA on source+target X, and tunes CORAL/MMD with target labels (ADR-011); our numbers are not directly comparable"
+  },
+  "mode": "transductive_batch",
+  "transductive_warning": "TRANSDUCTIVE RESEARCH MODE: these predictions need a BATCH of unlabeled target spectra from the same unseen adulterant. Metrics from this mode must never be advertised as single-file (inductive) deployment performance.",
+  "optimal_transport": {
+    "epsilon": 0.1,
+    "max_iter": 1000,
+    "tol": 1e-09
+  },
+  "run_class": "locked",
+  "subset_brand": null,
+  "leakage_audit": {
+    "fold_audit_checks": {
+      "each_test_is_exactly_one_adulterant": true,
+      "target_adulterant_absent_from_train": true,
+      "train_test_sample_ids_disjoint": true,
+      "every_sample_tested_exactly_once": true,
+      "sizes_match_published": true
+    },
+    "canary_passed": true
+  }
+}

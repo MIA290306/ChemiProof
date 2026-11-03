@@ -1,0 +1,6 @@
+fold_id,target_adulterant,n_test,n_train,train_adulterants,test_brands,train_brands,test_brands_absent_from_train
+LOAO-soybean,soybean,30,120,"[""corn"", ""peanut"", ""rapeseed"", ""walnut""]","{""luhua"": 30}","{""luhua"": 120}",[]
+LOAO-peanut,peanut,30,120,"[""corn"", ""rapeseed"", ""soybean"", ""walnut""]","{""luhua"": 30}","{""luhua"": 120}",[]
+LOAO-rapeseed,rapeseed,30,120,"[""corn"", ""peanut"", ""soybean"", ""walnut""]","{""luhua"": 30}","{""luhua"": 120}",[]
+LOAO-corn,corn,30,120,"[""peanut"", ""rapeseed"", ""soybean"", ""walnut""]","{""luhua"": 30}","{""luhua"": 120}",[]
+LOAO-walnut,walnut,30,120,"[""corn"", ""peanut"", ""rapeseed"", ""soybean""]","{""luhua"": 30}","{""luhua"": 120}",[]

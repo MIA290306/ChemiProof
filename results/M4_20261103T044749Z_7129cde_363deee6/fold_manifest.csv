@@ -1,0 +1,6 @@
+fold_id,target_adulterant,n_test,n_train,train_adulterants,test_brands,train_brands,test_brands_absent_from_train
+LOAO-soybean,soybean,60,270,"[""corn"", ""peanut"", ""rapeseed"", ""walnut""]","{""luhua"": 30, ""olivera"": 30}","{""earl_grey"": 60, ""luhua"": 120, ""olivera"": 90}",[]
+LOAO-peanut,peanut,60,270,"[""corn"", ""rapeseed"", ""soybean"", ""walnut""]","{""luhua"": 30, ""olivera"": 30}","{""earl_grey"": 60, ""luhua"": 120, ""olivera"": 90}",[]
+LOAO-rapeseed,rapeseed,90,240,"[""corn"", ""peanut"", ""soybean"", ""walnut""]","{""earl_grey"": 30, ""luhua"": 30, ""olivera"": 30}","{""earl_grey"": 30, ""luhua"": 120, ""olivera"": 90}",[]
+LOAO-corn,corn,90,240,"[""peanut"", ""rapeseed"", ""soybean"", ""walnut""]","{""earl_grey"": 30, ""luhua"": 30, ""olivera"": 30}","{""earl_grey"": 30, ""luhua"": 120, ""olivera"": 90}",[]
+LOAO-walnut,walnut,30,300,"[""corn"", ""peanut"", ""rapeseed"", ""soybean""]","{""luhua"": 30}","{""earl_grey"": 60, ""luhua"": 120, ""olivera"": 120}",[]

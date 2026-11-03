@@ -131,6 +131,14 @@
 - **Required wording everywhere:** "TRANSDUCTIVE RESEARCH MODE: needs a batch of unlabeled target spectra; never advertise as single-file deployment performance". `screen_single` refuses the transductive mode with `TRANSDUCTIVE_BATCH_REQUIRED`.
 - **Owner signoff:** delegated; review pending
 
+## ADR-015: label-skewed batch stress test for OT (declared before it was run)
+
+- **Date:** 2026-11-02 · **Status:** ACCEPTED (agent, under owner delegation)
+- **Why:** OT with uniform marginals pairs every source spectrum with target spectra. In every LOAO fold the held-out batch has the same ten equally frequent olive levels as the source, so a good score might partly come from that distribution match instead of from spectral alignment. A real unlabeled batch will not have a uniform composition.
+- **Design (exploratory, extends run (3) of ADR-014; `ot.py` and the frozen configs are untouched):** inside each LOAO fold, in addition to random batches of 10/20 and single-brand batches, score two label-skewed batches: all held-out samples with olive fraction < 0.5 ("skew_low_olive") and > 0.5 ("skew_high_olive") (levels 1-5 and 6-10), each only if it has at least 10 samples. Adaptation uses the batch FEATURES only; held-out labels are used (a) to define batch membership for the stress scenario and (b) for scoring. Compared with `svr_no_adaptation` on the same samples. No result of this run feeds back into any frozen protocol.
+- **Prediction (stated in advance):** if OT relies on a matching label distribution, OT's error will grow clearly on skewed batches while the no-adaptation control stays roughly the same. This is a stress test, not a tuning step.
+- **Owner signoff:** delegated; review pending
+
 ## Future ADR template
 
 ```text

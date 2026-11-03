@@ -29,7 +29,7 @@ from chemiproof.evaluation.runner import (
     write_run_artifacts,
 )
 from chemiproof.modeling.baselines import MODEL_KEYS, SEED
-from chemiproof.modeling.ot import TRANSDUCTIVE_WARNING, OTConfig
+from chemiproof.modeling.ot import MIN_TARGET_BATCH, TRANSDUCTIVE_WARNING, OTConfig
 from chemiproof.pipeline import Dataset, load_dataset
 from chemiproof.provenance import config_hash, file_sha256, make_run_id
 from chemiproof.spectra.preprocess import AUTHOR_V1, preprocess_features
@@ -515,6 +515,16 @@ def run_ot_batch_sensitivity(
                 batches.append((f"random_{k}", rng.choice(len(te), size=k, replace=False)))
         if len(set(brands.tolist())) > 1:
             batches += [(f"brand_{b}", np.flatnonzero(brands == b)) for b in sorted(set(brands))]
+        # ADR-015: label-SKEWED batches. Labels only DEFINE which samples form the stress batch;
+        # the adaptation never sees them. They test whether OT silently relies on the target batch
+        # having the same (uniform) olive-fraction distribution as the source.
+        y_te = y[te]
+        for label, sel in (
+            ("skew_low_olive", np.flatnonzero(y_te < 0.5)),
+            ("skew_high_olive", np.flatnonzero(y_te > 0.5)),
+        ):
+            if sel.size >= MIN_TARGET_BATCH:
+                batches.append((label, sel))
         rows_out: dict[str, list[dict[str, float]]] = {}
         for label, sel in batches:
             xt = X[te][sel]
