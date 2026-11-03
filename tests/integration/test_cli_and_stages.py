@@ -82,7 +82,7 @@ def test_experiment_run_validates_config_first_then_needs_dataset(repo, tmp_path
     assert rc == EXIT_ERROR and "DATASET_NOT_AVAILABLE" in capsys.readouterr().err
 
 
-@pytest.mark.parametrize("argv", [["app"], ["experiment", "report"]])
+@pytest.mark.parametrize("argv", [["experiment", "report"]])
 def test_later_milestone_commands_are_truthful(argv, capsys):
     assert main(argv) == EXIT_ERROR
     assert "NOT_IMPLEMENTED" in capsys.readouterr().err

@@ -182,6 +182,64 @@ def _cmd_uncertainty(args: argparse.Namespace) -> int:
     return EXIT_OK
 
 
+def _cmd_train_final(args: argparse.Namespace) -> int:
+    """FINAL-PLS-v1 (ADR-018): fit on all spectra, calibrate leave-one-adulterant-out, save."""
+    import hashlib
+    from types import SimpleNamespace
+
+    from chemiproof.evaluation.runner import git_state
+    from chemiproof.experiments import _append_registry
+    from chemiproof.modeling import final
+    from chemiproof.pipeline import load_dataset
+    from chemiproof.provenance import config_hash, file_sha256
+    from chemiproof.spectra.preprocess import preprocess_features
+
+    manifest = Path(args.manifest)
+    ds = load_dataset(manifest, Path(args.data_dir))  # re-verifies every file's SHA-256
+    constants = {
+        "protocol_id": final.PROTOCOL_ID, "model": final.MODEL_KEY,
+        "ood_components": final.OOD_COMPONENTS, "retention_goal": final.RETENTION_GOAL,
+        "interval_level": final.INTERVAL_LEVEL, "preprocess": "author_v1",
+    }  # fmt: skip
+    run_id = make_run_id(constants)
+    ids = sorted(r.sample_id for r in ds.rows)
+    card = {
+        "run_id": run_id,
+        "config_sha256": config_hash(constants),
+        "manifest_sha256": file_sha256(manifest),
+        "train_sample_ids_hash": hashlib.sha256("\n".join(ids).encode()).hexdigest(),
+        "data_source_doi": ds.rows[0].source_record_doi,
+        "git": git_state(),
+        "environment": environment_info(),
+    }
+    s0 = ds.spectra[0]
+    model = final.train_final(
+        preprocess_features(ds.spectra), ds.y, ds.groups, s0.excitation_nm, s0.emission_nm, card
+    )
+    out = final.save_final(model, Path(args.output_root) / f"{final.ARTIFACT_PREFIX}{run_id}")
+    tag = SimpleNamespace(  # registry row; this is not an ExperimentConfig run
+        experiment_id="chemiproof-final-pls", protocol=final.PROTOCOL_ID, run_class="final",
+        subset_brand=None,
+    )  # fmt: skip
+    _append_registry(Path(args.output_root), run_id, tag, card["config_sha256"], out)  # type: ignore[arg-type]
+    print(f"final model artifact: {out}")
+    print((out / "model_card.json").read_text(encoding="utf-8"))
+    return EXIT_OK
+
+
+def _cmd_app(args: argparse.Namespace) -> int:
+    import importlib.util
+    import subprocess
+
+    if importlib.util.find_spec("streamlit") is None:
+        raise ChemiProofError(
+            StatusCode.INVALID_CONFIG, "streamlit is not installed: pip install -e '.[ui]'"
+        )
+    app = Path(__file__).parent / "ui" / "app.py"
+    cmd = [sys.executable, "-m", "streamlit", "run", str(app), "--server.headless", "true"]
+    return subprocess.call(cmd + ["--server.port", str(args.port)])
+
+
 def _unavailable(milestone: str, what: str) -> Callable[[argparse.Namespace], int]:
     def run(_: argparse.Namespace) -> int:
         raise _not_implemented(milestone, what)
@@ -262,9 +320,16 @@ def build_parser() -> argparse.ArgumentParser:
     uq.set_defaults(func=_cmd_uncertainty)
     ex_sub.add_parser("report").set_defaults(func=_unavailable("M7", "experiment report"))
 
-    sub.add_parser("app", help="research explorer (available from M6)").set_defaults(
-        func=_unavailable("M6", "the Streamlit explorer")
-    )
+    md = sub.add_parser("model", help="final screening artifact (M6, ADR-018)")
+    md_sub = md.add_subparsers(dest="action", required=True)
+    tf = md_sub.add_parser("train-final", help="FINAL-PLS-v1 on all spectra (no independent test)")
+    _add_data_args(tf)
+    tf.add_argument("--output-root", default=str(DEFAULT_RESULTS))
+    tf.set_defaults(func=_cmd_train_final)
+
+    ap = sub.add_parser("app", help="Streamlit research explorer (M6; needs the 'ui' extra)")
+    ap.add_argument("--port", type=int, default=8501)
+    ap.set_defaults(func=_cmd_app)
     return parser
 
 
