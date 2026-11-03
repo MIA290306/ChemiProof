@@ -57,6 +57,6 @@
 
 ## Recommendations and next action
 
-- **Decisions requested from owner:** (1) accept or change ADR-019 (license, copyright holder name, public result tables, screenshots); (2) name an external reviewer (instructor, mentor or QA practitioner) and send the packet in `RELEASE_REVIEW.md` section 5; (3) review and merge PR #3 (M6) and this M7 branch.
+- **Decisions requested from owner:** (1) accept or change ADR-019 (license, copyright holder name, public result tables, screenshots); (2) name an external reviewer (instructor, mentor or QA practitioner) and send the packet in `RELEASE_REVIEW.md` section 5; (3) review and merge the M7 pull request (PR #3, M6, was merged on 2026-11-03 as `3035439`; merging is not the same as marking M6 ACCEPTED).
 - **Conditions before M7 may be ACCEPTED:** license decided and `LICENSE` added; reviewer answers recorded; any blocking review finding fixed; then tag `v1.0`.
 - **Suggested next milestone AFTER approval:** none in the plan; optional M6.5 on a Windows machine, and the two open M5 questions (brand-effect test, OT batch-composition detector) as new ADRs.

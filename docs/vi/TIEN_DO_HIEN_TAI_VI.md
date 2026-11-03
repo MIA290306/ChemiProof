@@ -19,7 +19,7 @@ Câu hỏi khoa học chính: khi gặp **một loại dầu pha trộn chưa t�
 | M3 Benchmark LOAO | REVIEW REQUIRED | 5 fold ngoài, đóng băng giao thức `LOAO-v1` |
 | M4 Tái lập OT | REVIEW REQUIRED | Optimal transport (transductive), `LOAO-OT-v1` |
 | M5 Từ chối dự đoán và độ bền | REVIEW REQUIRED | `LOAO-UQ-v1` (ADR-017) |
-| M6 Giao diện nghiên cứu (Streamlit) | REVIEW REQUIRED | Explorer 6 trang + mô hình sàng lọc `FINAL-PLS-v1` (ADR-018), nhánh `m6/research-explorer` |
+| M6 Giao diện nghiên cứu (Streamlit) | REVIEW REQUIRED | Explorer 6 trang + mô hình sàng lọc `FINAL-PLS-v1` (ADR-018), đã merge vào `main` (PR #3, 2026-11-03) |
 | M6.5 Power BI | CHƯA BẮT ĐẦU (chỉ có đặc tả) | Cần M5, M6 và máy Windows |
 | M7 Phát hành | REVIEW REQUIRED | Báo cáo nghiên cứu, model card, data card trong `docs/release/`; chạy lại sạch khớp hoàn toàn; chưa tag (chờ chọn license ADR-019 và người review bên ngoài) |
 
