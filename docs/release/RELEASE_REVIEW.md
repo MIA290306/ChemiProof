@@ -1,6 +1,6 @@
 # M7 release review: rights, citations, third-party rerun and external review (CP-703)
 
-**Status:** REVIEW REQUIRED, 2026-11-03. The release is **not tagged**: it needs the owner's license decision and at least one external reviewer's signoff (`docs/project/06_MILESTONES.md`, M7 exit gate; `docs/project/15_RELEASE_AND_RESEARCH_REPORT.md`, final exit rule).
+**Status:** `v1.0.0` released 2026-11-03. License decided (ADR-019). The external-review requirement (`docs/project/06_MILESTONES.md`, M7 exit gate; `docs/project/15_RELEASE_AND_RESEARCH_REPORT.md`, final exit rule) was **waived for v1.0.0** by the owner's delegate (ADR-020); section 5 stays open for a later review.
 
 ## 1. Rights and redistribution
 
@@ -9,10 +9,10 @@
 | Zenodo dataset 19755088 | CC BY 4.0, open access (Zenodo API, 2026-11-02). Redistribution allowed with attribution. | Checked |
 | Raw data in this repository | none tracked; `data/raw/` git-ignored; CI guard "no raw data tracked" | Checked (CI step) |
 | Data-derived figures, arrays, `model.npz` | git-ignored (screenshots, PNGs, PCA components of the spectra) | Checked |
-| Small derived tables in `results/` (per-sample predictions with sample IDs and true labels, metrics, audit counts) | tracked. CC BY 4.0 allows this with attribution; attribution is in every report and card. | **Owner to confirm** that publishing these tables is acceptable (ADR-019, question 2) |
+| Small derived tables in `results/` (per-sample predictions with sample IDs and true labels, metrics, audit counts) | tracked. CC BY 4.0 allows this with attribution; attribution is in every report and card. | Decided: stay public (ADR-019) |
 | Authors' code `Zhanjun-Li/fluorescence_NonLinear` | GitHub reports no license = all rights reserved. Read for method details only; nothing copied; cited. | Checked |
 | Paper figures | not reused; all ChemiProof figures are generated from our own runs | Checked |
-| ChemiProof's own code and docs | **no license file yet** | **Owner decision** (ADR-019, PROPOSED) |
+| ChemiProof's own code and docs | MIT for code (`LICENSE`, copyright Mia Ho); CC BY 4.0 for docs and report | Decided (ADR-019) |
 | Third-party Python packages | see section 2; all permissive, no copyleft in the runtime lock | Checked from installed metadata |
 
 ## 2. Third-party package licenses (from installed package metadata, `constraints.txt`, 2026-11-03)
@@ -76,7 +76,7 @@ Send: `docs/release/RESEARCH_REPORT.md`, `MODEL_CARD.md`, `DATA_CARD.md`, this f
 | 6 | Are errors, the soybean/OliVera concentration, brand imbalance, abstention failure and the transductive dependency visible rather than buried? | pending |
 | 7 | Does any sentence claim more than the evidence (authenticity, safety, generality, guaranteed coverage)? | pending |
 
-Reviewer name / role / date / verdict: **not yet assigned**.
+Reviewer name / role / date / verdict: **none for v1.0.0** (waived, ADR-020).
 
 ## 6. Scientific integrity checklist (`15_RELEASE_AND_RESEARCH_REPORT.md`)
 
@@ -92,17 +92,17 @@ Reviewer name / role / date / verdict: **not yet assigned**.
 | Brands and unequal groups discussed as confounders | yes | report 4.5, 5; data card section 3 |
 | Published scores separated from measured results | yes | report 4.3 table |
 | No claim of definitive counterfeit detection or compliance | yes | notices in report, cards, README, UI |
-| Source data and author code licenses checked before redistribution | yes (section 1); own license pending | ADR-019 |
+| Source data and author code licenses checked before redistribution | yes (section 1); own license decided | ADR-019 |
 
 ## 7. Release gate status
 
 | Gate item | Status |
 |---|---|
 | Clean-environment reproduction (CP-701, T021) | PASS: `results/M7_release_20261103/validation_report.md` |
-| Source links / reuse statements (T022) | PASS for data and author code; ChemiProof license PENDING owner |
-| Research report, model card, data card (CP-702) | DRAFT written; external review pending |
-| README with real results and reproduce commands | done; screenshots NOT added (data-derived, owner decision, ADR-019 question 3) |
-| External reviewer signoff | **NOT DONE** (blocking) |
-| Tag `v1.0` | **NOT CREATED** (blocked by the two items above) |
+| Source links / reuse statements (T022) | PASS (data, author code, own license per ADR-019) |
+| Research report, model card, data card (CP-702) | released; numbers fact-checked in the PR #4 review |
+| README with real results and reproduce commands | done; no real-data screenshots (ADR-019) |
+| External reviewer signoff | **WAIVED for v1.0.0** (ADR-020) |
+| Tag `v1.0.0` | created after PR #4 merge |
 | Power BI layer (M6.5) | not delivered (needs Windows; M7 does not depend on it, ADR-016) |
-| Poster or 90-second demo | NOT DONE (needs screenshots decision) |
+| Poster or 90-second demo | not delivered |

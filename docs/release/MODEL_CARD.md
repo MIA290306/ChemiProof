@@ -1,6 +1,6 @@
 # Model card: FINAL-PLS-v1 (ChemiProof inductive screening model)
 
-**Status:** DRAFT for owner and external review (M7, CP-702). Source of every value: `results/M6_final_20261103T074605Z_ce2423b_82b39d6c/model_card.json` (tracked) and the LOAO runs named below. Decision record: ADR-018.
+**Status:** released with `v1.0.0`; not externally reviewed (ADR-020). Source of every value: `results/M6_final_20261103T074605Z_ce2423b_82b39d6c/model_card.json` (tracked) and the LOAO runs named below. Decision record: ADR-018.
 
 > **Research prototype. Not a certified authenticity test, not a regulatory or food-safety decision, and not validated outside the published laboratory dataset.**
 

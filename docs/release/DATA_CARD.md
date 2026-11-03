@@ -1,6 +1,6 @@
 # Data card: Sun et al. (2026) EEM olive-oil adulteration dataset, as used by ChemiProof
 
-**Status:** DRAFT for owner and external review (M7, CP-702). Every count below comes from the M1 audit run `20261103T034431Z_b050b36-dirty_33c0ba5b` (`results/M1_.../data_audit.json`) unless another source is named.
+**Status:** released with `v1.0.0`; not externally reviewed (ADR-020). Every count below comes from the M1 audit run `20261103T034431Z_b050b36-dirty_33c0ba5b` (`results/M1_.../data_audit.json`) unless another source is named.
 
 > ChemiProof did **not** collect these data. The dataset was published by Sun et al. (2026); this card records what we measured when we parsed it, and the conditions under which ChemiProof uses it.
 
