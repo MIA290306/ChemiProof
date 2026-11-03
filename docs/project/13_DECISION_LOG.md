@@ -107,6 +107,17 @@
 - **Why it is allowed and its limit:** it is a within-training model-selection refinement, but it was prompted by looking at the M2 outer-round scores, so M2 numbers are exploratory-development numbers. M3 will freeze grid v2 and the protocol before scoring any held-out adulterant (docs/science/05_EVALUATION_PLAN.md section 2).
 - **Owner signoff:** delegated; review pending
 
+## ADR-013: LOAO-v1 protocol freeze (before scoring any held-out adulterant)
+
+- **Date:** 2026-11-02 · **Status:** ACCEPTED (agent, under owner delegation); owner review requested at the M3 gate
+- **Frozen protocol `LOAO-v1`:** five outer folds `LOAO-{soybean,peanut,rapeseed,corn,walnut}` (test = every sample of that adulterant, train = the other four; deterministic, no randomness); inductive mode only; preprocessing `author_v1`; models `mean_y`, `svr_raw` (poly, degree 3, C=1, gamma=scale, epsilon=0.1), `pca_svr` (PCA grid 5/10/20/40/80 + the same SVR), `pls` (grid 2/4/6/8/12/16/24/32); hyper-parameters chosen by an inner **leave-one-source-adulterant-out** CV on the 4 source adulterants only (components capped by the smallest inner fold); metrics MAE/RMSE/bias/R2 per fold, macro (unweighted) and pooled, primary scoring unclipped, clipped secondary; seed 20261024.
+- **Files frozen (SHA-256, taken before the first scored run):** `config/experiments/baseline.yaml` `60ca7cf5cd1bfac7...`; `config/experiments/loao_luhua_only.yaml` `f8f3878d8d27c42a...`; `src/chemiproof/modeling/baselines.py` `a932daedfaf2de5b...`; `src/chemiproof/spectra/preprocess.py` `f694baa01f934caeb...`. Any change to these files requires a new protocol id (LOAO-v2) and a new ADR; results of different protocol ids are never merged.
+- **Two locked runs are planned and nothing else:** (1) all 330 samples (`baseline.yaml`); (2) sensitivity restricted to brand Luhua, the only brand present for all five adulterants, which removes brand imbalance as a confounder (`loao_luhua_only.yaml`). Both are run once on a clean tracked git tree; `run_class: locked` refuses a dirty tree. Every run (exploratory or locked) is appended to `results/experiment_registry.csv`.
+- **Disclosure about earlier scoring:** the dataset-marked tests (`pytest -m dataset`) execute the LOAO pipeline on the real data to check structure and determinism. Their outputs go to temporary directories and are discarded, only structural assertions (fold sizes, determinism, canary pass) are made, and no configuration was changed in response to them.
+- **Safeguards in code:** independent fold audit (`audit_folds`), and a label-shuffle canary run after every LOAO experiment (shuffles each fold's held-out labels, refits, requires identical predictions and hyper-parameters, otherwise raises `QC_REVIEW_REQUIRED`).
+- **Not frozen / out of scope:** OT (M4) and abstention (M5) get their own protocol ids.
+- **Owner signoff:** delegated; review pending
+
 ## Future ADR template
 
 ```text

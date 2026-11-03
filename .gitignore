@@ -38,3 +38,6 @@ results/*
 results/M1_*/*.png
 !results/M2_*/
 results/M2_*/*.png
+!results/M3_*/
+results/M3_*/*.png
+!results/experiment_registry.csv

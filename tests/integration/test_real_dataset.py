@@ -94,3 +94,67 @@ def test_m2_source_internal_run_on_real_data(repo, tmp_path):
         for d in dirs
     ]
     assert rows[0] == rows[1]  # deterministic
+
+
+@pytest.mark.parametrize("subset", [None, "luhua"])
+def test_m3_loao_run_on_real_data(repo, tmp_path, subset):
+    """Real LOAO runs (exploratory class so a dirty tree does not block): structure + determinism,
+    not performance claims."""
+    import csv
+    import json
+
+    import yaml
+
+    from chemiproof.cli import EXIT_OK, main
+
+    cfg = yaml.safe_load((repo / "config/experiments/baseline.yaml").read_text())
+    cfg.update(
+        run_class="exploratory",
+        subset_brand=subset,
+        dataset_manifest=str(repo / "data/interim/sample_manifest.csv"),
+    )
+    p = tmp_path / "c.yaml"
+    p.write_text(yaml.safe_dump(cfg))
+    dirs = []
+    for name in ("a", "b"):
+        rc = main(
+            [
+                "experiment",
+                "run",
+                "--config",
+                str(p),
+                "--data-dir",
+                str(repo / "data/raw/extracted"),
+                "--output-root",
+                str(tmp_path / name),
+            ]
+        )
+        assert rc == EXIT_OK
+        (d,) = list((tmp_path / name).glob("M3_*"))
+        dirs.append(d)
+    m = list(csv.DictReader((dirs[0] / "metrics_by_fold.csv").open()))
+    sizes = {r["fold_id"]: int(r["n"]) for r in m if r["model"] == "mean_y"}
+    expected = (
+        {
+            "LOAO-soybean": 60,
+            "LOAO-peanut": 60,
+            "LOAO-rapeseed": 90,
+            "LOAO-corn": 90,
+            "LOAO-walnut": 30,
+        }
+        if subset is None
+        else {f"LOAO-{a}": 30 for a in ("soybean", "peanut", "rapeseed", "corn", "walnut")}
+    )
+    assert sizes == expected
+    audit = json.loads((dirs[0] / "leakage_audit.json").read_text())
+    assert (
+        audit["label_shuffle_canary"]["passed"] and len(audit["label_shuffle_canary"]["folds"]) == 5
+    )
+    rows = [
+        [
+            (r["sample_id"], r["model"], r["y_pred_fraction"])
+            for r in csv.DictReader((d / "predictions.csv").open())
+        ]
+        for d in dirs
+    ]
+    assert rows[0] == rows[1]

@@ -72,3 +72,38 @@ def fake_rows(rounds: list[int], ys: list[float]):
                 )
             )
     return rows
+
+
+PUBLISHED_DESIGN = {  # adulterant -> EVOO brands, = docs/science/03_DATA_CONTRACT.md (330 samples)
+    "soybean": ["luhua", "olivera"],
+    "peanut": ["luhua", "olivera"],
+    "rapeseed": ["earl_grey", "luhua", "olivera"],
+    "corn": ["earl_grey", "luhua", "olivera"],
+    "walnut": ["luhua"],
+}
+
+
+def fake_rows_multi(design=None, rounds=(1, 2, 3), n_levels=10):
+    """Synthetic ManifestRow list with the published group x brand design (no spectra)."""
+    from dataclasses import replace
+
+    base = fake_rows([1], [0.5])[0]
+    rows = []
+    for ad, brands in (design or PUBLISHED_DESIGN).items():
+        for brand in brands:
+            for rnd in rounds:
+                for a in range(1, n_levels + 1):
+                    sid = f"{ad}_{brand}_R{rnd}_{a:02d}"
+                    rows.append(
+                        replace(
+                            base,
+                            sample_id=sid,
+                            sha256=sid.encode().hex().ljust(64, "0")[:64],
+                            adulterant_type=ad,
+                            evoo_brand=brand,
+                            measurement_round=rnd,
+                            olive_fraction=a / 11,
+                            olive_ratio_raw=f"{a}:{11 - a}",
+                        )
+                    )
+    return rows

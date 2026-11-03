@@ -88,18 +88,56 @@ def run_models(
     return RunOutput(preds, fold_rows, selected, mobj)
 
 
-def summarize(out: RunOutput, model_keys: list[str]) -> dict[str, Any]:
+def summarize(
+    out: RunOutput, model_keys: list[str], rows: list[ManifestRow] | None = None
+) -> dict[str, Any]:
+    """Macro (unweighted over folds) and pooled metrics, unclipped primary + clipped secondary."""
+    by_sample = {r.sample_id: r for r in rows} if rows else {}
     summary: dict[str, Any] = {}
     for key in model_keys:
+        preds = [p for p in out.predictions if p["model"] == key]
         per_fold = [m for (fid, k), m in out.metrics_objects.items() if k == key]
-        pooled_t = np.array([p["y_true_fraction"] for p in out.predictions if p["model"] == key])
-        pooled_p = np.array([p["y_pred_fraction"] for p in out.predictions if p["model"] == key])
-        clipped = compute_metrics(pooled_t, np.clip(pooled_p, 0.0, 1.0))
-        summary[key] = {
+        fold_ids = [fid for (fid, k) in out.metrics_objects if k == key]
+        pooled_t = np.array([p["y_true_fraction"] for p in preds])
+        pooled_p = np.array([p["y_pred_fraction"] for p in preds])
+        clipped_folds = []
+        for fid in fold_ids:
+            fp = [p for p in preds if p["fold_id"] == fid]
+            clipped_folds.append(
+                compute_metrics(
+                    np.array([p["y_true_fraction"] for p in fp]),
+                    np.clip([p["y_pred_fraction"] for p in fp], 0.0, 1.0),
+                )
+            )
+        entry: dict[str, Any] = {
             "macro_over_folds": macro_average(per_fold),
+            "macro_over_folds_clipped_to_unit_interval": macro_average(clipped_folds),
             "pooled_unclipped": compute_metrics(pooled_t, pooled_p).as_dict(),
-            "pooled_clipped_to_unit_interval": clipped.as_dict(),
+            "pooled_clipped_to_unit_interval": compute_metrics(
+                pooled_t, np.clip(pooled_p, 0.0, 1.0)
+            ).as_dict(),
+            "worst_fold": max(
+                zip(fold_ids, per_fold, strict=True), key=lambda t: t[1].mae_fraction
+            )[0],
         }
+        if by_sample:
+            brand: dict[str, dict[str, dict[str, float]]] = {}
+            for fid in fold_ids:
+                groups: dict[str, list[float]] = {}
+                for p in preds:
+                    if p["fold_id"] == fid:
+                        err = p["y_pred_fraction"] - p["y_true_fraction"]
+                        groups.setdefault(by_sample[p["sample_id"]].evoo_brand, []).append(err)
+                brand[fid] = {
+                    b: {
+                        "n": len(e),
+                        "mae_fraction": float(np.mean(np.abs(e))),
+                        "bias_fraction": float(np.mean(e)),
+                    }
+                    for b, e in sorted(groups.items())
+                }
+            entry["descriptive_by_brand"] = brand
+        summary[key] = entry
     return summary
 
 

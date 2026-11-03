@@ -129,7 +129,7 @@ def test_config_hash_is_part_of_the_run_id_and_changes_with_config(synthetic_wor
 @pytest.mark.parametrize(
     ("key", "value", "needle"),
     [
-        ("mode", "transductive_batch", "INVALID_CONFIG"),
+        ("mode", "transductive_batch", "NOT_IMPLEMENTED"),
         ("random_seed", 1, "INVALID_CONFIG"),
     ],
 )
@@ -174,7 +174,7 @@ def test_unknown_preprocessing_version_refused(synthetic_world, tmp_path, capsys
     assert rc == EXIT_ERROR and "unknown preprocessing version" in capsys.readouterr().err
 
 
-def test_loao_protocol_is_not_implemented_yet_but_checks_data_first(repo, tmp_path, capsys):
+def test_loao_without_data_reports_dataset_not_available(repo, tmp_path, capsys):
     rc = main(
         [
             "experiment",

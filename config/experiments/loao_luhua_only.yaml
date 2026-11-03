@@ -1,0 +1,22 @@
+# M3 sensitivity: LOAO restricted to ONE evoo brand (Luhua is the only brand present for all five
+# adulterants), removing brand imbalance as a confounder at the cost of 30 samples per adulterant.
+# Same frozen LOAO-v1 protocol as baseline.yaml (ADR-013); only the sample set differs.
+experiment_id: chemiproof-loao-luhua-only
+status: NOT_RUN
+run_class: locked
+protocol: loao
+subset_brand: luhua
+random_seed: 20261024
+mode: inductive
+label_unit: fraction
+outer_cv: leave_one_adulterant_out
+inner_cv: leave_one_source_adulterant_out
+dataset_manifest: data/interim/sample_manifest.csv
+preprocessing:
+  version: author_v1
+  baseline_correction: subtract_global_min
+  savitzky_golay: {window: 5, polyorder: 2, axes: [emission]}
+  intensity_normalization: divide_by_global_max
+models: [mean_y, svr_raw, pca_svr, pls]
+metrics: [mae, rmse, bias, r2]
+outputs: results/

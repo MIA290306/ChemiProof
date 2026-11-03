@@ -81,6 +81,8 @@ class ExperimentConfig(BaseModel):
     random_seed: int
     mode: Literal["inductive", "transductive_batch"]
     protocol: Literal["source_internal_loro", "loao"] = "loao"
+    run_class: Literal["exploratory", "locked"] = "exploratory"
+    subset_brand: Literal["luhua", "olivera", "earl_grey"] | None = None
     outer_cv: Literal["leave_one_adulterant_out"] | None = None
     models: list[Literal["mean_y", "svr_raw", "pca_svr", "pls"]] | None = None
     metrics: list[Literal["mae", "rmse", "bias", "r2"]]

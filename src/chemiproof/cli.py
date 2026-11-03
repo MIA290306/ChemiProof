@@ -20,8 +20,7 @@ from chemiproof.data.manifest import (
 )
 from chemiproof.data.zipsafe import inspect_zip
 from chemiproof.errors import ChemiProofError, StatusCode
-from chemiproof.experiments import run_source_internal
-from chemiproof.pipeline import load_dataset
+from chemiproof.experiments import run_experiment
 from chemiproof.provenance import environment_info, make_run_id
 
 EXIT_OK = 0
@@ -146,10 +145,7 @@ def _cmd_spectra_compare(args: argparse.Namespace) -> int:
 def _cmd_experiment(args: argparse.Namespace) -> int:
     cfg = load_experiment_config(Path(args.config))  # validate BEFORE anything else
     manifest = Path(cfg.model_dump().get("dataset_manifest", DEFAULT_MANIFEST))
-    if cfg.protocol == "loao":
-        load_dataset(manifest, Path(args.data_dir))  # fails honestly if the data is absent
-        raise _not_implemented("M3", "the LOAO benchmark")
-    out_dir = run_source_internal(cfg, Path(args.data_dir), manifest, Path(args.output_root))
+    out_dir = run_experiment(cfg, Path(args.data_dir), manifest, Path(args.output_root))
     print(f"run artifacts: {out_dir}")
     print((out_dir / "run_report.md").read_text(encoding="utf-8"))
     return EXIT_OK
