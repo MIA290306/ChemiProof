@@ -24,6 +24,18 @@ python -m chemiproof.cli --help
 
 If project chooses `uv`, use resolved lockfile and equivalent commands instead; do **not** generate conflicting package managers.
 
+## Research explorer (M6)
+
+`.[dev]` already includes Streamlit and Plotly; a runtime-only install uses `pip install -e '.[ui]'`. The screening page needs the final model, which is git-ignored and rebuilt from the real data (about 7 s, deterministic):
+
+```bash
+chemiproof dataset audit          # once, builds data/interim/sample_manifest.csv
+chemiproof model train-final      # FINAL-PLS-v1 (ADR-018) -> results/M6_final_<run_id>/
+chemiproof app                    # http://localhost:8501 (run from the repository root)
+```
+
+Without the data and the model, the Overview, Benchmarks and Methods pages still work from the committed run folders; Screen sample and Batch research then say that the research model is not available.
+
 ## Proposed CLI contract (implemented incrementally)
 
 ```bash

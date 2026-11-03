@@ -55,8 +55,12 @@ def test_every_page_renders_with_committed_results(page, repo, tmp_path, monkeyp
     at = _app(monkeypatch, repo / "results", tmp_path, page)
     text = _text(at).lower()
     assert not any(f in text for f in FORBIDDEN)
-    if page in ("Screen sample", "Batch research"):  # T020: no model -> honest message
-        assert "research model not available" in text
+
+
+@pytest.mark.parametrize("page", ["Screen sample", "Batch research"])
+def test_no_model_gives_honest_message(page, tmp_path, monkeypatch):  # T020
+    text = _text(_app(monkeypatch, tmp_path, tmp_path, page)).lower()
+    assert "research model not available" in text and "estimated" not in text
 
 
 def test_overview_and_benchmarks_without_runs(tmp_path, monkeypatch):

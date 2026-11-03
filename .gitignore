@@ -55,3 +55,6 @@ results/M6_final_*/model.npz
 **/.pbi/localSettings.json
 **/.pbi/cache.abf
 exports/bi/
+.playwright-mcp/
+!results/M6_explorer_*/
+results/M6_explorer_*/screenshots/

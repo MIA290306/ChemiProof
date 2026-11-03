@@ -148,6 +148,7 @@ class BatchResult:
     sample_ids: list[str]
     olive_fraction: np.ndarray  # unclipped, transductive
     diagnostics: dict[str, Any]
+    n_in_sample: int = 0  # files that are also training spectra (source = all 330)
 
 
 def screen_batch(files: list[tuple[str, bytes]], source: Dataset, model: FinalModel) -> BatchResult:
@@ -166,4 +167,5 @@ def screen_batch(files: list[tuple[str, bytes]], source: Dataset, model: FinalMo
         xs, source.y, xt
     )  # raises TRANSDUCTIVE_BATCH_REQUIRED / NONCONVERGENCE
     batch_id = hashlib.sha256("".join(hashes).encode()).hexdigest()
-    return BatchResult(batch_id, [n for n, _ in files], pred.y_pred, pred.diagnostics)
+    n_in = len(set(hashes) & set(model.card.get("train_file_sha256", [])))
+    return BatchResult(batch_id, [n for n, _ in files], pred.y_pred, pred.diagnostics, n_in)

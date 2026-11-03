@@ -11,3 +11,5 @@ utc_time,run_id,experiment_id,protocol,run_class,subset_brand,config_sha256,git_
 2026-11-03T07:18:44Z,20261103T071825Z_ac1dcfe_b1c2dfa1,chemiproof-source-baselines,loao,locked,,2c427bf82704fa93,ac1dcfe138b6,False,M3_20261103T071825Z_ac1dcfe_b1c2dfa1
 2026-11-03T07:18:54Z,20261103T071848Z_ac1dcfe_363deee6,chemiproof-ot-loao,loao,locked,,417e41b5b3029099,ac1dcfe138b6,False,M4_20261103T071848Z_ac1dcfe_363deee6
 2026-11-03T07:19:27Z,20261103T071856Z_ac1dcfe_ac6bfcef,chemiproof-uq-loao,LOAO-UQ-v1,locked,,f93cfb4c97d22ad2,ac1dcfe138b6,False,M5_20261103T071856Z_ac1dcfe_ac6bfcef
+2026-11-03T07:42:32Z,20261103T074230Z_f22ae1d_82b39d6c,chemiproof-final-pls,FINAL-PLS-v1,final,,82b39d6c5ceed1a5,f22ae1d0167f,False,M6_final_20261103T074230Z_f22ae1d_82b39d6c
+2026-11-03T07:46:07Z,20261103T074605Z_ce2423b_82b39d6c,chemiproof-final-pls,FINAL-PLS-v1,final,,82b39d6c5ceed1a5,ce2423b10bc3,False,M6_final_20261103T074605Z_ce2423b_82b39d6c

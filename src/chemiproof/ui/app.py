@@ -181,7 +181,7 @@ def page_explore() -> None:
     if spec.intensity.min() < 0:
         warnings.append("NEGATIVE_INTENSITY: negative cells kept as measured (never clamped)")
     validation_strip(spec, warnings)
-    st.json(meta, expanded=False)
+    st.json(meta, expanded=True)
     processed = st.toggle("Show preprocessed (author_v1)", value=False)
     st.plotly_chart(heatmap(spec, processed), use_container_width=True)
     st.caption("Preprocessing author_v1: " + "; ".join(AUTHOR_V1.describe()))
@@ -362,8 +362,8 @@ def page_screen() -> None:
     validation_strip(res.spectrum, res.warnings)
     if res.olive_fraction is None:
         st.warning(
-            "Review required — estimate withheld. Reason: model risk. "
-            + A.MESSAGES[A.StatusCode.ABSTAIN_OOD_RISK]
+            "Review required — estimate withheld (reason: model risk, not QC). Input differs from "
+            "reference research spectra. This is a statistical flag, not a diagnosis."
         )
     else:
         f = res.olive_fraction
@@ -420,6 +420,11 @@ def page_batch() -> None:
         f"Sinkhorn converged: {res.diagnostics['converged']} "
         f"({res.diagnostics['n_iter']} iterations)"
     )
+    if res.n_in_sample:
+        st.caption(
+            f"⚠ IN_SAMPLE: {res.n_in_sample} of {len(res.sample_ids)} files are training "
+            "spectra; their estimates are in-sample, not a test."
+        )
     out = pd.DataFrame(
         {"file": res.sample_ids, "olive_fraction (transductive)": res.olive_fraction}
     )
