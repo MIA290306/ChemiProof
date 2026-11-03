@@ -6,7 +6,7 @@
 
 | Milestone | Status | Evidence / artifacts | Next action |
 |---|---|---|---|
-| M0 Foundations | REVIEW REQUIRED | `results/M0_foundation/validation_report.md`, `MILESTONE_REVIEW.md`; 41 tests pass locally | Owner review; push and confirm green GitHub Actions run |
+| M0 Foundations | REVIEW REQUIRED | `results/M0_foundation/validation_report.md`, `MILESTONE_REVIEW.md`; 41 tests pass locally and in CI | Owner review and ADR-007 approval (CI green: run 41572684248) |
 | M1 Dataset audit | NOT STARTED | Published Zenodo link only; no archive downloaded | Perform safe M1 acquisition and parse |
 | M2 Chemometric baselines | NOT STARTED | None | Await M1 acceptance |
 | M3 LOAO benchmark | NOT STARTED | None | Await M2 acceptance |
@@ -19,7 +19,7 @@
 
 1. `.dat` actual internal schema, wavelength grid orientation, exact filename-to-label mapping unverified.
 2. Data Zenodo license not yet verified from an explicit machine-readable rights field; source GitHub code license not checked.
-3. Local environment and 41 synthetic-fixture tests now exist (M0); GitHub Actions has not run yet.
+3. Local environment and 41 synthetic-fixture tests now exist (M0); GitHub Actions `ci` passed on c1e8a98.
 4. No ChemiProof benchmark results, UI or proof of model generalization exist.
 
 ## Agent update format (append; do not overwrite history)
@@ -54,7 +54,7 @@ Files changed: `pyproject.toml`, `constraints.txt`, `.python-version`, `src/chem
 Actual commands + exit codes: see `results/M0_foundation/validation_report.md` (pytest exit 0 with 41 passed; ruff exit 0; clean-venv install exit 0; CLI DATASET_NOT_AVAILABLE exit 3).
 Measured results (with units; if none say NONE): NONE (no experiments).
 Artifact paths + checksums: `results/M0_foundation/` (no checksums needed; text reports).
-Acceptance tests (IDs / PASS, FAIL, NOT RUN): T001 PASS; T002-T024 NOT RUN (later milestones); GitHub Actions NOT RUN.
-Risks / open questions: ADR-007 needs owner approval; CP-006 example provenance artifact not produced; pre-commit hook not installed.
+Acceptance tests (IDs / PASS, FAIL, NOT RUN): T001 PASS; T002-T024 NOT RUN (later milestones); GitHub Actions PASS (run 41572684248, commit c1e8a98).
+Risks / open questions: ADR-007 needs owner approval; CP-006 example provenance artifact not produced; pre-commit hook not installed (owner may run `pre-commit install`).
 Owner signoff: pending
 Next milestone (only after ACCEPTED): M1

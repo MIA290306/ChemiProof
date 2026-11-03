@@ -30,7 +30,7 @@
 
 ## Executed verification — not just expectations
 
-See `results/M0_foundation/validation_report.md` for the full command/exit-code table. Summary: pytest 41 passed (exit 0); ruff check/format clean (exit 0); clean-venv install from constraints OK (exit 0); T001 PASS; GitHub Actions run NOT RUN.
+See `results/M0_foundation/validation_report.md` for the full command/exit-code table. Summary: pytest 41 passed (exit 0); ruff check/format clean (exit 0); clean-venv install from constraints OK (exit 0); T001 PASS; GitHub Actions `ci` PASS (run 41572684248, commit c1e8a98).
 
 ## Scientific results (if any)
 
@@ -38,12 +38,12 @@ See `results/M0_foundation/validation_report.md` for the full command/exit-code 
 
 ## Open blockers and adverse observations
 
-1. CI has never run on GitHub; the exit gate needs a green run after pushing.
+1. ~~CI not yet run~~ Resolved: green run 41572684248 on commit c1e8a98.
 2. `pre-commit install` not performed (modifies `.git/hooks`); owner can run `.venv/bin/pre-commit install`.
 3. Dataset license, `.dat` schema and label direction remain unverified (M1 scope).
 
 ## Recommendations and next action
 
-- Decision requested from owner: approve ADR-007 (extra status codes) and push to trigger CI.
-- Conditions before M0 may be ACCEPTED: green GitHub Actions run; owner review of this report.
+- Decision requested from owner: approve ADR-007 (extra status codes).
+- Conditions before M0 may be ACCEPTED: owner review of this report and ADR-007 (CI condition met).
 - Suggested next milestone AFTER approval: M1 (dataset audit; needs manual Zenodo download and license check).

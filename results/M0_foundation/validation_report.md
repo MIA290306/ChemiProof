@@ -25,7 +25,7 @@
 |---|---|---|
 | T001 (synthetic 35×270 EEM, monotonic axes, finite, no mutation) | PASS | `tests/unit/test_synthetic_eem.py` |
 | T002–T024 | NOT RUN | belong to M1–M7 |
-| GitHub Actions `ci.yml` on the remote | NOT RUN | workflow written; no run observed yet (needs push) |
+| GitHub Actions `ci` workflow on the remote | PASS | run 41572684248, commit `c1e8a98`, conclusion `success` (queried with `gh run list`): https://github.com/MIA290306/ChemiProof/actions/runs/41572684248 |
 
 ## M0 exit-gate checklist
 
@@ -34,7 +34,7 @@
 - Lint passes: PASS.
 - CLI help and `DATASET_NOT_AVAILABLE` path tested: PASS (`tests/integration/test_cli_and_stages.py`).
 - Docs match repo: see decision log ADR-006/007 and progress log.
-- CI green on GitHub: NOT RUN.
+- CI green on GitHub: PASS (run above).
 
 ## Known limitations
 
