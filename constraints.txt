@@ -1,0 +1,23 @@
+# Resolved on 2026-11-03 with Python 3.12 / macOS arm64 via: pip install -e '.[dev]' && pip freeze --exclude-editable
+annotated-types==0.8.0
+cfgv==3.5.0
+distlib==0.4.4
+filelock==4.2.7
+identify==2.6.20
+iniconfig==2.3.1
+nodeenv==1.12.0
+numpy==2.5.4
+packaging==26.3
+platformdirs==4.14.3
+pluggy==1.7.0
+pre_commit==4.7.0
+pydantic==2.14.2
+pydantic_core==2.50.2
+Pygments==2.21.0
+pytest==9.2.0
+python-discovery==1.9.1
+PyYAML==6.0.3
+ruff==0.17.3
+typing-inspection==0.4.4
+typing_extensions==4.16.0
+virtualenv==21.15.2

@@ -2,7 +2,7 @@
 project:
   name: ChemiProof
   owner: Mia Ho
-  stage: documentation_only
+  stage: m0_foundation
   default_seed: 20261024
   primary_target: olive_oil_volume_fraction
   target_unit: fraction

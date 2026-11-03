@@ -1,0 +1,18 @@
+repos:
+  - repo: local
+    hooks:
+      - id: ruff-check
+        name: ruff check
+        entry: .venv/bin/ruff check
+        language: system
+        types: [python]
+      - id: ruff-format
+        name: ruff format --check
+        entry: .venv/bin/ruff format --check
+        language: system
+        types: [python]
+      - id: no-raw-data
+        name: block raw third-party data (.dat/.zip/data/raw)
+        entry: bash -c 'echo "Raw data must not be committed (CLAUDE.md invariant 10)"; exit 1'
+        language: system
+        files: '(\.dat$|\.zip$|^data/raw/)'

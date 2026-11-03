@@ -1,0 +1,32 @@
+name: ci
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install from constraints
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -c constraints.txt -e '.[dev]'
+      - name: Lint
+        run: |
+          ruff check .
+          ruff format --check .
+      - name: Tests (synthetic fixtures only; no dataset, no network)
+        run: python -m pytest -q -m "not dataset"
+      - name: Package import and CLI check
+        run: |
+          python -c "import chemiproof; print(chemiproof.__version__)"
+          chemiproof --help
+      - name: Guard - no raw data tracked
+        run: |
+          if git ls-files | grep -E '(\.dat$|\.zip$|^data/raw/)'; then
+            echo "Raw data is tracked in git"; exit 1
+          fi
