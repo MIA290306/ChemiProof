@@ -17,7 +17,7 @@ python3 -m venv .venv
 source .venv/bin/activate
 python -m pip install --upgrade pip
 python -m pip install -e '.[dev]'
-python -m pytest -q
+python -m pytest -q -m "not dataset"   # synthetic only, as in CI; real-data tests: -m dataset
 ruff check .
 python -m chemiproof.cli --help
 ```

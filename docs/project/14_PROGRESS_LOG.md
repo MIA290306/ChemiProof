@@ -18,10 +18,15 @@
 
 ## Current blockers / unknowns
 
-1. `.dat` actual internal schema, wavelength grid orientation, exact filename-to-label mapping unverified.
-2. Data Zenodo license not yet verified from an explicit machine-readable rights field; source GitHub code license not checked.
-3. Local environment and 41 synthetic-fixture tests now exist (M0); GitHub Actions `ci` passed on c1e8a98.
-4. No ChemiProof benchmark results, UI or proof of model generalization exist.
+*Refreshed 2026-11-03 after M5. The earlier list (unverified `.dat` schema, unchecked licenses, no benchmark results) was resolved by M1-M5; see the entries below.*
+
+1. Owner sign-off pending for M0-M5 and for ADR-007 (PROPOSED) plus the ADRs taken under delegation that request gate review (ADR-008, 013, 014, 015, 016, 017).
+2. Dataset archive MD5 not verifiable: the data arrived as an extracted folder (ADR-009).
+3. Licenses: dataset CC BY 4.0; authors' code has no license, so it is read-only reference only (ADR-010/011). Project code/data license for release still to be decided (M7).
+4. Brand/batch effect (soybean-olivera errors) described but not tested; OT batch-composition (label-skew) detector missing. Both need a new ADR (M5 open questions).
+5. M6 needs a final all-330-sample model (proposed PLS) declared in ADR-018 before training; it will have no independent evaluation.
+6. M6.5 dashboard work needs a Windows machine with Power BI Desktop; the owner works on macOS.
+7. Generalization beyond this benchmark is unproven: five adulterant systems, one instrument and lab, lab-made mixtures, imbalanced EVOO brands.
 
 ## Agent update format (append; do not overwrite history)
 
@@ -144,3 +149,11 @@ Acceptance tests: BI001-BI014 and BI020-BI032 defined, all NOT RUN. T001-T024 un
 Risks / open questions: Power BI Desktop is Windows-only and the owner works on macOS (M6.5 may end BLOCKED); uncertainty tables depend on M5 metadata that does not exist yet; the protocol map is seeded from five existing runs; ADR-016 needs owner approval (including M7 not depending on M6.5).
 Owner signoff: pending
 Next milestone (only after ACCEPTED): M5 (unchanged); M6.5 only after M5 and M6.
+
+### 2026-11-03 — Docs fixes (no milestone change) — DONE
+Owner / agent: Bruce1508 (collaborator) / Claude Code
+Scope attempted: correct the documented synthetic-test command and refresh the stale "Current blockers / unknowns" list. No scientific content, protocol or result changed.
+Files changed: `docs/vi/TIEN_DO_HIEN_TAI_VI.md` (section 6), `docs/engineering/11_DEV_SETUP.md` (bootstrapping), `docs/project/14_PROGRESS_LOG.md` (blockers list, this entry).
+Actual commands + exit codes: on a clean checkout without `data/raw/extracted`, plain `pytest -q` gave 187 passed, 5 failed, 3 errors (all `DATASET_NOT_AVAILABLE` in `tests/integration/test_real_dataset.py`); the docs now say `pytest -q -m "not dataset"`, matching `.github/workflows/ci.yml`. After the change: `pytest -q -m "not dataset"` 187 passed, 8 deselected; `ruff check .` exit 0.
+Measured results: NONE (documentation only).
+Owner signoff: pending
