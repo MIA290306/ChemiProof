@@ -82,10 +82,16 @@ def test_experiment_run_validates_config_first_then_needs_dataset(repo, tmp_path
     assert rc == EXIT_ERROR and "DATASET_NOT_AVAILABLE" in capsys.readouterr().err
 
 
-@pytest.mark.parametrize("argv", [["experiment", "report"]])
-def test_later_milestone_commands_are_truthful(argv, capsys):
-    assert main(argv) == EXIT_ERROR
-    assert "NOT_IMPLEMENTED" in capsys.readouterr().err
+def test_experiment_compare_cli(tmp_path, capsys):
+    ref, new = tmp_path / "ref", tmp_path / "new"
+    for d, pred in ((ref, "0.5"), (new, "0.5000000000001")):
+        d.mkdir()
+        (d / "predictions.csv").write_text(f"run_id,y_pred_fraction\n{d.name},{pred}\n")
+    assert main(["experiment", "compare", str(ref), str(new)]) == 0
+    assert "1/1 files match" in capsys.readouterr().out
+    (new / "predictions.csv").write_text("run_id,y_pred_fraction\nnew,0.51\n")
+    assert main(["experiment", "compare", str(ref), str(new)]) == 1
+    assert main(["experiment", "compare", str(ref), str(tmp_path / "absent")]) == EXIT_ERROR
 
 
 def test_load_dataset_missing_manifest(tmp_path):
