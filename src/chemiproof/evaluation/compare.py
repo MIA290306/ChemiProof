@@ -38,10 +38,10 @@ def _read_csv(path: Path) -> tuple[list[str], list[dict[str, str]]]:
         return list(reader.fieldnames or []), list(reader)
 
 
-def _as_float(text: str) -> float | None:
+def _as_float(text: str | None) -> float | None:
     try:
-        return float(text)
-    except ValueError:
+        return float(text)  # type: ignore[arg-type]
+    except (TypeError, ValueError):  # None = cell missing from a short row
         return None
 
 

@@ -51,3 +51,13 @@ def test_missing_table_and_bad_folders(tmp_path):
     (tmp_path / "empty").mkdir()
     with pytest.raises(ChemiProofError):
         compare_run_dirs(tmp_path / "empty", new)
+
+
+def test_tolerance_boundary_is_inclusive_and_short_rows_are_differences(tmp_path):
+    ref = _run(tmp_path / "a", ["r1,LOAO-corn,0.5,\n"])
+    at = _run(tmp_path / "b", ["r2,LOAO-corn,0.75,\n"])  # |diff| = 0.25 exactly (binary-exact)
+    assert all(r.ok for r in compare_run_dirs(ref, at, atol=0.25))
+    assert not all(r.ok for r in compare_run_dirs(ref, at, atol=0.125))
+    short = _run(tmp_path / "c", ["r2,LOAO-corn\n"])  # truncated row: missing cells
+    problems = [p for r in compare_run_dirs(ref, short) for p in r.problems]
+    assert any("mae_fraction" in p for p in problems)

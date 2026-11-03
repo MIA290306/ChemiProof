@@ -1,6 +1,6 @@
 # M7 release review: rights, citations, third-party rerun and external review (CP-703)
 
-**Status:** REVIEW REQUIRED, 2026-11-03. The release is **not tagged**: it needs the owner's license decision and at least one external reviewer's signoff (`docs/project/06_MILESTONES.md`, M7 exit gate; `15_RELEASE_AND_RESEARCH_REPORT.md`, final exit rule).
+**Status:** REVIEW REQUIRED, 2026-11-03. The release is **not tagged**: it needs the owner's license decision and at least one external reviewer's signoff (`docs/project/06_MILESTONES.md`, M7 exit gate; `docs/project/15_RELEASE_AND_RESEARCH_REPORT.md`, final exit rule).
 
 ## 1. Rights and redistribution
 
