@@ -190,7 +190,7 @@
 
 ## ADR-019: release licensing and what the public repository may contain (M7)
 
-- **Date:** 2026-11-03 · **Status:** PROPOSED; **owner decision required** (the agent may not choose a license for the owner's work)
+- **Date:** 2026-11-03 · **Status:** ACCEPTED 2026-11-03 by Bruce1508 under full decision authority delegated by the owner (Mia Ho)
 - **Problem:** the M7 exit gate needs "no unknown legal permissions". The dataset is CC BY 4.0 and the authors' code has no license (read only, nothing copied), but ChemiProof's own code and documents have no license file, and the repository already tracks small data-derived tables (`results/*/predictions.csv` with sample IDs and true labels; metric and audit tables).
 - **Options and tradeoffs:**
   - Code: **MIT** (shortest, permissive, common for portfolio/research code) or **Apache-2.0** (permissive plus an explicit patent grant and change-notice rule). Both are compatible with every runtime dependency (all permissive; `docs/release/RELEASE_REVIEW.md` section 2). A copyleft license (GPL) would restrict reuse by labs and is not suggested.
@@ -198,8 +198,17 @@
   - No license: the repository stays "all rights reserved"; others may read it but not legally reuse it.
 - **Proposed decision (for the owner to accept or change):** MIT for code; CC BY 4.0 for `docs/` and the report; keep the dataset, data-derived figures, screenshots and `model.npz` out of git; keep the small tracked result tables with the CC BY 4.0 attribution that already appears in every report and card.
 - **Questions for the owner:** (1) which license, under which copyright holder name; (2) may the tracked per-sample tables in `results/` stay public (CC BY 4.0 allows it with attribution); (3) may README screenshots of the explorer that show real spectra be committed (also allowed by CC BY 4.0, but against the current conservative policy of ADR-003 / invariant 10).
-- **Until decided:** no `LICENSE` file is added, no release tag is created, and the release review lists T022 as pending for ChemiProof's own license.
-- **Owner signoff:** pending
+- **Decision (2026-11-03):** the proposal as written. (1) MIT for code, copyright holder "Mia Ho"; CC BY 4.0 for `docs/` and the report; `LICENSE` added. (2) The tracked result tables stay public with attribution. (3) No real-data screenshots for now (conservative policy kept; can be revisited).
+- **Owner signoff:** Bruce1508 (delegated owner authority), 2026-11-03
+
+## ADR-020: ship v1.0.0 without the external review (scope change by the owner's delegate)
+
+- **Date:** 2026-11-03 · **Status:** ACCEPTED by Bruce1508 under full decision authority delegated by the owner (Mia Ho)
+- **Problem:** the M7 exit gate and the final exit rule of `docs/project/15_RELEASE_AND_RESEARCH_REPORT.md` require an external reviewer's signoff before `v1.0`. No reviewer is available and the decision-holder asked to ship as fast as possible.
+- **Decision:** release `v1.0.0` now. The external-review requirement is waived **for this release only** and the waiver is stated in the release notes, `README.md`, the research report and `docs/release/RELEASE_REVIEW.md`. M0-M7 are marked ACCEPTED by the delegate on the evidence in their milestone reviews. The reviewer packet (`RELEASE_REVIEW.md` section 5) stays open; any finding from a later review goes into a patch release and this log.
+- **What does not change:** the scientific claims. Every limitation in the report and cards stays; nothing is relabelled as validated; FINAL-PLS-v1 still has no independent test; the transductive warning, "not a certified authenticity test" and the empirical-coverage caveats stay.
+- **Risk accepted:** a methods or claims error that an external chemist or ML reviewer would have caught may ship. Mitigations already in place: leakage audit (2026-11-03), independent recomputation tests in CI, second-machine and clean-environment reproduction, number-by-number fact-check of the M7 documents (PR #4 review).
+- **Owner signoff:** Bruce1508 (delegated owner authority), 2026-11-03
 
 ## Future ADR template
 
