@@ -10,6 +10,7 @@ docs/
   science/      protocol, data, evaluation, risk  (02, 03, 05, 09, 10)
   engineering/  how we build and verify it        (04, 07, 11, 12)
   project/      plan, decisions, progress, release (06, 13, 14, 15, 16)
+  release/      M7 drafts: research report, model card, data card, release review
   bi/           Power BI quality-analytics layer, milestone M6.5 (18, 19, 20) - specification only
   vi/           Vietnamese onboarding for the owner (START_HERE, ROADMAP, 17)
 templates/      MILESTONE_REVIEW.md, RESEARCH_REPORT.md
@@ -51,6 +52,15 @@ config/         project.yaml, milestones.yaml, experiments/, bi/export_contract.
 | `14_PROGRESS_LOG.md` | Which gates have evidence of completion? | All |
 | `15_RELEASE_AND_RESEARCH_REPORT.md` | What must be presented before public release? | Owner |
 | `16_TASK_BACKLOG.md` | What exact task should the agent implement next? | Agent |
+
+## Release drafts — `docs/release/` (M7, REVIEW REQUIRED)
+
+| Document | Main question | Reader |
+|---|---|---|
+| `RESEARCH_REPORT.md` | What did ChemiProof measure, and what does it not show? | Reviewer, public |
+| `MODEL_CARD.md` | What is FINAL-PLS-v1, how good is the evidence, what must it not be used for? | User, reviewer |
+| `DATA_CARD.md` | What is in the dataset we used, and how reliable is it? | Reviewer |
+| `RELEASE_REVIEW.md` | Are rights, citations and reproduction cleared; what blocks the tag? | Owner, external reviewer |
 
 ## Power BI layer (M6.5, specification only) — `docs/bi/`
 

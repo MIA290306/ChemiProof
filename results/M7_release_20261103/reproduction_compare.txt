@@ -1,0 +1,61 @@
+# chemiproof experiment compare <committed> <clean rerun>, 2026-11-03; rerun folders from a fresh clone at 27c6efb (scratch, not committed)
+
+$ chemiproof experiment compare results/M2_20261103T041143Z_ca43062_4097e86f <clone>/results/M2_20261103T084038Z_27c6efb_68d00a8b
+OK   metrics_by_fold.csv: 12 rows, max |diff| 7.99e-15
+OK   predictions.csv: 1320 rows, max |diff| 3.89e-15
+OK   splits.csv: 990 rows, max |diff| 0
+OK   dataset_manifest_sha256.txt: 0 rows, max |diff| 0
+4/4 files match (atol 1e-09; run_id ignored)
+exit=0
+
+$ chemiproof experiment compare results/M3_20261103T042740Z_01a9d42_b1c2dfa1 <clone>/results/M3_20261103T084046Z_27c6efb_b1c2dfa1
+OK   fold_manifest.csv: 5 rows, max |diff| 0
+OK   metrics_by_fold.csv: 20 rows, max |diff| 2.31e-14
+OK   predictions.csv: 1320 rows, max |diff| 7.22e-16
+OK   splits.csv: 1650 rows, max |diff| 0
+OK   dataset_manifest_sha256.txt: 0 rows, max |diff| 0
+5/5 files match (atol 1e-09; run_id ignored)
+exit=0
+
+$ chemiproof experiment compare results/M3_20261103T042759Z_01a9d42_2fbd19b6 <clone>/results/M3_20261103T084104Z_27c6efb_2fbd19b6
+OK   fold_manifest.csv: 5 rows, max |diff| 0
+OK   metrics_by_fold.csv: 20 rows, max |diff| 0
+OK   predictions.csv: 600 rows, max |diff| 0
+OK   splits.csv: 750 rows, max |diff| 0
+OK   dataset_manifest_sha256.txt: 0 rows, max |diff| 0
+5/5 files match (atol 1e-09; run_id ignored)
+exit=0
+
+$ chemiproof experiment compare results/M4_20261103T044749Z_7129cde_363deee6 <clone>/results/M4_20261103T084115Z_27c6efb_363deee6
+OK   fold_manifest.csv: 5 rows, max |diff| 0
+OK   metrics_by_fold.csv: 25 rows, max |diff| 0
+OK   ot_diagnostics.csv: 25 rows, max |diff| 0
+OK   predictions.csv: 1650 rows, max |diff| 0
+OK   splits.csv: 1650 rows, max |diff| 0
+OK   dataset_manifest_sha256.txt: 0 rows, max |diff| 0
+6/6 files match (atol 1e-09; run_id ignored)
+exit=0
+
+$ chemiproof experiment compare results/M4_20261103T044812Z_7129cde_44fba4b8 <clone>/results/M4_20261103T084121Z_27c6efb_44fba4b8
+OK   fold_manifest.csv: 5 rows, max |diff| 0
+OK   metrics_by_fold.csv: 25 rows, max |diff| 0
+OK   ot_diagnostics.csv: 25 rows, max |diff| 0
+OK   predictions.csv: 750 rows, max |diff| 0
+OK   splits.csv: 750 rows, max |diff| 0
+OK   dataset_manifest_sha256.txt: 0 rows, max |diff| 0
+6/6 files match (atol 1e-09; run_id ignored)
+exit=0
+
+$ chemiproof experiment compare results/M5_20261103T054226Z_914e8ed_ac6bfcef <clone>/results/M5_20261103T084132Z_27c6efb_ac6bfcef
+OK   ablation_no_savgol.csv: 30 rows, max |diff| 5.55e-17
+OK   brand_breakdown.csv: 33 rows, max |diff| 2.78e-16
+OK   failure_cases.csv: 75 rows, max |diff| 6.11e-16
+OK   interval_coverage.csv: 30 rows, max |diff| 4.44e-16
+OK   perturbation_table.csv: 420 rows, max |diff| 4.44e-16
+OK   predictions.csv: 990 rows, max |diff| 7.22e-16
+OK   risk_coverage_curve.csv: 570 rows, max |diff| 3.61e-16
+OK   score_diagnostics.csv: 30 rows, max |diff| 2.08e-16
+OK   selective_risk.csv: 120 rows, max |diff| 2.36e-16
+OK   dataset_manifest_sha256.txt: 0 rows, max |diff| 0
+10/10 files match (atol 1e-09; run_id ignored)
+exit=0

@@ -50,7 +50,7 @@ milestones:
     exit: [export_tests_pass_on_real_runs, kpis_reconcile_with_python, dashboard_verified_in_power_bi_desktop_on_windows, protocol_and_mode_never_mixed, no_unsupported_claims]
   - id: M7
     name: Release
-    status: NOT_STARTED
+    status: REVIEW_REQUIRED
     prerequisites: [M6]
     soft_prerequisites: [M6.5]        # included in the release only if accepted; otherwise the release says "Power BI layer: not delivered"
     exit: [clean_reproduction, source_rights_review, research_report, reviewer_signoff]

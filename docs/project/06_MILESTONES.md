@@ -268,10 +268,10 @@
 **Scientific purpose:** demonstrate a standalone, scientifically responsible project.
 
 **Tasks**
-- [ ] Freeze final evaluation; run reproducibility checks on new environment.
-- [ ] Produce 4–8 page research report using `templates/RESEARCH_REPORT.md`; create model card and data card.
-- [ ] Add actual results, source attribution, reproducibility command and clear screenshots to README.
-- [ ] Decide code/data license after checking original rights. Never automatically mirror original dataset or author's repository.
+- [x] Freeze final evaluation; run reproducibility checks on new environment. (2026-11-03, `results/M7_release_20261103/`)
+- [x] Produce 4–8 page research report using `templates/RESEARCH_REPORT.md`; create model card and data card. (drafts in `docs/release/`, external review pending)
+- [ ] Add actual results, source attribution, reproducibility command and clear screenshots to README. (results, attribution, commands done; screenshots wait for ADR-019)
+- [ ] Decide code/data license after checking original rights. Never automatically mirror original dataset or author's repository. (rights checked; license PROPOSED in ADR-019, owner decision)
 - [ ] Have at least one external reviewer (scientific instructor/mentor/QA practitioner if available) review methods and claims.
 - [ ] Fix blocking bugs; tag release only when package/test/docs/UI checks pass.
 
