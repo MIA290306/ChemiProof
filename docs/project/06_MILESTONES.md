@@ -139,7 +139,7 @@
 
 **Exit gate:** reviewer can inspect genuine test-run artifacts, upload valid and invalid examples and see honest methodological labels.
 
-## M6.5 — Power BI Food Quality Intelligence (extension; BLOCKED — CP-651 Python-side work started 2026-11-03, CP-653+ need Windows)
+## M6.5 — Power BI Food Quality Intelligence (extension; REVIEW REQUIRED — CP-651/652 done with evidence; CP-653-660 claimed complete by Bruce1508 2026-11-03 on a Windows machine, no artifact retained yet)
 
 **Scientific and product purpose:** give Food Science, QA/QC and laboratory readers a business-intelligence view of dataset quality, model performance, uncertainty and research findings, built **only** from validated experiment outputs. Power BI is a presentation layer; Python remains the only place where metrics, intervals and abstention are computed. This milestone neither renumbers nor changes M0–M7 and does not alter the scientific protocols.
 

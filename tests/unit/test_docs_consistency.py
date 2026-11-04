@@ -174,7 +174,9 @@ def test_power_bi_documents_state_that_nothing_is_built():
     if built:  # a Power BI file may exist only once M6.5 has left NOT_STARTED
         assert by_id["M6.5"]["status"] != "NOT_STARTED", built
     else:
-        assert by_id["M6.5"]["status"] in {"NOT_STARTED", "BLOCKED"}
+        # REVIEW_REQUIRED is allowed with no file: it means "claimed, pending evidence
+        # review", never "validated" -- ACCEPTED still requires a real .pbip/.pbix file.
+        assert by_id["M6.5"]["status"] in {"NOT_STARTED", "BLOCKED", "REVIEW_REQUIRED"}
 
 
 CONTRACT = "config/bi/export_contract.yaml"
