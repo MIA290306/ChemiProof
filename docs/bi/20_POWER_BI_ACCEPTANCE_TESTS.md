@@ -1,6 +1,6 @@
 # Power BI Acceptance Tests and Definition of Done (M6.5)
 
-**Status: NO TEST HAS BEEN WRITTEN OR RUN.** Every test below is `NOT RUN`. Automated tests (BI001 to BI014) are intended for `pytest` on any platform; Power BI tests (BI020 to BI032) need Power BI Desktop on Windows and are manual with saved evidence. Never mark a test PASS without its evidence.
+**Status (2026-11-03, M6.5 CP-652):** BI001, BI002, BI004, BI006, BI007, BI009, BI011 and BI014 PASS against the real exporter on the committed `results/` runs (evidence: `tests/unit/test_bi_export.py`, `tests/integration/test_bi_export_real.py`, `docs/project/14_PROGRESS_LOG.md`). BI003, BI005, BI008, BI010, BI012, BI013 remain `NOT RUN` (not independently checked by the exporter yet, or require a scenario not yet fixtured). Power BI tests (BI020 to BI032) need Power BI Desktop on Windows, are manual with saved evidence, and all remain `NOT RUN`: the dashboard itself is not built. Never mark a test PASS without its evidence.
 
 Related: `docs/bi/18_POWER_BI_SPEC.md`, `docs/bi/19_POWER_BI_DATA_MODEL.md`, `docs/engineering/07_ACCEPTANCE_TESTS.md` (general test policy).
 
@@ -8,20 +8,20 @@ Related: `docs/bi/18_POWER_BI_SPEC.md`, `docs/bi/19_POWER_BI_DATA_MODEL.md`, `do
 
 | ID | Given | Expected result | Status |
 |---|---|---|---|
-| BI001 | Same run directories exported twice | All table files are byte-identical (only `created_utc` in `export_manifest.json` differs) | NOT RUN |
-| BI002 | Any export | Every table matches `config/bi/export_contract.yaml`: names, order, types, nullability | NOT RUN |
+| BI001 | Same run directories exported twice | All table files are byte-identical (only `created_utc` in `export_manifest.json` differs) | PASS |
+| BI002 | Any export | Every table matches `config/bi/export_contract.yaml`: names, order, types, nullability | PASS |
 | BI003 | Any export | Primary keys unique and non-null; every foreign key resolves (rule V-02) | NOT RUN |
-| BI004 | Any export | `olive_fraction`/`y_true_fraction` in [0,1] and equal to `dim_sample`; all `*_pp` equal `100 x fraction`; residual/abs-error/clip columns consistent (V-03, V-04) | NOT RUN |
+| BI004 | Any export | `olive_fraction`/`y_true_fraction` in [0,1] and equal to `dim_sample`; all `*_pp` equal `100 x fraction`; residual/abs-error/clip columns consistent (V-03, V-04) | PASS |
 | BI005 | Real M3 and M4 runs | Metrics recomputed from `fact_predictions` equal `fact_model_metrics` (fold, macro, pooled; unclipped and clipped) within 1e-9 (V-05) | NOT RUN |
-| BI006 | Run directories with mixed protocols | Every fact row carries `run_id`, `model_key`, `mode`; `protocol_id` assigned by the map; an unmapped run gets `UNREGISTERED`, `is_registered=false`, `is_headline=false` (P-2) | NOT RUN |
-| BI007 | Run with `git_dirty=true` or missing hash fields | Missing provenance rejects the run; dirty locked run exported with `is_headline=false` and a warning (V-06) | NOT RUN |
+| BI006 | Run directories with mixed protocols | Every fact row carries `run_id`, `model_key`, `mode`; `protocol_id` assigned by the map; an unmapped run gets `UNREGISTERED`, `is_registered=false`, `is_headline=false` (P-2) | PASS |
+| BI007 | Run with `git_dirty=true` or missing hash fields | Missing provenance rejects the run; dirty locked run exported with `is_headline=false` and a warning (V-06) | PASS |
 | BI008 | LOAO run lacking `leakage_audit.json` or with a failed canary | Run rejected with `BI_RUN_REJECTED` (V-07) | NOT RUN |
-| BI009 | Export containing published numbers | They appear only in `fact_published_reference` with `is_measured=false`; no relationship, no row in any measured table (V-11) | NOT RUN |
+| BI009 | Export containing published numbers | They appear only in `fact_published_reference` with `is_measured=false`; no relationship, no row in any measured table (V-11) | PASS |
 | BI010 | Dataset directory hashed before and after export | Identical; exporter wrote nothing inside `data/` or a source run folder; existing export folder is not overwritten (V-12) | NOT RUN |
-| BI011 | Any export | No intensity arrays, no absolute paths, no user names or e-mail addresses in any column (V-10, V-12) | NOT RUN |
+| BI011 | Any export | No intensity arrays, no absolute paths, no user names or e-mail addresses in any column (V-10, V-12) | PASS |
 | BI012 | Runs without M5 outputs | `fact_uncertainty` and `fact_selective_risk` are empty, `uncertainty_available=false`; no fabricated rows | NOT RUN |
 | BI013 | Uncertainty fixture with a threshold fitted on target labels, or missing method/level fields | Export rejected (V-09) | NOT RUN |
-| BI014 | CSV and Parquet exports of the same runs | Identical values and types (Parquet only if the optional extra is installed) | NOT RUN |
+| BI014 | CSV and Parquet exports of the same runs | Identical values and types (Parquet only if the optional extra is installed) | PASS |
 
 ## 2. Power BI tests (Windows, Power BI Desktop; manual with evidence)
 

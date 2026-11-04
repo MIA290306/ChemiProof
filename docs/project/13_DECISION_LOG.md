@@ -149,6 +149,16 @@
 - **Consequences:** new documents `docs/bi/18-20`, `config/bi/export_contract.yaml`, new acceptance tests BI001-BI032, risks R21-R26, backlog CP-651 to CP-660, a docs-consistency test; no change to code, protocols or results.
 - **Owner signoff:** pending
 
+### ADR-016 amendment (2026-11-03) — CP-651 real-artifact cross-check findings
+- **Context:** building `config/bi/protocol_map.yaml` (CP-651's missing file) and re-checking `config/bi/export_contract.yaml` against the real, committed run artifacts (not just the markdown spec) surfaced three concrete gaps. Decided by the owner's delegate (Bruce1508, full decision authority relayed from Mia Ho; see M7 entries below for the same delegation).
+- **Decision 1 (protocol registration):** register `LOAO-UQ-v1` (M5 uncertainty/abstention, `config_sha256` `f93cfb4c97d22ad2`) in the Rule P-2 protocol map. This was NOT an invented identifier: it is the exact `protocol_id` the pipeline already stamps on every M5 `predictions.csv` row and in `config_resolved.yaml` (ADR-017), and M5 is already ACCEPTED. Leaving it unregistered would have silently resolved every M5 row to `UNREGISTERED` and emptied CP-657 (Uncertainty & Screening Assessment) by default.
+- **Decision 2 (random-rejection baseline columns):** `fact_selective_risk.random_reject_mae_fraction_sd` is removed (ADR-017 never computed a parametric sd; it reports "mean and 5-95% band" over 200 seeded repeats). Replaced with `random_reject_mae_fraction_p05`/`_p95`, sourced from the real `risk_coverage_curve.csv` (`random_mean`, `random_p05`, `random_p95`) joined at the matching `retention_percent`, not from `selective_risk.csv` as the contract previously (incorrectly) implied. `n_random_repeats` is sourced from `config_resolved.yaml` (`uq.random_rejection_repeats`, real value 200), not from a per-row column that does not exist.
+- **Decision 3 (interval variant):** `fact_uncertainty` gains a `variant` column (`pooled` | `max_domain`) and the primary key is extended to include it. Real M5 output (`predictions.csv`, `interval_coverage.csv`) carries both ADR-017 interval variants; the prior single `interval_lo/hi_fraction` pair could not represent both without silently dropping or conflating one.
+- **Also renamed to match the real `selective_risk.csv` column:** `rule_id` -> `score`; added the real `threshold` column. Both `fact_uncertainty` and `fact_selective_risk` status moved `PLANNED_M5` -> `AVAILABLE_M5` (the source data exists; only the exporter, CP-652, remains unwritten).
+- **Scope not changed:** CP-652 (export pipeline) is still unwritten; CP-653-CP-660 remain `BLOCKED` on a Windows machine with Power BI Desktop, per the original ADR-016 decision.
+- **Files changed:** `docs/bi/19_POWER_BI_DATA_MODEL.md`, `config/bi/export_contract.yaml`, `config/bi/protocol_map.yaml`, `tests/unit/test_docs_consistency.py`.
+- **Owner signoff:** pending (delegate decision, consistent with the M0-M7 delegation pattern already accepted for this release).
+
 ## ADR-017: LOAO-UQ-v1 preregistration (abstention, intervals, robustness; declared before any M5 scoring)
 
 - **Date:** 2026-11-03 · **Status:** ACCEPTED (agent, under owner delegation); owner review requested at the M5 gate

@@ -76,12 +76,13 @@ The default `pytest` and CI must run using tiny generated EEM fixtures with clea
 - Add a reproducible `results/README.md` documenting exactly how results were obtained and how public extracts relate to private raw data.
 - Keep schemas validated at boundaries and clear exception messages for novice maintainers.
 
-## Power BI (M6.5 only; optional, specification-level)
+## Power BI (M6.5 only; optional; CP-652 exporter built, dashboard not)
 
 - **Where it runs:** Power BI Desktop requires Windows 10 or later (checked against Microsoft Learn on 2026-11-03). There is **no macOS version**. On a Mac use a Windows PC, a Windows VM (verify compatibility with Apple silicon first), or a cloud Windows desktop (Windows 365 or Azure Virtual Desktop, which Microsoft documents as supported). Desktop works without signing in; the Power BI service (web, sharing, scheduled refresh) needs a work or school account and personal e-mail addresses such as Gmail are not accepted directly.
 - **What can be done on macOS:** write and test the Python export (`src/chemiproof/bi/`), the data contract and KPI recomputation; edit `.pbip` text files (TMDL/PBIR) in VS Code. **What cannot:** open, refresh or verify the report. Text generated outside Desktop is unvalidated until opened there; record this in the milestone review.
 - **Files:** use the `.pbip` project format; `.pbix`, `.pbi/cache.abf` and `exports/bi/` are git-ignored. Exports are produced by `chemiproof export bi` and pointed to by the `ExportFolder` parameter. No gateway, scheduled refresh or publishing is assumed.
-- **Optional dependency:** Parquet output needs `pip install -e '.[bi]'` (adds `pyarrow`, added only when M6.5 starts); CSV needs nothing.
+- **Optional dependency:** Parquet output needs `pip install -e '.[bi]'` (adds `pyarrow`, already resolved in `constraints.txt` via `streamlit`); CSV needs nothing and is the default.
+- **Run it (CP-652, 2026-11-03):** `chemiproof export bi --output-dir exports/bi/<id>` (add `--format parquet` for Parquet). Reads `results/` and `data/interim/sample_manifest.csv` only; refuses to write into a non-empty `--output-dir`; prints each table's row count and sha256 and any V-03/05/06/07/10/11 contract violations (exit non-zero on a violation; V-01/02/04/08/09 are enforced by construction in `src/chemiproof/bi/export.py`). Tests: `pytest tests/unit/test_bi_export.py` (synthetic, CI) and `pytest -m dataset tests/integration/test_bi_export_real.py` (real committed runs).
 - Full procedure and tests: `docs/bi/18_POWER_BI_SPEC.md`, `docs/bi/20_POWER_BI_ACCEPTANCE_TESTS.md`.
 
 ## CI minimum proposed

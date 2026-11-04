@@ -487,14 +487,17 @@ tables:
       description: macro rows only
   fact_uncertainty:
     kind: fact
-    grain: one row per run x fold x model x held-out sample (only for runs with an uncertainty experiment)
+    grain: one row per run x fold x model x held-out sample x interval variant (only for runs with an uncertainty experiment)
     primary_key:
     - run_id
     - fold_id
     - model_key
     - sample_id
-    source: M5 artifacts (planned; predictions.csv already reserves abstain, ood_score, interval_lo, interval_hi)
-    status: PLANNED_M5
+    - variant
+    source: results/<run>/predictions.csv (abstain, ood_score, interval_lo/hi for the pooled variant, interval_lo/hi_max_domain
+        for the max_domain variant) and interval_coverage.csv (per-fold width/coverage, also carries variant); the exporter
+        melts both interval variants into separate rows (ADR-016 amendment, 2026-11-03)
+    status: AVAILABLE_M5
     columns:
     - name: run_id
       type: string
@@ -516,6 +519,11 @@ tables:
       unit: null
       nullable: false
       description: FK dim_sample
+    - name: variant
+      type: string
+      unit: null
+      nullable: false
+      description: 'enum: pooled, max_domain; which interval half-width rule produced this row'
     - name: mode
       type: string
       unit: null
@@ -599,16 +607,18 @@ tables:
       description: taxonomy code from docs/engineering/04_ARCHITECTURE.md
   fact_selective_risk:
     kind: fact
-    grain: one row per run x model x scope x retention target (only for runs with an abstention experiment)
+    grain: one row per run x model x scope x retention target x score (only for runs with an abstention experiment)
     primary_key:
     - run_id
     - model_key
     - scope_type
     - fold_id
     - retention_target
-    - rule_id
-    source: M5 selective_risk.csv (planned; columns follow docs/science/05_EVALUATION_PLAN.md section 7)
-    status: PLANNED_M5
+    - score
+    source: results/<run>/selective_risk.csv (per-fold selective risk) joined with risk_coverage_curve.csv at the row matching
+        retention_percent = round(100 * retention_target) for the random-rejection baseline, and config_resolved.yaml
+        (uq.random_rejection_repeats) for n_random_repeats (ADR-016 amendment, 2026-11-03)
+    status: AVAILABLE_M5
     columns:
     - name: run_id
       type: string
@@ -635,11 +645,17 @@ tables:
       unit: null
       nullable: true
       description: FK dim_fold for fold rows
-    - name: rule_id
+    - name: score
       type: string
       unit: null
       nullable: false
-      description: identifier of the preregistered abstention rule
+      description: 'scoring rule used to rank abstention candidates, e.g. ood_maha, model_disagreement (real
+        column: selective_risk.csv score)'
+    - name: threshold
+      type: decimal
+      unit: method-specific
+      nullable: false
+      description: cutoff on score for this retention target; fitted source-only
     - name: retention_target
       type: decimal
       unit: fraction
@@ -680,16 +696,21 @@ tables:
       unit: fraction
       nullable: true
       description: random-abstention control, mean over seeded repeats
-    - name: random_reject_mae_fraction_sd
+    - name: random_reject_mae_fraction_p05
       type: decimal
       unit: fraction
       nullable: true
-      description: random-abstention control, sd
+      description: random-abstention control, observed 5th percentile over seeded repeats
+    - name: random_reject_mae_fraction_p95
+      type: decimal
+      unit: fraction
+      nullable: true
+      description: random-abstention control, observed 95th percentile over seeded repeats
     - name: n_random_repeats
       type: int
       unit: repeats
       nullable: true
-      description: number of seeded repeats
+      description: 'number of seeded repeats (config: uq.random_rejection_repeats)'
   fact_data_quality:
     kind: fact
     grain: one row per validated spectrum

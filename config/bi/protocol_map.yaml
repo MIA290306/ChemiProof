@@ -1,0 +1,69 @@
+# Machine-readable twin of docs/bi/19_POWER_BI_DATA_MODEL.md section 4, Rule P-2.
+# Edit both together; tests/unit/test_docs_consistency.py checks they stay identical.
+# Status: SPECIFICATION ONLY (M6.5 CP-651). No exporter reads this file yet (CP-652).
+# Registering a new protocol or run here requires an ADR and owner approval (Rule P-2).
+version: 1
+contract_version: bi-contract-1.0.0
+entries:
+  - protocol_family: source_internal_loro
+    mode: inductive
+    run_class: any
+    protocol_id: SI-LORO-v1
+    accepted_config_sha256:
+      - 5ddb4697c349f887
+    meaning: leave-one-measurement-round-out; OPTIMISTIC, not unseen-adulterant evidence
+  - protocol_family: loao
+    mode: inductive
+    run_class: locked
+    protocol_id: LOAO-v1
+    accepted_config_sha256:
+      - 2c427bf82704fa93 # all 330
+      - c98da7473d7088d3 # Luhua-only
+    meaning: frozen five-fold held-out-adulterant benchmark (ADR-013)
+  - protocol_family: loao
+    mode: inductive
+    run_class: locked
+    protocol_id: LOAO-UQ-v1
+    accepted_config_sha256:
+      - f93cfb4c97d22ad2
+    meaning: >
+      M5 uncertainty/abstention layer on top of LOAO-v1 predictions; the value the pipeline
+      itself already stamps as protocol_id on every M5 row (config_resolved.yaml, predictions.csv).
+      Registered by ADR-016 amendment, 2026-11-03 (CP-651 real-artifact cross-check).
+  - protocol_family: loao
+    mode: transductive_batch
+    run_class: locked
+    protocol_id: LOAO-OT-v1
+    accepted_config_sha256:
+      - 417e41b5b3029099 # all 330
+      - 70f0c2f5af843fb8 # Luhua-only
+    meaning: frozen OT benchmark, needs an unlabeled batch (ADR-014)
+  - protocol_family: loao_negative_control
+    mode: inductive
+    run_class: exploratory
+    protocol_id: LOAO-v1/negative-control
+    accepted_config_sha256: [] # n/a: permuted-label control, any config accepted
+    meaning: permuted-source-label control
+  - protocol_family: loao_ot_batch_sensitivity
+    mode: transductive_batch
+    run_class: exploratory
+    protocol_id: LOAO-OT-v1/batch-stress
+    accepted_config_sha256: [] # n/a: stress sweep, any config accepted
+    meaning: batch size, brand and label-skew stress tests (ADR-014/015)
+  - protocol_family: loao
+    mode: any
+    run_class: exploratory
+    protocol_id: EXPLORATORY
+    accepted_config_sha256: [] # n/a: never headline
+    meaning: never headline
+
+fallback:
+  protocol_id: UNREGISTERED
+  meaning: >
+    anything else, or a locked run whose config_sha256 is not in accepted_config_sha256;
+    exported with is_registered=false and excluded from default dashboard views
+
+# Resolved 2026-11-03 (ADR-016 amendment): LOAO-UQ-v1 is now registered above. No open
+# known_gaps remain; keep this key for any future unregistered protocol/run discovered
+# by test_protocol_map_resolves_every_committed_locked_run.
+known_gaps: []

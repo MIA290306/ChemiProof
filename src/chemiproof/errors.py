@@ -22,6 +22,9 @@ class StatusCode(StrEnum):
     DATASET_NOT_AVAILABLE = "DATASET_NOT_AVAILABLE"
     INVALID_CONFIG = "INVALID_CONFIG"
     NOT_IMPLEMENTED = "NOT_IMPLEMENTED"
+    # Added in M6.5 CP-652 (BI export): no code in the original taxonomy covered these.
+    BI_EXPORT_EXISTS = "BI_EXPORT_EXISTS"
+    BI_VALIDATION_FAILED = "BI_VALIDATION_FAILED"
 
 
 DESCRIPTIONS: dict[StatusCode, str] = {
@@ -39,6 +42,8 @@ DESCRIPTIONS: dict[StatusCode, str] = {
     StatusCode.DATASET_NOT_AVAILABLE: "The required dataset archive or manifest is not present.",
     StatusCode.INVALID_CONFIG: "Configuration failed validation.",
     StatusCode.NOT_IMPLEMENTED: "This stage is not implemented in the current milestone.",
+    StatusCode.BI_EXPORT_EXISTS: "The BI export output directory already has files in it.",
+    StatusCode.BI_VALIDATION_FAILED: "The BI export failed its own contract validation rules.",
 }
 
 
