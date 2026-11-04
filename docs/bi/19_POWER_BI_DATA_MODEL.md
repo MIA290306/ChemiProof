@@ -198,11 +198,11 @@ Reference counts observed when this specification was written (2026-11-03): 330 
 
 ### `fact_uncertainty`
 
-- **Kind:** fact · **Grain:** one row per run x fold x model x held-out sample (only for runs with an uncertainty experiment)
-- **Primary key:** `run_id`, `fold_id`, `model_key`, `sample_id`
-- **Source:** M5 artifacts (planned; predictions.csv already reserves abstain, ood_score, interval_lo, interval_hi)
-- **Availability:** `PLANNED_M5`
-- **Note:** Does not exist until M5 produces it. The exporter must emit zero rows and uncertainty_available=false rather than invent values.
+- **Kind:** fact · **Grain:** one row per run x fold x model x held-out sample x interval variant (only for runs with an uncertainty experiment)
+- **Primary key:** `run_id`, `fold_id`, `model_key`, `sample_id`, `variant`
+- **Source:** `results/<run>/predictions.csv` (`abstain`, `ood_score`, `interval_lo`/`interval_hi` for the `pooled` variant, `interval_lo_max_domain`/`interval_hi_max_domain` for the `max_domain` variant) and `interval_coverage.csv` (per-fold width/coverage, also carries `variant`); the exporter melts both interval variants into separate rows (ADR-016 amendment, 2026-11-03)
+- **Availability:** `AVAILABLE_M5`
+- **Note:** Zero rows and `uncertainty_available=false` for any run without an uncertainty experiment, rather than invented values. Real M5 output has two interval variants (`pooled`, `max_domain`); a row must never average or pick between them silently.
 
 | Column | Type | Unit | Nullable | Meaning / validation |
 |---|---|---|---|---|
@@ -210,6 +210,7 @@ Reference counts observed when this specification was written (2026-11-03): 330 
 | `fold_id` | string |  | no | FK dim_fold |
 | `model_key` | string |  | no | FK dim_model |
 | `sample_id` | string |  | no | FK dim_sample |
+| `variant` | string |  | no | enum: pooled, max_domain; which interval half-width rule produced this row |
 | `mode` | string |  | no | inductive or transductive_batch |
 | `abstain` | bool |  | no | research-level review flag; NOT a safety or fraud decision |
 | `abstain_reason_code` | string |  | yes | status code, e.g. ABSTAIN_OOD_RISK, INSUFFICIENT_CALIBRATION |
@@ -229,11 +230,11 @@ Reference counts observed when this specification was written (2026-11-03): 330 
 
 ### `fact_selective_risk`
 
-- **Kind:** fact · **Grain:** one row per run x model x scope x retention target (only for runs with an abstention experiment)
-- **Primary key:** `run_id`, `model_key`, `scope_type`, `fold_id`, `retention_target`, `rule_id`
-- **Source:** M5 selective_risk.csv (planned; columns follow docs/science/05_EVALUATION_PLAN.md section 7)
-- **Availability:** `PLANNED_M5`
-- **Note:** Abstention can lower error simply by discarding hard cases; retention must always be shown beside selective error.
+- **Kind:** fact · **Grain:** one row per run x model x scope x retention target x score (only for runs with an abstention experiment)
+- **Primary key:** `run_id`, `model_key`, `scope_type`, `fold_id`, `retention_target`, `score`
+- **Source:** `results/<run>/selective_risk.csv` (per-fold selective risk) joined with `risk_coverage_curve.csv` at the row matching `retention_percent = round(100 * retention_target)` for the random-rejection baseline, and `config_resolved.yaml` (`uq.random_rejection_repeats`) for `n_random_repeats` (ADR-016 amendment, 2026-11-03)
+- **Availability:** `AVAILABLE_M5`
+- **Note:** Abstention can lower error simply by discarding hard cases; retention must always be shown beside selective error. The random baseline is reported as observed 5th/95th percentiles over the seeded repeats, never as a fabricated parametric mean/sd.
 
 | Column | Type | Unit | Nullable | Meaning / validation |
 |---|---|---|---|---|
@@ -242,7 +243,8 @@ Reference counts observed when this specification was written (2026-11-03): 330 
 | `mode` | string |  | no | inductive or transductive_batch; never merged |
 | `scope_type` | string |  | no | enum: fold, macro |
 | `fold_id` | string |  | yes | FK dim_fold for fold rows |
-| `rule_id` | string |  | no | identifier of the preregistered abstention rule |
+| `score` | string |  | no | scoring rule used to rank abstention candidates, e.g. ood_maha, model_disagreement (real column: selective_risk.csv `score`) |
+| `threshold` | decimal | method-specific | no | cutoff on `score` for this retention target; fitted source-only |
 | `retention_target` | decimal | fraction | no | 1.0, 0.9, 0.8, 0.7 |
 | `retention_observed` | decimal | fraction | no | actual fraction retained |
 | `rejection_rate` | decimal | fraction | no | 1 - retention_observed |
@@ -251,8 +253,9 @@ Reference counts observed when this specification was written (2026-11-03): 330 
 | `rejected_mae_fraction` | decimal | fraction | yes | retrospective MAE of rejected samples; analysis only |
 | `worst_retained_error_fraction` | decimal | fraction | yes | max absolute error among retained |
 | `random_reject_mae_fraction_mean` | decimal | fraction | yes | random-abstention control, mean over seeded repeats |
-| `random_reject_mae_fraction_sd` | decimal | fraction | yes | random-abstention control, sd |
-| `n_random_repeats` | int | repeats | yes | number of seeded repeats |
+| `random_reject_mae_fraction_p05` | decimal | fraction | yes | random-abstention control, observed 5th percentile over seeded repeats |
+| `random_reject_mae_fraction_p95` | decimal | fraction | yes | random-abstention control, observed 95th percentile over seeded repeats |
+| `n_random_repeats` | int | repeats | yes | number of seeded repeats (config: uq.random_rejection_repeats) |
 
 ### `fact_data_quality`
 
@@ -381,6 +384,7 @@ Reference counts observed when this specification was written (2026-11-03): 330 
 |---|---|---|---|---|---|
 | `source_internal_loro` | inductive | any | `SI-LORO-v1` | `5ddb4697c349f887` | leave-one-measurement-round-out; OPTIMISTIC, not unseen-adulterant evidence |
 | `loao` | inductive | locked | `LOAO-v1` | `2c427bf82704fa93` (all 330), `c98da7473d7088d3` (Luhua-only) | frozen five-fold held-out-adulterant benchmark (ADR-013) |
+| `loao` | inductive | locked | `LOAO-UQ-v1` | `f93cfb4c97d22ad2` | M5 uncertainty/abstention layer on top of LOAO-v1 predictions; registered by ADR-016 amendment 2026-11-03 (CP-651) |
 | `loao` | transductive_batch | locked | `LOAO-OT-v1` | `417e41b5b3029099` (all 330), `70f0c2f5af843fb8` (Luhua-only) | frozen OT benchmark, needs an unlabeled batch (ADR-014) |
 | `loao_negative_control` | inductive | exploratory | `LOAO-v1/negative-control` | n/a | permuted-source-label control |
 | `loao_ot_batch_sensitivity` | transductive_batch | exploratory | `LOAO-OT-v1/batch-stress` | n/a | batch size, brand and label-skew stress tests (ADR-014/015) |

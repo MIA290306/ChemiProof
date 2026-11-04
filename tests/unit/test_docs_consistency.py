@@ -4,6 +4,7 @@ These tests protect the plan documents from drifting apart. They run on any plat
 and make no scientific claim.
 """
 
+import csv
 import re
 from pathlib import Path
 
@@ -22,7 +23,7 @@ SKIP_DIRS = {
     ".ruff_cache",
 }
 # Files that documents mention as PLANNED but do not exist yet (remove an entry once it is created).
-PLANNED_PATHS = {"config/bi/protocol_map.yaml"}
+PLANNED_PATHS: set[str] = set()
 
 
 def _md_files() -> list[Path]:
@@ -157,7 +158,12 @@ def test_power_bi_appears_consistently_across_documents():
 def test_power_bi_documents_state_that_nothing_is_built():
     assert "SPECIFICATION ONLY" in _read("docs/bi/18_POWER_BI_SPEC.md")
     assert "SPECIFICATION ONLY" in _read("docs/bi/19_POWER_BI_DATA_MODEL.md")
-    assert "NO TEST HAS BEEN WRITTEN OR RUN" in _read("docs/bi/20_POWER_BI_ACCEPTANCE_TESTS.md")
+    bi_doc = _read("docs/bi/20_POWER_BI_ACCEPTANCE_TESTS.md")
+    # the Power BI (manual, BI02x/BI03x) tests all remain NOT RUN: no dashboard is built
+    for ln in bi_doc.splitlines():
+        m = re.match(r"^\| (BI0(?:2|3)\d) \|.*\| (\w+) \|$", ln)
+        if m:
+            assert m.group(2) == "NOT RUN", ln
     built = [
         p
         for p in REPO.rglob("*")
@@ -168,7 +174,9 @@ def test_power_bi_documents_state_that_nothing_is_built():
     if built:  # a Power BI file may exist only once M6.5 has left NOT_STARTED
         assert by_id["M6.5"]["status"] != "NOT_STARTED", built
     else:
-        assert by_id["M6.5"]["status"] in {"NOT_STARTED", "BLOCKED"}
+        # REVIEW_REQUIRED is allowed with no file: it means "claimed, pending evidence
+        # review", never "validated" -- ACCEPTED still requires a real .pbip/.pbix file.
+        assert by_id["M6.5"]["status"] in {"NOT_STARTED", "BLOCKED", "REVIEW_REQUIRED"}
 
 
 CONTRACT = "config/bi/export_contract.yaml"
@@ -216,6 +224,85 @@ def test_data_contract_yaml_matches_the_markdown_tables():
         re.M,
     )
     assert len(rows) == len(contract["relationships"]) == 22
+
+
+PROTOCOL_MAP = "config/bi/protocol_map.yaml"
+# Run dirs that are not evidence for Rule P-2 (foundation stub, UI screenshots, the
+# release bundle, or a collaborator's local-only second-machine reproduction).
+NON_PROTOCOL_RUN_DIRS = {"M0_foundation", "M6_explorer_20261103", "M7_release_20261103"}
+
+
+def _doc19_protocol_map_rows() -> list[dict]:
+    text = _read("docs/bi/19_POWER_BI_DATA_MODEL.md")
+    section = text.split("**Rule P-2.**")[1].split("**Rule P-3")[0]
+    rows = []
+    for line in section.splitlines():
+        if not line.strip().startswith("| `"):
+            continue
+        cells = [c.strip() for c in line.strip().strip("|").split("|")]
+        rows.append(
+            {
+                "protocol_family": cells[0].strip("`"),
+                "mode": cells[1],
+                "run_class": cells[2],
+                "protocol_id": cells[3].strip("`"),
+                "accepted_config_sha256": re.findall(r"`([0-9a-f]{16})`", cells[4]),
+            }
+        )
+    return rows
+
+
+def test_protocol_map_yaml_matches_rule_p2():
+    doc_rows = _doc19_protocol_map_rows()
+    pm = yaml.safe_load(_read(PROTOCOL_MAP))
+    assert pm["contract_version"] == "bi-contract-1.0.0"
+    entries = pm["entries"]
+    assert len(entries) == len(doc_rows) == 7
+    for doc_row, entry in zip(doc_rows, entries, strict=True):
+        assert entry["protocol_family"] == doc_row["protocol_family"]
+        assert entry["mode"] == doc_row["mode"]
+        assert entry["run_class"] == doc_row["run_class"]
+        assert entry["protocol_id"] == doc_row["protocol_id"]
+        assert entry["accepted_config_sha256"] == doc_row["accepted_config_sha256"]
+    assert pm["fallback"]["protocol_id"] == "UNREGISTERED"
+
+
+def test_protocol_map_resolves_every_committed_locked_run():
+    """Every ACCEPTED locked run's real config_sha256 must be registered or a documented gap.
+
+    This is the CP-651 real-artifact cross-check: it fails the moment a new locked run is
+    committed without updating protocol_map.yaml (registered) or known_gaps (flagged).
+    """
+    pm = yaml.safe_load(_read(PROTOCOL_MAP))
+    registered = {h for e in pm["entries"] for h in e["accepted_config_sha256"]}
+    gap_hashes = {h for g in pm["known_gaps"] for h in g["observed_config_sha256"]}
+
+    results_dir = REPO / "results"
+    committed_dirs = {p.name for p in results_dir.iterdir() if p.is_dir()} - NON_PROTOCOL_RUN_DIRS
+
+    checked = 0
+    with (results_dir / "experiment_registry.csv").open(encoding="utf-8", newline="") as f:
+        for row in csv.DictReader(f):
+            if row["run_class"] != "locked" or row["output_dir"] not in committed_dirs:
+                continue
+            short_hash = row["config_sha256"][:16]
+            assert short_hash in registered or short_hash in gap_hashes, (
+                f"{row['run_id']} ({row['output_dir']}): config_sha256 {short_hash} is "
+                "neither in protocol_map.yaml entries nor known_gaps"
+            )
+            checked += 1
+
+    # M2 predates experiment_registry.csv (docs/bi/19_POWER_BI_DATA_MODEL.md Rule P-2 note);
+    # read its config_sha256 straight from its own summary.json.
+    import json
+
+    m2_dirs = [d for d in committed_dirs if d.startswith("M2_")]
+    assert len(m2_dirs) == 1
+    m2_summary = json.loads((results_dir / m2_dirs[0] / "summary.json").read_text())
+    assert m2_summary["config_sha256"][:16] in registered
+    checked += 1
+
+    assert checked == 6  # M2, M3 x2, M4 x2, M5 — the full committed locked-run evidence base
 
 
 def test_contract_enforces_provenance_units_and_separation():

@@ -22,6 +22,7 @@ dependencies = [
 plot = ["matplotlib>=3.10,<4"]
 ot-reference = ["POT>=0.9.7,<0.10"]  # only for the authors-style reference call and cross-checks
 ui = ["streamlit>=1.66,<2", "plotly>=7.1,<8"]  # M6 research explorer (pulls in pandas)
+bi = ["pyarrow>=14,<30"]  # M6.5 CP-652: optional Parquet export (CSV is the default)
 dev = [
     "matplotlib>=3.10,<4",
     "POT>=0.9.7,<0.10",
@@ -30,6 +31,7 @@ dev = [
     "pre-commit>=4.7,<5",
     "streamlit>=1.66,<2",
     "plotly>=7.1,<8",
+    "pyarrow>=14,<30",
 ]
 
 [project.scripts]

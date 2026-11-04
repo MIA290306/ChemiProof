@@ -238,6 +238,36 @@ def _cmd_train_final(args: argparse.Namespace) -> int:
     return EXIT_OK
 
 
+def _cmd_export_bi(args: argparse.Namespace) -> int:
+    """CP-652: export validated results/ run outputs to the Power BI data-contract CSVs."""
+    from chemiproof.bi.export import export_all
+
+    try:
+        manifest = export_all(
+            Path(args.results_dir),
+            Path(args.manifest),
+            Path(args.contract),
+            Path(args.protocol_map),
+            Path(args.output_dir),
+            args.format,
+        )
+    except FileExistsError as exc:
+        raise ChemiProofError(StatusCode.BI_EXPORT_EXISTS, str(exc)) from exc
+    for f in manifest["files"]:
+        print(f"  {f['table']}: {f['rows']} rows (sha256 {f['sha256'][:16]}...)")
+    print(f"export_manifest.json: {args.output_dir}")
+    if manifest["validation_violations"]:
+        for v in manifest["validation_violations"]:
+            print(f"VIOLATION: {v}", file=sys.stderr)
+        raise ChemiProofError(
+            StatusCode.BI_VALIDATION_FAILED,
+            "export failed its own contract validation",
+            count=len(manifest["validation_violations"]),
+        )
+    print("validation: V-03/05/06/07/10/11 clean (V-01/02/04/08/09 by construction)")
+    return EXIT_OK
+
+
 def _cmd_app(args: argparse.Namespace) -> int:
     import importlib.util
     import subprocess
@@ -338,6 +368,17 @@ def build_parser() -> argparse.ArgumentParser:
     ap = sub.add_parser("app", help="Streamlit research explorer (M6; needs the 'ui' extra)")
     ap.add_argument("--port", type=int, default=8501)
     ap.set_defaults(func=_cmd_app)
+
+    exp = sub.add_parser("export", help="data export layers (M6.5)")
+    exp_sub = exp.add_subparsers(dest="action", required=True)
+    bi = exp_sub.add_parser("bi", help="CP-652: export runs to the Power BI data contract (CSV)")
+    bi.add_argument("--results-dir", default=str(DEFAULT_RESULTS))
+    bi.add_argument("--manifest", default=str(DEFAULT_MANIFEST))
+    bi.add_argument("--contract", default="config/bi/export_contract.yaml")
+    bi.add_argument("--protocol-map", default="config/bi/protocol_map.yaml")
+    bi.add_argument("--output-dir", required=True)
+    bi.add_argument("--format", choices=["csv", "parquet"], default="csv")
+    bi.set_defaults(func=_cmd_export_bi)
     return parser
 
 

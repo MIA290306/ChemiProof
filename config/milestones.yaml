@@ -41,7 +41,7 @@ milestones:
     exit: [real_artifacts_rendered, malformed_files_refused, modes_separate, disclaimers_visible]
   - id: M6.5
     name: PowerBI_Quality_Intelligence
-    status: NOT_STARTED
+    status: REVIEW_REQUIRED # CP-651/652 done w/ evidence; CP-653-660 claimed done by Bruce1508 2026-11-03, no artifact retained yet
     kind: optional_extension          # ADR-016: M7 does not depend on it
     prerequisites: [M5, M6]
     environment_requirement: windows_power_bi_desktop   # cannot be built or validated on macOS
