@@ -136,3 +136,32 @@ def test_dataset_integrity_error_is_not_disguised_as_missing(world, tmp_path, mo
     at.sidebar.radio[0].set_value("Explore EEM").run()
     assert not at.exception
     assert "BAD_FILE_FORMAT" in " ".join(e.value for e in at.error)
+
+
+CLOUD_APP = str(Path(__file__).resolve().parents[2] / "streamlit_app.py")
+
+
+def test_cloud_entry_point_serves_ready_model_without_network(world, synthetic, monkeypatch):  # noqa: F811
+    """ADR-021: when a verified model and dataset are present, the bootstrap is a no-op."""
+    _, root, manifest = world
+    res, _ = synthetic
+    monkeypatch.setenv("CHEMIPROOF_RESULTS_DIR", str(res))
+    monkeypatch.setenv("CHEMIPROOF_DATA_DIR", str(root))
+    monkeypatch.setenv("CHEMIPROOF_MANIFEST", str(manifest))
+    at = AppTest.from_file(CLOUD_APP, default_timeout=60).run()
+    assert not at.exception, at.exception
+    assert len(at.sidebar.radio) == 1  # app.main() ran exactly once (no double render)
+    at.sidebar.radio[0].set_value("Screen sample").run()
+    assert not at.exception
+    assert "research model not available" not in _text(at).lower()
+
+
+def test_cloud_entry_point_degrades_when_rebuild_impossible(repo, tmp_path, monkeypatch):
+    """No locked card -> bootstrap fails before any download; benchmark pages still render."""
+    monkeypatch.setenv("CHEMIPROOF_RESULTS_DIR", str(tmp_path))
+    monkeypatch.setenv("CHEMIPROOF_DATA_DIR", str(tmp_path / "no_data"))
+    monkeypatch.setenv("CHEMIPROOF_MANIFEST", str(tmp_path / "no_manifest.csv"))
+    at = AppTest.from_file(CLOUD_APP, default_timeout=60).run()
+    assert not at.exception, at.exception
+    warn = " ".join(w.value for w in at.sidebar.warning)
+    assert "screening is disabled" in warn and "no committed FINAL-PLS-v1" in warn

@@ -84,6 +84,10 @@ chemiproof experiment compare results/<committed run> results/<your rerun>   # m
 chemiproof model train-final && chemiproof app # local research explorer
 ```
 
+### Hosted explorer (Streamlit Community Cloud)
+
+`streamlit_app.py` is the cloud entry point (ADR-021). On first start it downloads the official Zenodo archive, checks the published MD5 and the locked manifest hash, rebuilds FINAL-PLS-v1 and serves it only if it matches the committed model card; otherwise the explorer runs with benchmark pages only. Deploy settings: main file `streamlit_app.py`, Python 3.12; dependencies come from `requirements.txt` (pinned by `constraints.txt`).
+
 ## License / data distribution
 
 - Dataset: Sun et al. (2026), Zenodo 10.5281/zenodo.19755088, **CC BY 4.0**. It is not redistributed here; raw spectra, data-derived figures and the trained model file are git-ignored.

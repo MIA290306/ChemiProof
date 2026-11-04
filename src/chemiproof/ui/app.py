@@ -27,6 +27,10 @@ DISCLAIMER = (
     "Research prototype: experimental estimates of olive-oil volume fraction from EEM "
     "fluorescence spectra. Not a certified authenticity test; no regulatory or safety meaning."
 )
+DATA_CREDIT = (
+    "Spectra: Sun et al. (2026), Zenodo 10.5281/zenodo.19755088, CC BY 4.0. "
+    "ChemiProof is independent of the dataset authors."
+)
 BATCH_NOTE = (
     "Research transductive mode: this procedure adapts using the unlabeled spectra of the full "
     "batch."
@@ -487,7 +491,9 @@ def main() -> None:
     st.set_page_config(page_title="ChemiProof research explorer", layout="wide")
     page = st.sidebar.radio("Section", list(PAGES))
     st.sidebar.caption(DISCLAIMER)
+    st.sidebar.caption(DATA_CREDIT)
     PAGES[page]()
 
 
-main()
+if __name__ == "__main__":  # Streamlit runs scripts as __main__; streamlit_app.py calls main()
+    main()

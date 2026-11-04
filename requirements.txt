@@ -1,0 +1,4 @@
+# Streamlit Community Cloud install (ADR-021). Versions come from the resolved constraints file;
+# the hosted app uses Python 3.12 (set it under "Advanced settings" when creating the app).
+-c constraints.txt
+-e .[ui]
