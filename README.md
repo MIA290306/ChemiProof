@@ -35,32 +35,38 @@ Dataset: **330 EEM measurements**, five adulterants (**soybean 60, peanut 60, ra
 
 **Trust signals (negative result)**, run `M5_20261103T054226Z_914e8ed_ac6bfcef`: a preregistered label-free abstention rule met its usefulness criterion for 1 of 6 model/score pairs; 90 % intervals covered 0.65-1.00 of held-out samples per fold, so coverage is not guaranteed.
 
-## Read this first
+## What is in this repository
 
-- New to Food Chemistry + tech? Start with [`docs/vi/START_HERE_VI.md`](docs/vi/START_HERE_VI.md) and [`docs/vi/ROADMAP_VI.md`](docs/vi/ROADMAP_VI.md).
-- Coding with Claude Code? Read [`CLAUDE.md`](CLAUDE.md), then [`docs/00_DOCS_INDEX.md`](docs/00_DOCS_INDEX.md), and work on **the first incomplete milestone** only.
-- Need product requirements? [`docs/product/01_PRD.md`](docs/product/01_PRD.md).
-- Need the actual scientific protocol? [`docs/science/02_RESEARCH_PROTOCOL.md`](docs/science/02_RESEARCH_PROTOCOL.md).
-- Need phase-specific deliverables and stop/go gates? [`docs/project/06_MILESTONES.md`](docs/project/06_MILESTONES.md).
+| Part | What it does | Where |
+|---|---|---|
+| Data audit | Parses the 330 `.dat` EEMs, checks axes, labels and file hashes, writes a manifest | `chemiproof dataset audit`, `src/chemiproof/data/` |
+| Inductive benchmark | Five leave-one-adulterant-out folds (`LOAO-v1`) for mean, SVR, PCA+SVR, PLS | `config/experiments/baseline.yaml` |
+| Transductive OT | Independent re-implementation of the published OT-SVR (`LOAO-OT-v1`) and batch stress tests | `config/experiments/ot_transductive.yaml` |
+| Trust study | Preregistered abstention, intervals and perturbations (`LOAO-UQ-v1`) | `config/experiments/uncertainty_loao.yaml` |
+| Screening model | `FINAL-PLS-v1` with model card, OOD flag and empirical intervals | `chemiproof model train-final`, [`docs/release/MODEL_CARD.md`](docs/release/MODEL_CARD.md) |
+| Research explorer | Local Streamlit app: data, benchmarks, single-file screening, batch research, methods | `chemiproof app` |
+| Evidence | Every run's config, hashes, per-fold tables and reports | [`results/`](results/) |
 
-## Core workflows
+Two information-access modes are always kept apart: **inductive** (one spectrum, no target data) and **transductive** (OT needs a batch of unlabelled target spectra; its numbers are never single-file performance).
 
-1. **Inductive single-sample baseline:** a source-trained model handles one EEM without seeing a target batch. Claims limited to measured inductive performance.
-2. **Transductive research batch:** OT aligns to a **batch of unlabeled target spectra** and predicts that batch. The batch is required for the published-style transductive method; never market its metrics as single-upload performance.
-3. **Selective prediction research:** measure error–coverage trade-offs and rate of abstention. Prediction intervals require explicit assumptions; no blanket 90% coverage guarantees under unseen adulterants.
+## Documentation
 
-## Intended scientific outputs
+- Research report, model card, data card, release review: [`docs/release/`](docs/release/)
+- Protocol and evaluation plan: [`docs/science/02_RESEARCH_PROTOCOL.md`](docs/science/02_RESEARCH_PROTOCOL.md), [`docs/science/05_EVALUATION_PLAN.md`](docs/science/05_EVALUATION_PLAN.md)
+- Decisions (ADR-001 to ADR-020) and progress evidence: [`docs/project/13_DECISION_LOG.md`](docs/project/13_DECISION_LOG.md), [`docs/project/14_PROGRESS_LOG.md`](docs/project/14_PROGRESS_LOG.md)
+- Full map: [`docs/00_DOCS_INDEX.md`](docs/00_DOCS_INDEX.md) · Vietnamese onboarding: [`docs/vi/START_HERE_VI.md`](docs/vi/START_HERE_VI.md)
+- Contributors using an AI coding agent: [`CLAUDE.md`](CLAUDE.md) / [`AGENTS.md`](AGENTS.md)
 
-- Verifiable data inventory, data dictionary, QC report and provenance trail.
-- Five leave-one-adulterant-out evaluations with **per-adulterant** MAE, RMSE, R², bias, plus macro-average and dispersion.
-- Source-only baseline, published-style OT benchmark, an **abstention/robustness extension**, negative controls and reproducibility artifacts.
-- A local Streamlit research explorer with **clear non-clinical/non-regulatory warnings**, model mode and limitations visible.
-- *(Planned extension M6.5, specification only)* A **Power BI quality-analytics dashboard**, "ChemiProof: Food Authenticity & Quality Intelligence", built from validated experiment exports for Food Science, QA/QC and laboratory audiences. Python stays the only place where metrics are computed. Power BI Desktop is Windows-only, so macOS users need a Windows machine, VM or cloud desktop to build or verify it. See [`docs/bi/18_POWER_BI_SPEC.md`](docs/bi/18_POWER_BI_SPEC.md).
-- A short research report that cites baseline work and separates replicated findings from original additions.
+## Repository layout
 
-## Power BI layer (planned, milestone M6.5)
-
-Architecture: **Zenodo dataset → Python data processing → machine learning and uncertainty evaluation → validated analysis outputs → export pipeline → Power BI dashboard**. Power BI never trains models, tunes thresholds or reads raw spectra; every KPI must reproduce from the exported outputs with Python; protocols and modes are never mixed. Status: **specification only, nothing built**. Documents: [`docs/bi/18_POWER_BI_SPEC.md`](docs/bi/18_POWER_BI_SPEC.md), [`docs/bi/19_POWER_BI_DATA_MODEL.md`](docs/bi/19_POWER_BI_DATA_MODEL.md), [`docs/bi/20_POWER_BI_ACCEPTANCE_TESTS.md`](docs/bi/20_POWER_BI_ACCEPTANCE_TESTS.md).
+```text
+src/chemiproof/   package: data, spectra, modeling, evaluation, uncertainty, ui, cli
+tests/            unit + integration tests (synthetic by default; `-m dataset` needs the real data)
+config/           project, experiment and milestone configs
+results/          committed run evidence (small tables and reports only)
+docs/             product, science, engineering, project, release, bi (spec), vi
+templates/        report and milestone-review templates
+```
 
 ## How to reproduce
 
@@ -83,10 +89,10 @@ chemiproof model train-final && chemiproof app # local research explorer
 - Dataset: Sun et al. (2026), Zenodo 10.5281/zenodo.19755088, **CC BY 4.0**. It is not redistributed here; raw spectra, data-derived figures and the trained model file are git-ignored.
 - Authors' code: no license (all rights reserved); read for method details only, nothing copied.
 - ChemiProof's code: **MIT** ([`LICENSE`](LICENSE)). Documentation and research report: **CC BY 4.0**. Decision: ADR-019 in [`docs/project/13_DECISION_LOG.md`](docs/project/13_DECISION_LOG.md).
-- Power BI layer: not delivered (M6.5 needs Windows; M7 does not depend on it).
+- Power BI layer (optional milestone M6.5): specified in [`docs/bi/`](docs/bi/), not built (Power BI Desktop needs Windows).
 
-## Roadmap
+## Status and roadmap
 
-**M0** Repo setup → **M1** Dataset audit → **M2** Chemometric baselines → **M3** Open-world evaluation → **M4** OT reproduction → **M5** Uncertainty/abstention → **M6** App/reports → *(optional extension)* **M6.5** Power BI food-quality intelligence → **M7** Validation/public release. M6.5 does not change M0-M7 and does not block M7.
+M0-M7 delivered and released as `v1.0.0`. Open: an external methods review (waived for v1.0.0, ADR-020), a brand-effect test and an OT batch-composition check (M5 follow-ups), and the optional Power BI layer (M6.5).
 
-All status indicators and metrics must be computed from real runs; **never manufacture a result or mark a milestone complete to make the demo look impressive.**
+All metrics come from real runs; nothing in this repository is a manufactured or tuned-to-impress result.
