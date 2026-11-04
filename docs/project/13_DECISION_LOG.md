@@ -220,6 +220,14 @@
 - **Risk accepted:** a methods or claims error that an external chemist or ML reviewer would have caught may ship. Mitigations already in place: leakage audit (2026-11-03), independent recomputation tests in CI, second-machine and clean-environment reproduction, number-by-number fact-check of the M7 documents (PR #4 review).
 - **Owner signoff:** Bruce1508 (delegated owner authority), 2026-11-03
 
+## ADR-021: model.npz committed on a deploy branch for Streamlit Community Cloud (supersedes part of ADR-019)
+
+- **Date:** 2026-11-04 · **Status:** ACCEPTED by Nguyen Duc Anh Vo under the delegated decision authority established in ADR-019/ADR-020
+- **Problem:** ADR-019 kept `model.npz` out of git because its arrays are derived from the third-party EEM dataset. Streamlit Community Cloud deploys by cloning the GitHub repo with no other channel to supply the artifact; without it, the explorer's single-file scoring feature has no model to load (benchmark/report pages still work from the small tracked CSVs).
+- **Options and tradeoffs:** (1) deploy with scoring disabled, keep `model.npz` local-only; (2) commit `model.npz` on a dedicated `deploy/streamlit-cloud` branch (never merged to `main`) so the override is scoped and reversible; the source dataset is CC BY 4.0, which permits redistributing derived data with attribution (the explorer and model card already carry that attribution).
+- **Decision:** option (2). `model.npz` is force-added (`git add -f`) on `deploy/streamlit-cloud` only; `main` and the gitignore rule are unchanged. If the deployment is retired, the branch can be deleted without touching `main`'s history.
+- **Owner signoff:** owner explicitly confirmed overriding the ADR-019 exclusion for this artifact, 2026-11-04 (asked and confirmed in-session before the override was applied).
+
 ## Future ADR template
 
 ```text
