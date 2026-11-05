@@ -33,7 +33,7 @@ flowchart TD
 
 ```text
 ChemiProof/
-├── README.md, docs/vi/START_HERE_VI.md, CLAUDE.md, AGENTS.md
+├── README.md, CLAUDE.md, AGENTS.md
 ├── docs/                      # specifications and decisions
 ├── config/
 │   ├── project.yaml

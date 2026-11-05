@@ -54,7 +54,7 @@ Two information-access modes are always kept apart: **inductive** (one spectrum,
 - Research report, model card, data card, release review: [`docs/release/`](docs/release/)
 - Protocol and evaluation plan: [`docs/science/02_RESEARCH_PROTOCOL.md`](docs/science/02_RESEARCH_PROTOCOL.md), [`docs/science/05_EVALUATION_PLAN.md`](docs/science/05_EVALUATION_PLAN.md)
 - Decisions (ADR-001 to ADR-020) and progress evidence: [`docs/project/13_DECISION_LOG.md`](docs/project/13_DECISION_LOG.md), [`docs/project/14_PROGRESS_LOG.md`](docs/project/14_PROGRESS_LOG.md)
-- Full map: [`docs/00_DOCS_INDEX.md`](docs/00_DOCS_INDEX.md) · Vietnamese onboarding: [`docs/vi/START_HERE_VI.md`](docs/vi/START_HERE_VI.md)
+- Full map: [`docs/00_DOCS_INDEX.md`](docs/00_DOCS_INDEX.md)
 - Contributors using an AI coding agent: [`CLAUDE.md`](CLAUDE.md) / [`AGENTS.md`](AGENTS.md)
 
 ## Repository layout
@@ -64,7 +64,7 @@ src/chemiproof/   package: data, spectra, modeling, evaluation, uncertainty, ui,
 tests/            unit + integration tests (synthetic by default; `-m dataset` needs the real data)
 config/           project, experiment and milestone configs
 results/          committed run evidence (small tables and reports only)
-docs/             product, science, engineering, project, release, bi (spec), vi
+docs/             product, science, engineering, project, release, bi (spec)
 templates/        report and milestone-review templates
 ```
 

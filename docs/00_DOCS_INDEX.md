@@ -70,15 +70,6 @@ config/         project.yaml, milestones.yaml, experiments/, bi/export_contract.
 | `19_POWER_BI_DATA_MODEL.md` | Which tables, columns, units, relationships, KPIs and validation rules does the export need? | Data engineer + BI engineer |
 | `20_POWER_BI_ACCEPTANCE_TESTS.md` | How do we prove the export and the dashboard are correct (and when is M6.5 done)? | QA + owner |
 
-## Vietnamese guides — `docs/vi/`
-
-| Document | Main question | Reader |
-|---|---|---|
-| `START_HERE_VI.md` | Where do I begin, with zero background? | Owner / student |
-| `ROADMAP_VI.md` | What are the milestones and the evidence to check? | Owner / student |
-| `TIEN_DO_HIEN_TAI_VI.md` | What is the project status right now, for a new collaborator? | Collaborator / owner |
-| `17_GLOSSARY_VI.md` | How do key food chemistry/ML concepts work? | Student |
-
 ## Delivery policy
 
 - **No phase skipping.** UI work begins after validated model/evaluation infrastructure exists.
@@ -97,4 +88,4 @@ config/         project.yaml, milestones.yaml, experiments/, bi/export_contract.
 
 ## Starting point
 
-Owner reads `docs/vi/START_HERE_VI.md`; coding agent reads `CLAUDE.md`; then begin M0 in `docs/project/06_MILESTONES.md`.
+Owner reads `README.md`; coding agent reads `CLAUDE.md`; then begin M0 in `docs/project/06_MILESTONES.md`.

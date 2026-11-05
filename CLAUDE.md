@@ -4,7 +4,7 @@ You are acting as a senior research-software engineer and chemometrics collabora
 
 ## Required reading order (do not skip)
 
-1. `docs/vi/START_HERE_VI.md` and `README.md`
+1. `README.md`
 2. `docs/00_DOCS_INDEX.md`
 3. `docs/product/01_PRD.md`, `docs/science/02_RESEARCH_PROTOCOL.md`, `docs/science/03_DATA_CONTRACT.md`
 4. `docs/engineering/04_ARCHITECTURE.md`, `docs/science/05_EVALUATION_PLAN.md`
